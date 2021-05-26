@@ -1,18 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, Icon } from 'semantic-ui-react';
 import moment from 'moment';
 
-function Conditions(props) {
+function Conditions({ conditions, onChange }) {
 
   const [selectedConditionIds, setSelectedConditionIds] = useState([]);
-
-  const { conditions, onChange } = props;
-
-  // Whenever the selected conditions change, we send up the condition names
-  useEffect(() => {
-    const conditionNames = conditions.filter(c => selectedConditionIds.includes(c.id)).map(c => c?.code?.text || '[unknown]');
-    onChange(conditionNames);
-  }, [selectedConditionIds, conditions, onChange]);
 
   const Condition = (props) => {
     const condition = props.condition;
@@ -23,11 +15,15 @@ function Conditions(props) {
 
     const handleClick = (event, data) => {
       const clickedId = data.id;
+      let newSelectedConditionIds = null;
       if (selectedConditionIds.includes(clickedId)) {
-        setSelectedConditionIds(selectedConditionIds.filter(id => id !== clickedId));
+        newSelectedConditionIds = selectedConditionIds.filter(id => id !== clickedId);
       } else {
-        setSelectedConditionIds(selectedConditionIds.concat(clickedId));
+        newSelectedConditionIds = selectedConditionIds.concat(clickedId);
       }
+      setSelectedConditionIds(newSelectedConditionIds);
+      const conditionNames = conditions.filter(c => newSelectedConditionIds.includes(c.id)).map(c => c?.code?.text || '[unknown]');
+      onChange(conditionNames);
     };
 
     return (

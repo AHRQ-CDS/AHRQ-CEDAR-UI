@@ -38,14 +38,14 @@ function SearchResult(props) {
   const url = resource?.citedArtifact?.webLocation?.[0]?.url;
 
   return (
-      <Card fluid id={resource.id}>
+    <Card fluid id={resource.id}>
       <Card.Content>
-      <Card.Header>{resource.title}</Card.Header>
-      <Card.Meta>{subheaderFields.join(' - ')}</Card.Meta>
-      <Card.Description>
-      {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
-    {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
-    </Card.Description>
+        <Card.Header>{resource.title}</Card.Header>
+        <Card.Meta>{subheaderFields.join(' - ')}</Card.Meta>
+        <Card.Description>
+          {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
+          {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
+        </Card.Description>
       </Card.Content>
       {url && <Card.Content extra><a href={url}>{url}</a></Card.Content>}
     </Card>
