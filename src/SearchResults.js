@@ -1,16 +1,20 @@
 import React, { memo } from 'react';
+import { Loader } from 'semantic-ui-react';
 import SearchResult from './SearchResult';
 
-function SearchResults(props) {
-  if (props.searchResults) {
+function SearchResults({ searchResults, onKeywordClick }) {
+  if (searchResults?.status === 'complete') {
     return (
         <React.Fragment>
-          <h4>{props.searchResults.total} Search Results</h4>
-          {props.searchResults.entry && props.searchResults.entry.map(e => <SearchResult key={e.resource.id} resource={e.resource} />)}
+          <h4>{searchResults.data.total} Search Results</h4>
+          {searchResults.data.entry && searchResults.data.entry.map(e => <SearchResult key={e.resource.id} resource={e.resource} onKeywordClick={onKeywordClick} />)}
         </React.Fragment>
     );
+  } else if (searchResults?.status === 'pending') {
+    return <div><Loader active content='Loading' /></div>;
+  } else {
+    return <div>No search results</div>;
   }
-  return <div>No search results</div>;
 }
 
 // Use memo so that we only re-render when search results change

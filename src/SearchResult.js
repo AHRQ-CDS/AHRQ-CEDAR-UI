@@ -3,12 +3,11 @@ import { Card, Button } from 'semantic-ui-react';
 import ReactMarkdown from 'react-markdown';
 import strip from 'strip-markdown';
 import remark from 'remark';
+import _ from 'lodash';
 
-function SearchResult(props) {
+function SearchResult({ resource, onKeywordClick }) {
 
   const [fullDescription, setFullDescription] = useState(false);
-
-  const resource = props.resource;
 
   // Put publisher and date in subheader in a way that supports either being missing
   let subheaderFields = [];
@@ -37,6 +36,16 @@ function SearchResult(props) {
 
   const url = resource?.citedArtifact?.webLocation?.[0]?.url;
 
+  // Grab all the keywords
+  // TODO: We may want to handle MeSH keywords separately at some point
+  let keywords = [];
+  for (const classification of resource.citedArtifact?.classification || []) {
+    for (const classifier of classification.classifier || []) {
+      keywords.push(classifier.text)
+    }
+  }
+  keywords = _.uniq(keywords);
+
   return (
     <Card fluid id={resource.id}>
       <Card.Content>
@@ -45,6 +54,8 @@ function SearchResult(props) {
         <Card.Description>
           {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
           {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
+          <h4>Keywords</h4>
+          {keywords.map(k => <Button basic compact size='mini' key={k} onClick={() => onKeywordClick(k)}>{k}</Button>)}
         </Card.Description>
       </Card.Content>
       {url && <Card.Content extra><a href={url}>{url}</a></Card.Content>}

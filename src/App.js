@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { SMART } from './FHIRClientWrapper';
 import Patient from './Patient';
 import Conditions from './Conditions';
 import SearchResults from './SearchResults';
-import { Container, Grid, Segment, Menu, Input } from 'semantic-ui-react';
+import { Container, Grid, Segment, Menu, Input, Label, Icon } from 'semantic-ui-react';
 import './App.css';
 
 function App(props) {
@@ -13,7 +13,8 @@ function App(props) {
   const [conditionSearchString, setConditionSearchString] = useState('');
   const [additionalSearchInput, setAdditionalSearchInput] = useState('');
   const [additionalSearchString, setAdditionalSearchString] = useState('');
-  const [searchResults, setSearchResults] = useState();
+  const [selectedKeywords, setSelectedKeywords] = useState([]);
+  const [searchResults, setSearchResults] = useState({ status: 'none' });
 
   useEffect(() => {
 
@@ -31,7 +32,14 @@ function App(props) {
   useEffect(() => {
 
     const cedarSearch = async () => {
+      setSearchResults({ status: 'pending' });
       let searchString = conditionSearchString;
+      if (selectedKeywords.length > 0) {
+        if (searchString.length > 0) {
+          searchString += ' AND ';
+        }
+        searchString += `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`;
+      }
       if (additionalSearchString.length > 0) {
         if (searchString.length > 0) {
           searchString += ' AND ';
@@ -44,15 +52,15 @@ function App(props) {
         const json = await response.json();
         // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
         // idea: for each search, increment a "most recent search" counter and don't set search results if the counter has moved on from this search
-        setSearchResults(json);
+        setSearchResults({ status: 'complete', data: json });
       } else {
-        setSearchResults(null);
+        setSearchResults({ status: 'none' });
       }
     };
 
     cedarSearch();
 
-  }, [conditionSearchString, additionalSearchString]);
+  }, [conditionSearchString, selectedKeywords, additionalSearchString]);
 
   const handleConditionsChange = (conditionNames) => {
     // TODO: parenthisis handling is a temporary workaround for conditions like "Acute bronchitis (disorder)"
@@ -76,13 +84,28 @@ function App(props) {
     setAdditionalSearchString(additionalSearchInput);
   };
 
+  // Memoize this handler so we don't re-render the search results on every overall re-render
+  const handleKeywordClick = useCallback(
+    (keyword) => {
+      setSelectedKeywords((previousSelectedKeywords) => {
+        if (previousSelectedKeywords.includes(keyword)) {
+          return previousSelectedKeywords.filter(k => k !== keyword);
+        } else {
+          return previousSelectedKeywords.concat(keyword);
+        }
+      });
+    },
+    []
+  );
+
   return (
-    <div className="App">
+    <React.Fragment>
+
       <Menu color='blue' inverted attached>
         <Menu.Item header><h2>CEDAR SMART Demonstration</h2></Menu.Item>
       </Menu>
 
-      <Container fluid>
+      <Container fluid className='App'>
         <Grid>
           <Grid.Row>
             <Grid.Column width={5}>
@@ -92,9 +115,11 @@ function App(props) {
               <Segment>
                 <h4>Additional Filters</h4>
                 <form onSubmit={updateAdditionalSearchString}>
-                <Input fluid placeholder='Search filter...' action={{ primary: true, icon: 'search' }}
-                       value={additionalSearchInput} onChange={updateAdditionalSearchInput} />
+                  <Input fluid placeholder='Search filter...' action={{ primary: true, icon: 'search' }}
+                         value={additionalSearchInput} onChange={updateAdditionalSearchInput} />
                 </form>
+                {selectedKeywords.length > 0 && <h5>Additional Search Keywords</h5>}
+                {selectedKeywords.map(k => <p key={k}><Label color='blue'><Icon name='delete' onClick={() => handleKeywordClick(k)}/> {k}</Label></p>)}
               </Segment>
               <Segment>
                 <h4>Conditions</h4>
@@ -102,15 +127,13 @@ function App(props) {
               </Segment>
             </Grid.Column>
             <Grid.Column width={11}>
-              <Segment>
-                <SearchResults searchResults={searchResults} />
-              </Segment>
+              <SearchResults searchResults={searchResults} onKeywordClick={handleKeywordClick} />
             </Grid.Column>
           </Grid.Row>
         </Grid>
       </Container>
 
-    </div>
+    </React.Fragment>
   );
 }
 
