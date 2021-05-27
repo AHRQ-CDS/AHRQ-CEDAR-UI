@@ -15,6 +15,7 @@ function App(props) {
   const [additionalSearchString, setAdditionalSearchString] = useState('');
   const [selectedKeywords, setSelectedKeywords] = useState([]);
   const [searchResults, setSearchResults] = useState({ status: 'none' });
+  const [searchPage, setSearchPage] = useState(1);
 
   useEffect(() => {
 
@@ -48,7 +49,7 @@ function App(props) {
       }
       console.log("Search string: " + searchString);
       if (searchString.length > 0) {
-        const response = await fetch(`http://127.0.0.1:4567/fhir/Citation?_content=${searchString}&artifact-current-state=active`);
+        const response = await fetch(`http://127.0.0.1:4567/fhir/Citation?_content=${searchString}&artifact-current-state=active&_count=10&page=${searchPage}`);
         const json = await response.json();
         // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
         // idea: for each search, increment a "most recent search" counter and don't set search results if the counter has moved on from this search
@@ -60,7 +61,7 @@ function App(props) {
 
     cedarSearch();
 
-  }, [conditionSearchString, selectedKeywords, additionalSearchString]);
+  }, [conditionSearchString, selectedKeywords, additionalSearchString, searchPage]);
 
   const handleConditionsChange = (conditionNames) => {
     // TODO: parenthisis handling is a temporary workaround for conditions like "Acute bronchitis (disorder)"
@@ -68,10 +69,12 @@ function App(props) {
     const newConditionSearchString = conditionNames.map(s => `"${s.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '')}"`).join(' AND ');
     if (newConditionSearchString !== conditionSearchString) {
       setConditionSearchString(newConditionSearchString);
+      setSearchPage(1);
     }
     // If the conditions are changed, whatever is in the additional filter input should be incorporated into search as well
     if (additionalSearchInput !== additionalSearchString) {
       setAdditionalSearchString(additionalSearchInput);
+      setSearchPage(1);
     }
   };
 
@@ -82,6 +85,7 @@ function App(props) {
   const updateAdditionalSearchString = (event) => {
     event.preventDefault();
     setAdditionalSearchString(additionalSearchInput);
+    setSearchPage(1);
   };
 
   // Memoize this handler so we don't re-render the search results on every overall re-render
@@ -94,9 +98,14 @@ function App(props) {
           return previousSelectedKeywords.concat(keyword);
         }
       });
+      setSearchPage(1);
     },
     []
   );
+
+  const handlePageChange = (event, data) => {
+    setSearchPage(data.activePage);
+  };
 
   return (
     <React.Fragment>
@@ -127,7 +136,7 @@ function App(props) {
               </Segment>
             </Grid.Column>
             <Grid.Column width={11}>
-              <SearchResults searchResults={searchResults} onKeywordClick={handleKeywordClick} />
+              <SearchResults searchResults={searchResults} page={searchPage} onPageChange={handlePageChange} onKeywordClick={handleKeywordClick} />
             </Grid.Column>
           </Grid.Row>
         </Grid>
