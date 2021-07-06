@@ -1,5 +1,6 @@
 {
   "name": "cedar_smart",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,6 +8,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "fhirclient": "^2.3.11",
+    "http-proxy-middleware": "^2.0.1",
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

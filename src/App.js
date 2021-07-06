@@ -49,7 +49,7 @@ function App(props) {
       }
       console.log("Search string: " + searchString);
       if (searchString.length > 0) {
-        const response = await fetch(`http://127.0.0.1:4567/fhir/Citation?_content=${searchString}&artifact-current-state=active&_count=10&page=${searchPage}`);
+        const response = await fetch(`/api/fhir/Citation?_content=${searchString}&artifact-current-state=active&_count=10&page=${searchPage}`);
         const json = await response.json();
         // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
         // idea: for each search, increment a "most recent search" counter and don't set search results if the counter has moved on from this search
