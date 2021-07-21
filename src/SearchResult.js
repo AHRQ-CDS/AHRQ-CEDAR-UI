@@ -41,7 +41,9 @@ function SearchResult({ resource, onKeywordClick }) {
   let keywords = [];
   for (const classification of resource.citedArtifact?.classification || []) {
     for (const classifier of classification.classifier || []) {
-      keywords.push(classifier.text)
+      if (classifier.text) {
+        keywords.push(classifier.text.toLowerCase())
+      }
     }
   }
   keywords = _.uniq(keywords);
