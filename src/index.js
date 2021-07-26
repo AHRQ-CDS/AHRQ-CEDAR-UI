@@ -22,6 +22,7 @@ case 'smart':
   ReactDOM.render(<React.StrictMode><App smart /></React.StrictMode>, document.getElementById('root'));
   break;
 case 'standalone':
+  console.log("standalone");
   ReactDOM.render(<React.StrictMode><App standalone /></React.StrictMode>, document.getElementById('root'));
   break;
 default:
