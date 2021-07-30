@@ -40,7 +40,7 @@ function App(props) {
   }
 
   const HEADER_TEXT = props.smart === true ? 'CEDAR SMART Demonstration' : 'CEDAR Standalone Demonstration'
-  const SEARCH_BOX_TEXT = props.smart === true? 'Additional Filters' : 'Filters'
+  const SEARCH_BOX_TEXT = props.smart === true? 'Additional Filters' : 'Search and Filter'
 
   useEffect(() => {
 
@@ -66,11 +66,16 @@ function App(props) {
         }
         searchString += `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`;
       }
+
+      console.log("Additional search string: " + additionalSearchString)
+
       if (additionalSearchString.length > 0) {
         if (searchString.length > 0) {
-          searchString += ' AND ';
+          searchString += ' AND ' + `(${additionalSearchString})`;
         }
-        searchString += `(${additionalSearchString})`;
+        else {
+          searchString += additionalSearchString;
+        }
       }
       console.log("Search string: " + searchString);
 
@@ -85,8 +90,6 @@ function App(props) {
         query.append('artifact-publisher', searchPublisher.join(','));
       }
 
-      console.log(query.toString());
-
       if (searchString.length > 0) {
         const response = await fetch(`/api/fhir/Citation?${query.toString()}`);
         const json = await response.json();
@@ -100,7 +103,7 @@ function App(props) {
 
     cedarSearch();
 
-  }, [conditionSearchString, selectedKeywords, additionalSearchString, searchPage, searchPublisher, searchStatus]);
+  }, [conditionSearchString, selectedKeywords, additionalSearchString, searchPage, searchPublisher, searchStatus, searchParameter]);
 
   useEffect(() => {
     if (allPublishers.length === 0) {
@@ -162,12 +165,12 @@ function App(props) {
   };
 
   const handlePublisherChange = (event) => {
-    if (event.checked && !searchPublisher.includes(event.name)) {
-      setSearchPublisher([ ...searchPublisher, event.name]);
+    if (event.target.checked && !searchPublisher.includes(event.target.value)) {
+      setSearchPublisher([ ...searchPublisher, event.target.value]);
       setSearchPage(1);
     }
-    else if (!event.checked && searchPublisher.includes(event.name)) {
-      const publisher = searchPublisher.filter(item => item !== event.name);
+    else if (!event.target.checked && searchPublisher.includes(event.target.value)) {
+      const publisher = searchPublisher.filter(item => item !== event.target.value);
       setSearchPublisher(publisher);
       setSearchPage(1);
     }
@@ -179,8 +182,8 @@ function App(props) {
   };
 
   // Handle changes to the type of search
-  const handleSearchTypeChange = (event) => {
-    setSearchParameter(event.target.value);
+  const handleSearchTypeChange = (event, data) => {
+    setSearchParameter(data.value);
   };
 
   function searchTypeOptions() {
@@ -192,7 +195,6 @@ function App(props) {
           value: search_api_key,
         })
     }
-    console.log(options)
     return options
   }
 
@@ -215,23 +217,24 @@ function App(props) {
               <Segment>
                 <h4>{SEARCH_BOX_TEXT}</h4>
 
-                <h4>Search Type</h4>
-                <Form.Group widths='equal'>
-                  <Form.Field>
-                    <Form.Select
-                      fluid
-                      selection
-                      name="type"
-                      options={searchTypeOptions()}
-                      defaultValue='_content'
-                      onChange={handleSearchTypeChange}
-                    />
-                  </Form.Field>
-                  <form onSubmit={updateAdditionalSearchString}>
-                    <Input fluid placeholder='Search filter...' action={{ primary: true, icon: 'search' }}
+                <h4>Search By</h4>
+
+                <Form onSubmit={updateAdditionalSearchString}>
+                  <Form.Group widths='equal'>
+                    <Form.Field>
+                      <Form.Select
+                        selection
+                        name="type"
+                        options={searchTypeOptions()}
+                        defaultValue='_content'
+                        onChange={handleSearchTypeChange}
+                      />
+                    </Form.Field>
+               
+                    <Form.Input placeholder='Search terms...' action={{ primary: true, icon: 'search' }}
                            value={additionalSearchInput} onChange={updateAdditionalSearchInput} />
-                  </form>
-                </Form.Group>
+                  </Form.Group>
+                </Form>
 
                 {selectedKeywords.length > 0 && <h5>Additional Search Keywords</h5>}
                 {selectedKeywords.map(k => <p key={k}><Label color='blue'><Icon name='delete' onClick={() => handleKeywordClick(k)}/> {k}</Label></p>)}
@@ -259,8 +262,9 @@ function App(props) {
                       <div class="ui checkbox">
                       <input type="checkbox"
                             checked={searchPublisher.includes[publisher.id]}
-                            onChange={event=>{handlePublisherChange(event.target)}}
-                            name={publisher.name} 
+                            onChange={handlePublisherChange}
+                            name={publisher.name}
+                            value={publisher.id} 
                       />
                       <label>{publisher.name}</label>
                       </div>
