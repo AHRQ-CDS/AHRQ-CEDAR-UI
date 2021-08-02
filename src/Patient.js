@@ -14,7 +14,7 @@ function Patient(props) {
 
   return (
       <React.Fragment>
-        <h4>Patient</h4>
+        <h3>Patient</h3>
         {name}
       </React.Fragment>
   );

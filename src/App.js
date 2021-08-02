@@ -3,7 +3,7 @@ import { SMART } from './FHIRClientWrapper';
 import Patient from './Patient';
 import Conditions from './Conditions';
 import SearchResults from './SearchResults';
-import { Container, Grid, Segment, Menu, Input, Label, Icon, List, Form } from 'semantic-ui-react';
+import { Container, Grid, Segment, Menu, Label, Icon, List, Form } from 'semantic-ui-react';
 import './App.css';
 
 function App(props) {
@@ -18,7 +18,11 @@ function App(props) {
   const [searchResults, setSearchResults] = useState({ status: 'none' });
   const [searchPage, setSearchPage] = useState(1);
   const [searchParameter, setSearchParameter] = useState('_content');
-  const [searchCount, setSearchCount] = useState(10);
+  
+  /* TODO: The cedar_ui app allows the user to change the count of results per page,
+   but cedar_smart does not. Is this something that we want to support?
+
+   const [searchCount, setSearchCount] = useState(10);*/ 
 
   const [searchStatus, setSearchStatus] = useState({
     Active: true,
@@ -28,6 +32,10 @@ function App(props) {
   });
   const [allPublishers, setAllPublishers] = useState([]);
   const [searchPublisher, setSearchPublisher] = useState([]);
+
+  /* TODO: Related to above. Currently, have a constant here in lieu of supporting a user-selected
+   number of page results returned (e.g., 10, 20, etc.) */
+  const SEARCH_COUNT = 10;
 
   const STATUS = [
     "Active", "Retired", "Draft", "Unknown"
@@ -67,22 +75,22 @@ function App(props) {
         searchString += `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`;
       }
 
-      console.log("Additional search string: " + additionalSearchString)
-
       if (additionalSearchString.length > 0) {
         if (searchString.length > 0) {
-          searchString += ' AND ' + `(${additionalSearchString})`;
+          searchString += ` AND (${additionalSearchString})`;
         }
         else {
           searchString += additionalSearchString;
         }
       }
-      console.log("Search string: " + searchString);
 
       const status = Object.keys(searchStatus).filter(name => searchStatus[name]).map(name => name.toLowerCase());
+      
       let query = new URLSearchParams();
       query.append(searchParameter, searchString);
-      query.append('_count', searchCount);
+      /* TODO: The cedar_ui app allows the user to change the count of results per page,
+         but cedar_smart does not. */
+      query.append('_count', SEARCH_COUNT);
       query.append('page', searchPage);
       query.append('artifact-current-state', status.join(','))
 
@@ -90,7 +98,10 @@ function App(props) {
         query.append('artifact-publisher', searchPublisher.join(','));
       }
 
-      if (searchString.length > 0) {
+      /* Note: By default a fetch() request timeouts at the time indicated by the browser. In Chrome, 
+         a network request times out in 300 seconds, while Firefox will time out in 90 seconds. 
+         Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window? */
+      if (searchString.length > 0 && status.length > 0) {
         const response = await fetch(`/api/fhir/Citation?${query.toString()}`);
         const json = await response.json();
         // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
@@ -215,24 +226,24 @@ function App(props) {
                 </Segment>
             )}
               <Segment>
-                <h4>{SEARCH_BOX_TEXT}</h4>
+                <h3>{SEARCH_BOX_TEXT}</h3>
 
                 <h4>Search By</h4>
 
                 <Form onSubmit={updateAdditionalSearchString}>
-                  <Form.Group widths='equal'>
-                    <Form.Field>
-                      <Form.Select
-                        selection
-                        name="type"
-                        options={searchTypeOptions()}
-                        defaultValue='_content'
-                        onChange={handleSearchTypeChange}
-                      />
-                    </Form.Field>
+                  <Form.Group>
+                    <Form.Select
+                      selection
+                      name="type"
+                      options={searchTypeOptions()}
+                      defaultValue='_content'
+                      onChange={handleSearchTypeChange}
+                      width={5}
+                      style={{minWidth:"8em"}}
+                    />
                
                     <Form.Input placeholder='Search terms...' action={{ primary: true, icon: 'search' }}
-                           value={additionalSearchInput} onChange={updateAdditionalSearchInput} />
+                           value={additionalSearchInput} onChange={updateAdditionalSearchInput}  width={11}/>
                   </Form.Group>
                 </Form>
 
@@ -260,13 +271,13 @@ function App(props) {
                   {allPublishers.map((publisher) => (
                     <List.Item key={publisher.id}>
                       <div class="ui checkbox">
-                      <input type="checkbox"
-                            checked={searchPublisher.includes[publisher.id]}
-                            onChange={handlePublisherChange}
-                            name={publisher.name}
-                            value={publisher.id} 
-                      />
-                      <label>{publisher.name}</label>
+                        <input type="checkbox"
+                              checked={searchPublisher.includes[publisher.id]}
+                              onChange={handlePublisherChange}
+                              name={publisher.name}
+                              value={publisher.id} 
+                        />
+                        <label>{publisher.name}</label>
                       </div>
                     </List.Item>
                   ))}
@@ -275,7 +286,7 @@ function App(props) {
               
               {props.smart && (
                 <Segment>
-                  <h4>Conditions</h4>
+                  <h3>Conditions</h3>
                   <Conditions conditions={conditions} onChange={handleConditionsChange}/>
                 </Segment>
               )}
