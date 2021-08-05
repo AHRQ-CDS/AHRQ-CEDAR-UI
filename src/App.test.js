@@ -7,6 +7,16 @@ const SEARCH_HEADER = 'Search By';
 const STATUS_HEADER = 'Status';
 const PUBLISHERS_HEADER = 'Publishers';
 
+jest.mock('fhirclient', () => ({
+    oauth2: {
+        ready: jest.fn(() => Promise.resolve({
+            client: {
+                request: jest.fn(() => { return { data: null } })
+            }
+        }))
+    }
+}));
+
 test('it shows the correct SMART UI when in the SMART context', () => {
   render(<App smart/>);
   const headerText = screen.getByText(/CEDAR SMART Demonstration/i);

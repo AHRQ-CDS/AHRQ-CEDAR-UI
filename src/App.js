@@ -254,7 +254,7 @@ function App(props) {
                 <List>
                 {STATUS.map((name) => (
                   <List.Item key={name}>
-                    <div class="ui checkbox">
+                    <div className="ui checkbox">
                     <input type="checkbox"
                               checked={searchStatus[name]}
                               onChange={event=>{handleStatusChange(event.target)}}
@@ -270,7 +270,7 @@ function App(props) {
                 <List>
                   {allPublishers.map((publisher) => (
                     <List.Item key={publisher.id}>
-                      <div class="ui checkbox">
+                      <div className="ui checkbox">
                         <input type="checkbox"
                               checked={searchPublisher.includes[publisher.id]}
                               onChange={handlePublisherChange}
