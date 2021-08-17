@@ -11,9 +11,8 @@ function App(props) {
   const [patient, setPatient] = useState();
   const [conditions, setConditions] = useState([]);
   const [conditionSearchString, setConditionSearchString] = useState('');
-  
-  const [additionalSearchInput, setAdditionalSearchInput] = useState('');
-  const [additionalSearchString, setAdditionalSearchString] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [searchString, setSearchString] = useState('');
   const [selectedKeywords, setSelectedKeywords] = useState([]);
   const [searchResults, setSearchResults] = useState({ status: 'none' });
   const [searchPage, setSearchPage] = useState(1);
@@ -64,44 +63,60 @@ function App(props) {
   }, [props.smart]);
 
   useEffect(() => {
-
     const cedarSearch = async () => {
       setSearchResults({ status: 'pending' });
-      let searchString = conditionSearchString;
+
+      let searchParams = {}
+      let textSearchString = conditionSearchString;
+      let keywordSearchString = selectedKeywords;
+      let titleSearchString = '';
+      
       if (selectedKeywords.length > 0) {
-        if (searchString.length > 0) {
-          searchString += ' AND ';
-        }
-        searchString += `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`;
+        keywordSearchString = `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`;
       }
 
-      if (additionalSearchString.length > 0) {
-        if (searchString.length > 0) {
-          searchString += ` AND (${additionalSearchString})`;
-        }
-        else {
-          searchString += additionalSearchString;
+      if (searchString.length > 0) {
+        switch(searchParameter) {
+          case 'classification:text':
+            keywordSearchString += keywordSearchString.length > 0 ? keywordSearchString += ` AND (${searchString})` : keywordSearchString += searchString;
+            break;
+          case 'title:contains':
+            titleSearchString = searchString;
+            break;
+          default:
+            // default is '_content'
+            textSearchString += textSearchString.length > 0 ? textSearchString += ` AND (${searchString})` : textSearchString += searchString;
         }
       }
 
+      let query = new URLSearchParams();
+      let anySearchTerms = false;
       const status = Object.keys(searchStatus).filter(name => searchStatus[name]).map(name => name.toLowerCase());
       
-      let query = new URLSearchParams();
-      query.append(searchParameter, searchString);
-      /* TODO: The cedar_ui app allows the user to change the count of results per page,
-         but cedar_smart does not. */
+      // TODO: The cedar_ui app allows the user to change the count of results per page, but cedar_smart does not.
       query.append('_count', SEARCH_COUNT);
       query.append('page', searchPage);
-      query.append('artifact-current-state', status.join(','))
-
-      if (searchPublisher.length > 0) {
+      query.append('artifact-current-state', status.join(','));
+      
+      if(searchPublisher.length > 0) {
         query.append('artifact-publisher', searchPublisher.join(','));
+      }
+
+      searchParams['classification:text'] = keywordSearchString;
+      searchParams['_content'] = textSearchString;
+      searchParams['title:contains'] = titleSearchString;
+
+      for (const [queryParam, queryValue] of Object.entries(searchParams)) {
+        if(queryValue.length > 0) {
+          anySearchTerms = true;
+          query.append(queryParam, queryValue);
+        }
       }
 
       /* Note: By default a fetch() request timeouts at the time indicated by the browser. In Chrome, 
          a network request times out in 300 seconds, while Firefox will time out in 90 seconds. 
          Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window? */
-      if (searchString.length > 0 && status.length > 0) {
+      if (anySearchTerms && status.length > 0) {
         const response = await fetch(`/api/fhir/Citation?${query.toString()}`);
         const json = await response.json();
         // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
@@ -114,7 +129,7 @@ function App(props) {
 
     cedarSearch();
 
-  }, [conditionSearchString, selectedKeywords, additionalSearchString, searchPage, searchPublisher, searchStatus, searchParameter]);
+  }, [conditionSearchString, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter]);
 
   useEffect(() => {
     if (allPublishers.length === 0) {
@@ -132,19 +147,19 @@ function App(props) {
       setSearchPage(1);
     }
     // If the conditions are changed, whatever is in the additional filter input should be incorporated into search as well
-    if (additionalSearchInput !== additionalSearchString) {
-      setAdditionalSearchString(additionalSearchInput);
+    if (searchInput !== searchString) {
+      setSearchString(searchInput);
       setSearchPage(1);
     }
   };
 
-  const updateAdditionalSearchInput = (event) => {
-    setAdditionalSearchInput(event.target.value);
+  const updateSearchInput = (event) => {
+    setSearchInput(event.target.value);
   };
 
-  const updateAdditionalSearchString = (event) => {
+  const updateSearchString = (event) => {
     event.preventDefault();
-    setAdditionalSearchString(additionalSearchInput);
+    setSearchString(searchInput);
     setSearchPage(1);
   };
 
@@ -230,7 +245,7 @@ function App(props) {
 
                 <h4>Search By</h4>
 
-                <Form onSubmit={updateAdditionalSearchString}>
+                <Form onSubmit={updateSearchString}>
                   <Form.Group>
                     <Form.Select
                       selection
@@ -243,7 +258,7 @@ function App(props) {
                     />
                
                     <Form.Input placeholder='Search terms...' action={{ primary: true, icon: 'search' }}
-                           value={additionalSearchInput} onChange={updateAdditionalSearchInput}  width={11}/>
+                           value={searchInput} onChange={updateSearchInput}  width={11}/>
                   </Form.Group>
                 </Form>
 
