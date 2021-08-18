@@ -22,26 +22,27 @@ yarn install
 
 This application relies on the CEDAR API application, a Ruby and Sinatra app, for the CEDAR search API functionality. To run the CEDAR API locally on port 4567:
 
-* Clone the CEDAR API repository. Follow the instructions on the CEDAR API README for any required dependencies specific to CEDAR API. 
+Clone the CEDAR API repository. Follow the instructions on the CEDAR API README for any required dependencies specific to CEDAR API. 
 ```
 git clone https://yourusername@bitbucket.org/ahrq/cedar_api.git
 cd cedar_api
 ```
-* Run the CEDAR API application
+Run the CEDAR API application
 ```
 ruby cedar_api.rb
 ```
 
 In the development environment, the CEDAR UI application may be run in two different contexts. The first context is as a SMART on FHIR application using the SMART on FHIR Sandbox environment and synthetic patient data. This simulates the experience of a clinician running the app from within an EHR. The second context is as a Standalone application, which offers a notional search interface. 
 
-* To run CEDAR UI:
+To run CEDAR UI:
 
 ```
 yarn start
 ```
 
-* For the Standalone application, simply visit [http://localhost:3000/](http://localhost:3000/)
-* For the SMART on FHIR development application, click [here](http://launch.smarthealthit.org/ehr.html?app=http%3A%2F%2Flocalhost%3A3000%2Flaunch%3Flaunch%3DeyJhIjoiMSIsImYiOiIxIn0%26iss%3Dhttp%253A%252F%252Flaunch.smarthealthit.org%252Fv%252Fr4%252Ffhir&user=). 
+For the Standalone application, simply visit [http://localhost:3000/](http://localhost:3000/)
+
+For the SMART on FHIR development application, click [here](http://launch.smarthealthit.org/ehr.html?app=http%3A%2F%2Flocalhost%3A3000%2Flaunch%3Flaunch%3DeyJhIjoiMSIsImYiOiIxIn0%26iss%3Dhttp%253A%252F%252Flaunch.smarthealthit.org%252Fv%252Fr4%252Ffhir&user=). 
 
 
 ## Run the Test Suit
