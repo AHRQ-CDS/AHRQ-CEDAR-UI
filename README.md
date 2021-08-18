@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+# CEDAR UI Demonstration
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Background
+CEDAR UI is a client application that enables users to interact with the CEDAR Service. The CEDAR Service is a backend system that provides a machine-accessible API to CEDAR repository data. CEDAR's API is intended to allow a diverse set of existing or new systems to access the data that CEDAR aggregates from multiple source repositories. This approach allows CEDAR to support many different types of uses. For example, a clinician and a researcher may both find CEDAR valuable, but the way they would like to use CEDAR may be very different. This means that different user types could potentially benefit from having different user interfaces to interact with. 
 
-## Available Scripts
+In this vein, the CEDAR UI demonstration offers two different user experiences: (1) a SMART on FHIR application using the SMART on FHIR Sandbox environment and synthetic patient data; (2) a Standalone application, which offers a notional search interface.
 
-In the project directory, you can run:
+## Prerequisites
 
-### `yarn start`
+* Node.js
+* Yarn
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Installation and Setup for the Development Environment
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+This is a React app bootstrapped with [Create React App](https://github.com/facebook/create-react-app). It requires node and yarn to be installed.
 
-### `yarn test`
+To install dependencies before running for the first time, run
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+yarn install
+```
 
-### `yarn build`
+This application relies on the CEDAR API application, a Ruby and Sinatra app, for the CEDAR search API functionality. To run the CEDAR API locally on port 4567:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* Clone the CEDAR API repository. Follow the instructions on the CEDAR API README for any required dependencies specific to CEDAR API. 
+```
+git clone https://yourusername@bitbucket.org/ahrq/cedar_api.git
+cd cedar_api
+```
+* Run the CEDAR API application
+```
+ruby cedar_api.rb
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+In the development environment, the CEDAR UI application may be run in two different contexts. The first context is as a SMART on FHIR application using the SMART on FHIR Sandbox environment and synthetic patient data. This simulates the experience of a clinician running the app from within an EHR. The second context is as a Standalone application, which offers a notional search interface. 
+
+* To run CEDAR UI:
+
+```
+yarn start
+```
+
+* For the Standalone application, simply visit [http://localhost:3000/](http://localhost:3000/)
+* For the SMART on FHIR development application, click [here](http://launch.smarthealthit.org/ehr.html?app=http%3A%2F%2Flocalhost%3A3000%2Flaunch%3Flaunch%3DeyJhIjoiMSIsImYiOiIxIn0%26iss%3Dhttp%253A%252F%252Flaunch.smarthealthit.org%252Fv%252Fr4%252Ffhir&user=). 
+
+
+## Run the Test Suit
+
+To run the test suite:
+
+
+```
+yarn test
+```
+
+## Build
+
+```
+yarn build
+```
+
+Builds the app for production to the `build` folder.
+It bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.
+The app is ready to be deployed.
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
