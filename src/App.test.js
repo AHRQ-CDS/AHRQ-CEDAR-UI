@@ -29,13 +29,13 @@ test('it shows the correct SMART UI when in the SMART context', () => {
   expect(conditionsText).toBeInTheDocument();
 
   const searchText = screen.getByText(SEARCH_HEADER);
-  expect(searchText).toBeInTheDocument;
+  expect(searchText).toBeInTheDocument();
 
   const statusText = screen.getByText(STATUS_HEADER);
-  expect(statusText).toBeInTheDocument;
+  expect(statusText).toBeInTheDocument();
 
   const publishersText = screen.getByText(PUBLISHERS_HEADER);
-  expect(publishersText).toBeInTheDocument;
+  expect(publishersText).toBeInTheDocument();
 });
 
 test('it shows the correct standalone UI when in the standalone context', () => {
@@ -50,11 +50,11 @@ test('it shows the correct standalone UI when in the standalone context', () => 
   expect(conditionsText).not.toBeInTheDocument();
 
   const searchText = screen.getByText(SEARCH_HEADER);
-  expect(searchText).toBeInTheDocument;
+  expect(searchText).toBeInTheDocument();
 
   const statusText = screen.getByText(STATUS_HEADER);
-  expect(statusText).toBeInTheDocument;
+  expect(statusText).toBeInTheDocument();
 
   const publishersText = screen.getByText(PUBLISHERS_HEADER);
-  expect(publishersText).toBeInTheDocument;
+  expect(publishersText).toBeInTheDocument();
 });
