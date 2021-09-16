@@ -69,7 +69,6 @@ function App(props) {
 
   }, [props.smart]);
 
-
   useEffect(() => {
     if (meshRoots.length === 0) {
       getMeshRoots();
@@ -160,7 +159,6 @@ function App(props) {
     // eslint-disable-next-line
   }, []);
 
-
   const getMeshRoots = async () => {
     const response = await fetch(`api/fhir/CodeSystem/$get-mesh-children`);
     const json = await response.json();
@@ -173,7 +171,6 @@ function App(props) {
       }));
 
     setMeshRoots(data);
-
   }
 
   const handleConditionsChange = (conditionNames) => {
