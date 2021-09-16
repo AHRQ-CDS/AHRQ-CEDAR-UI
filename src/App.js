@@ -53,6 +53,8 @@ function App(props) {
 
   const HEADER_TEXT = props.smart === true ? 'CEDAR SMART Demonstration' : 'CEDAR Standalone Demonstration'
   const SEARCH_BOX_TEXT = props.smart === true? 'Additional Filters' : 'Search and Filter'
+  const HEADER_COLOR = props.smart === true ? 'blue' : 'grey'
+  const BACKGROUND_COLOR = props.smart === true ? '#FFFFFF' : '#F8F8F8'
 
   useEffect(() => {
 
@@ -263,11 +265,11 @@ function App(props) {
   return (
     <React.Fragment>
 
-      <Menu color='blue' inverted attached>
+      <Menu color={HEADER_COLOR} inverted attached>
         <Menu.Item header><h2>{HEADER_TEXT}</h2></Menu.Item>
       </Menu>
 
-      <Container fluid className='App'>
+      <Container fluid className='App' style={{'backgroundColor': BACKGROUND_COLOR}}>
         <Grid>
           <Grid.Row>
             <Grid.Column width={5}>
