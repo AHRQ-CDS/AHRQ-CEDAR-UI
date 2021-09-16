@@ -116,7 +116,6 @@ function App(props) {
         query.append('artifact-publisher', searchPublisher.join(','));
       }
 
-
       let meshCodes = '';
       if(meshNodeSelected.size > 0) {
         meshCodes = [...meshNodeSelected.values()].join(',');
