@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
 
-function MeshTreeRoot({ element, meshNodeExpanded, setMeshNodeExpanded, meshNodeSelected, setMeshNodeSelected }) {
+function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, meshNodeSelected, setMeshNodeSelected }) {
 
   const handleTreeNodeExpand = (event) => {
     const nodeExpanded = meshNodeExpanded.get(element.treeNumber);
@@ -21,19 +21,20 @@ function MeshTreeRoot({ element, meshNodeExpanded, setMeshNodeExpanded, meshNode
     return meshNodeExpanded.get(treeNumber) !== undefined ? 'caret down' : 'caret right';
   }
 
-  return (
-    <span>
-      { element.isGlobalRoot
-        ? 
+  if (element.isGlobalRoot) {
+    return (
+      <span>
         <div className="expander">
           <span onClick={handleTreeNodeExpand}> 
             {element.name}
-            { element.hasChildren && 
-              <Icon name={getIcon(element.treeNumber)}/>
-            }
+            {element.hasChildren && <Icon name={getIcon(element.treeNumber)}/>}
           </span>
         </div> 
-        : 
+      </span>
+    );
+  } else {
+    return (
+      <span>
         <div className="ui checkbox" >
           <input type="checkbox"
                     name={element.name}
@@ -42,15 +43,13 @@ function MeshTreeRoot({ element, meshNodeExpanded, setMeshNodeExpanded, meshNode
                     checked={meshNodeSelected.get(element.treeNumber) !== undefined}
           />
           <label onClick={handleTreeNodeExpand}>
-          {element.name}
-          { element.hasChildren && 
-            <Icon name={getIcon(element.treeNumber)}/>
-          }
+            {element.name}
+            {element.hasChildren && <Icon name={getIcon(element.treeNumber)}/>}
           </label>
         </div>
-      }
-    </span>
-  );
+      </span>
+    );
+  }
 }
 
-export default MeshTreeRoot;
+export default MeshTreeNode;

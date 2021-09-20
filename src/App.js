@@ -4,7 +4,7 @@ import Patient from './Patient';
 import Conditions from './Conditions';
 import SearchResults from './SearchResults';
 import MeshTree from './MeshTree';
-import MeshTreeRoot from './MeshTreeRoot';
+import MeshTreeNode from './MeshTreeNode';
 import { Container, Grid, Segment, Menu, Label, Icon, List, Form } from 'semantic-ui-react';
 import './App.css';
 
@@ -70,10 +70,7 @@ function App(props) {
   }, [props.smart]);
 
   useEffect(() => {
-    if (meshRoots.length === 0) {
-      getMeshRoots();
-    }
-    // eslint-disable-next-line
+    getMeshRoots();
   }, []);
 
   useEffect(() => {
@@ -306,7 +303,7 @@ function App(props) {
                           <List key={element.treeNumber + i}>
                             <List.Item key={element.treeNumber}>  
                               <React.Fragment>
-                                <MeshTreeRoot element={element} 
+                                <MeshTreeNode element={element} 
                                               meshNodeExpanded={meshNodeExpanded} 
                                               meshNodeSelected={meshNodeSelected} 
                                               setMeshNodeSelected={setMeshNodeSelected}

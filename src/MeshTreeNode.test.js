@@ -1,5 +1,5 @@
 import React from 'react';
-import MeshTreeRoot from './MeshTreeRoot';
+import MeshTreeNode from './MeshTreeNode';
 import { mount } from 'enzyme';
 import element from '../fixtures/element';
 
@@ -8,5 +8,5 @@ meshNodeExpanded.set('123', '456');
 
 
 it('renders without crashing', () => {
-  mount(<MeshTreeRoot element={element} meshNodeExpanded={meshNodeExpanded}/>);
+  mount(<MeshTreeNode element={element} meshNodeExpanded={meshNodeExpanded}/>);
 });
