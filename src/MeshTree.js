@@ -37,16 +37,17 @@ function MeshTree({ treeNum, meshNodeSelected, meshNodeExpanded, setMeshNodeSele
       <List key={element.treeNumber + i}>
         <List.Item key={element.treeNumber}>
           <React.Fragment>
-            <MeshTreeNode element={element} 
-                  meshNodeExpanded={meshNodeExpanded} 
-                  setMeshNodeExpanded={setMeshNodeExpanded} 
-                  meshNodeSelected={meshNodeSelected} 
-                  setMeshNodeSelected={setMeshNodeSelected} 
-                  key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}/>
+            <MeshTreeNode element={element}
+              meshNodeExpanded={meshNodeExpanded}
+              setMeshNodeExpanded={setMeshNodeExpanded}
+              meshNodeSelected={meshNodeSelected}
+              setMeshNodeSelected={setMeshNodeSelected}
+              key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}
+            />
             <MeshTree
               meshNodeExpanded={meshNodeExpanded}
-              meshNodeSelected={meshNodeSelected} 
-              setMeshNodeExpanded={setMeshNodeExpanded} 
+              meshNodeSelected={meshNodeSelected}
+              setMeshNodeExpanded={setMeshNodeExpanded}
               setMeshNodeSelected={setMeshNodeSelected}
               treeNum={element.treeNumber}
               key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber}

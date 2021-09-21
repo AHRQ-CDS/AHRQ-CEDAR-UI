@@ -149,10 +149,7 @@ function App(props) {
   }, [conditionSearchString, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected]);
 
   useEffect(() => {
-    if (allPublishers.length === 0) {
-      getAllPublishers();
-    }
-    // eslint-disable-next-line
+    getAllPublishers();
   }, []);
 
   const getMeshRoots = async () => {
