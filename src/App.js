@@ -3,6 +3,8 @@ import { SMART } from './FHIRClientWrapper';
 import Patient from './Patient';
 import Conditions from './Conditions';
 import SearchResults from './SearchResults';
+import MeshTree from './MeshTree';
+import MeshTreeNode from './MeshTreeNode';
 import { Container, Grid, Segment, Menu, Label, Icon, List, Form } from 'semantic-ui-react';
 import './App.css';
 
@@ -17,6 +19,9 @@ function App(props) {
   const [searchResults, setSearchResults] = useState({ status: 'none' });
   const [searchPage, setSearchPage] = useState(1);
   const [searchParameter, setSearchParameter] = useState('_content');
+  const [meshRoots, setMeshRoots] = useState([]);
+  const [meshNodeExpanded, setMeshNodeExpanded] = useState(new Map());
+  const [meshNodeSelected, setMeshNodeSelected] = useState(new Map());
   
   /* TODO: The cedar_ui app allows the user to change the count of results per page,
    but cedar_smart does not. Is this something that we want to support?
@@ -48,6 +53,8 @@ function App(props) {
 
   const HEADER_TEXT = props.smart === true ? 'CEDAR SMART Demonstration' : 'CEDAR Standalone Demonstration'
   const SEARCH_BOX_TEXT = props.smart === true? 'Additional Filters' : 'Search and Filter'
+  const HEADER_COLOR = props.smart === true ? 'blue' : 'grey'
+  const BACKGROUND_COLOR = props.smart === true ? '#FFFFFF' : '#F8F8F8'
 
   useEffect(() => {
 
@@ -61,6 +68,10 @@ function App(props) {
     }
 
   }, [props.smart]);
+
+  useEffect(() => {
+    getMeshRoots();
+  }, []);
 
   useEffect(() => {
     const cedarSearch = async () => {
@@ -102,9 +113,15 @@ function App(props) {
         query.append('artifact-publisher', searchPublisher.join(','));
       }
 
+      let meshCodes = '';
+      if(meshNodeSelected.size > 0) {
+        meshCodes = [...meshNodeSelected.values()].join(',');
+      }
+
       searchParams['classification:text'] = keywordSearchString;
       searchParams['_content'] = textSearchString;
       searchParams['title:contains'] = titleSearchString;
+      searchParams['classification'] = meshCodes;
 
       for (const [queryParam, queryValue] of Object.entries(searchParams)) {
         if(queryValue.length > 0) {
@@ -129,14 +146,25 @@ function App(props) {
 
     cedarSearch();
 
-  }, [conditionSearchString, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter]);
+  }, [conditionSearchString, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected]);
 
   useEffect(() => {
-    if (allPublishers.length === 0) {
-      getAllPublishers();
-    }
-    // eslint-disable-next-line
+    getAllPublishers();
   }, []);
+
+  const getMeshRoots = async () => {
+    const response = await fetch(`api/fhir/CodeSystem/$get-mesh-children`);
+    const json = await response.json();
+    const data = (Object.entries(json.parameter) || []).map(([k, value]) => 
+      ({  name: value.valueCoding.display, 
+          treeNumber: value.valueCoding.extension[0].valueCode, 
+          meshCode: null, 
+          isGlobalRoot: true,
+          hasChildren: value.valueCoding.extension[1].valueBoolean
+      }));
+
+    setMeshRoots(data);
+  }
 
   const handleConditionsChange = (conditionNames) => {
     // TODO: parenthisis handling is a temporary workaround for conditions like "Acute bronchitis (disorder)"
@@ -227,11 +255,11 @@ function App(props) {
   return (
     <React.Fragment>
 
-      <Menu color='blue' inverted attached>
+      <Menu color={HEADER_COLOR} inverted attached>
         <Menu.Item header><h2>{HEADER_TEXT}</h2></Menu.Item>
       </Menu>
 
-      <Container fluid className='App'>
+      <Container fluid className='App' style={{'backgroundColor': BACKGROUND_COLOR}}>
         <Grid>
           <Grid.Row>
             <Grid.Column width={5}>
@@ -264,6 +292,36 @@ function App(props) {
 
                 {selectedKeywords.length > 0 && <h5>Additional Search Keywords</h5>}
                 {selectedKeywords.map(k => <p key={k}><Label color='blue'><Icon name='delete' onClick={() => handleKeywordClick(k)}/> {k}</Label></p>)}
+
+                {!props.smart && meshRoots && (
+                  <React.Fragment>
+                    <h4>Browse By</h4>
+                      {meshRoots.map((element, i) => (
+                          <List key={element.treeNumber + i}>
+                            <List.Item key={element.treeNumber}>  
+                              <React.Fragment>
+                                <MeshTreeNode element={element} 
+                                              meshNodeExpanded={meshNodeExpanded} 
+                                              meshNodeSelected={meshNodeSelected} 
+                                              setMeshNodeSelected={setMeshNodeSelected}
+                                              setMeshNodeExpanded={setMeshNodeExpanded} 
+                                              key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}/>
+                                <MeshTree
+                                  meshNodeExpanded={meshNodeExpanded}
+                                  meshNodeSelected={meshNodeSelected} 
+                                  setMeshNodeExpanded={setMeshNodeExpanded} 
+                                  setMeshNodeSelected={setMeshNodeSelected}
+                                  key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "tree"}
+                                  treeNum={element.treeNumber}
+                                />
+                              </React.Fragment>
+                            </List.Item>
+                          </List>
+                        )
+                      )
+                    }
+                  </React.Fragment>
+                )}
 
                 <h4>Status</h4>
                 <List>

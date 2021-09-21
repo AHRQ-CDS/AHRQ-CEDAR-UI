@@ -1,0 +1,7 @@
+.ui.list, .item { 
+	margin-left: 0.7em;
+}
+
+auto.ui.checkbox .box, .ui.checkbox label {
+	cursor: pointer;
+}
