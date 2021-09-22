@@ -153,7 +153,7 @@ function App(props) {
   }, []);
 
   const getMeshRoots = async () => {
-    const response = await fetch(`api/fhir/CodeSystem/$get-mesh-children`);
+    const response = await fetch('/api/fhir/CodeSystem/$get-mesh-children');
     const json = await response.json();
     const data = (Object.entries(json.parameter) || []).map(([k, value]) => 
       ({  name: value.valueCoding.display, 
@@ -211,7 +211,7 @@ function App(props) {
   };
 
   const getAllPublishers = async () => {
-    const response = await fetch(`/api/fhir/Organization`);
+    const response = await fetch('/api/fhir/Organization');
     const json = await response.json();
 
     const data = (json.entry || []).map((entry) => ({ id: entry.resource.id, name: entry.resource.name}))
