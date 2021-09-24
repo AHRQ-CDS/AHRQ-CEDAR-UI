@@ -284,7 +284,6 @@ function App(props) {
     event.preventDefault();
 
     const {target} = event;
-    let customDate;
 
     if(target.customDate.value !== '') {
       if(dateMatchesValidRegex(target.customDate.value) !== null) {
