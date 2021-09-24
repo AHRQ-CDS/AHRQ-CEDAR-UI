@@ -5,3 +5,12 @@
 .expander {
     cursor: pointer;
 }
+
+.wrapper {
+    position: relative;
+}
+
+.align-bottom {
+    position: absolute;
+    bottom: 0;
+}

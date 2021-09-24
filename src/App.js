@@ -22,6 +22,11 @@ function App(props) {
   const [meshRoots, setMeshRoots] = useState([]);
   const [meshNodeExpanded, setMeshNodeExpanded] = useState(new Map());
   const [meshNodeSelected, setMeshNodeSelected] = useState(new Map());
+  const [customDateError, setcustomDateError] = useState(false);
+  const [showLastUpdatedCustomDate, setShowLastUpdatedCustomDate] = useState(false);
+  const [lastUpdatedSearchString, setLastUpdatedSearchString] = useState('');
+  const [customDatePrefix, setCustomDatePrefix] = useState('eq');
+
   
   /* TODO: The cedar_ui app allows the user to change the count of results per page,
    but cedar_smart does not. Is this something that we want to support?
@@ -51,10 +56,59 @@ function App(props) {
     'classification:text': 'Keywords'
   }
 
+  const LAST_UPDATED_PRESETS = [
+    {
+      label: "Any time", 
+      time_in_months: ""
+    },
+    {
+      label: "Within 1 month",
+      time_in_months: 1
+    },
+    {
+      label: "Within 3 months",
+      time_in_months: 3
+    },
+    {
+      label: "Within 6 months",
+      time_in_months: 6
+    },
+    {
+      label: "Within 1 year",
+      time_in_months: 12
+    },
+    {
+      label: "Custom",
+      time_in_months: ""
+    }
+  ]
+
+  const LAST_UPDATED_CUSTOM_PREFIXES = [
+    {
+      key: "eq",
+      text: "On",
+      value: "eq"
+    },
+    {
+      key: "le",
+      text: "On or before",
+      value: "le"
+    },
+    {
+      key: "ge",
+      text: "On or after",
+      value: "ge"
+    },
+  ]
+
   const HEADER_TEXT = props.smart === true ? 'CEDAR SMART Demonstration' : 'CEDAR Standalone Demonstration'
   const SEARCH_BOX_TEXT = props.smart === true? 'Additional Filters' : 'Search and Filter'
   const HEADER_COLOR = props.smart === true ? 'blue' : 'grey'
   const BACKGROUND_COLOR = props.smart === true ? '#FFFFFF' : '#F8F8F8'
+
+  const YYYYMMDD_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+  const YYYYMM_REGEX = /^d{4}-d{2}$/;
+  const YYYY_REGEX = /^[12][0-9]{3}$/;
 
   useEffect(() => {
 
@@ -113,6 +167,10 @@ function App(props) {
         query.append('artifact-publisher', searchPublisher.join(','));
       }
 
+      if(lastUpdatedSearchString.length > 0) {
+        query.append('_lastUpdated', lastUpdatedSearchString);
+      }
+
       let meshCodes = '';
       if(meshNodeSelected.size > 0) {
         meshCodes = [...meshNodeSelected.values()].join(',');
@@ -146,7 +204,7 @@ function App(props) {
 
     cedarSearch();
 
-  }, [conditionSearchString, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected]);
+  }, [conditionSearchString, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected, lastUpdatedSearchString]);
 
   useEffect(() => {
     getAllPublishers();
@@ -190,6 +248,62 @@ function App(props) {
     setSearchString(searchInput);
     setSearchPage(1);
   };
+
+  const handleLastUpdatedChange = (event) => {
+    const {target} = event;
+    let dateString;
+
+    switch(target.value) {
+      case "Within 1 month":
+      case "Within 3 months":
+      case "Within 6 months":
+      case "Within 1 year":
+        dateString = getXMonthsAgo(target.getAttribute("data"));
+        setLastUpdatedSearchString(`ge${dateString}`);
+        setShowLastUpdatedCustomDate(false);
+        break;
+      case "Custom":
+        setLastUpdatedSearchString('');
+        setShowLastUpdatedCustomDate(true);
+        break;
+      default:
+        setLastUpdatedSearchString('');
+        setShowLastUpdatedCustomDate(false);
+        break;
+    }
+  }
+  
+  const getXMonthsAgo = (numMonths) => {
+    return new Date(
+      new Date().getFullYear(),
+      new Date().getMonth() - numMonths, 
+      new Date().getDate()).toLocaleDateString('en-CA')
+  }
+
+  const updateCustomDate = (event) => {
+    event.preventDefault();
+
+    const {target} = event;
+    let customDate;
+
+    if(target.customDate.value !== '') {
+      if(dateMatchesValidRegex(target.customDate.value) !== null) {
+        setcustomDateError(false);
+        setLastUpdatedSearchString(`${customDatePrefix}${target.customDate.value}`);
+      }
+      else {
+        setcustomDateError(true);
+      }
+    }
+  }
+
+  const dateMatchesValidRegex = (dateString) => {
+    return dateString.match(YYYYMMDD_REGEX) || dateString.match(YYYYMM_REGEX) || dateString.match(YYYY_REGEX);
+  }
+
+  const handleDatePrefixChange = (event, data) => {
+    setCustomDatePrefix(data.value);
+  }
 
   // Memoize this handler so we don't re-render the search results on every overall re-render
   const handleKeywordClick = useCallback(
@@ -288,6 +402,51 @@ function App(props) {
                     <Form.Input placeholder='Search terms...' action={{ primary: true, icon: 'search' }}
                            value={searchInput} onChange={updateSearchInput}  width={11}/>
                   </Form.Group>
+                </Form>
+
+                <h4>Last Updated</h4>
+
+                <Form onSubmit={updateCustomDate}>
+                  <Form.Group grouped>
+                    {LAST_UPDATED_PRESETS.map((item) => (
+                      <Form.Field
+                            control='input'
+                            type='radio'
+                            name='lastUpdatedRadio'
+                            label={item.label}
+                            key={item.label}
+                            value={item.label}
+                            data={item.time_in_months}
+                            onChange={handleLastUpdatedChange}
+                            defaultChecked={item.label === 'Any time' ? true : false}
+                      />
+                    ))}
+                  </Form.Group>
+                  { showLastUpdatedCustomDate && 
+                    <Form.Group>
+                      <Form.Select 
+                        selection 
+                        name="type" 
+                        options={LAST_UPDATED_CUSTOM_PREFIXES}
+                        defaultValue='eq'
+                        width={5}
+                        style={{minWidth:"8em"}}
+                        onChange={handleDatePrefixChange}
+                      />
+                      <Form.Input
+                        name='customDate' 
+                        width={5} 
+                        error={customDateError === false ? false : {content: 'Please enter a valid date.', pointing: 'below'}}
+                      />
+                      <div className="wrapper">
+                        <Form.Button content='Search Date' 
+                          style={{minWidth:"10em"}} 
+                          width={2} 
+                          className='align-bottom'
+                          type='submit' />
+                      </div>
+                    </Form.Group>
+                  }
                 </Form>
 
                 {selectedKeywords.length > 0 && <h5>Additional Search Keywords</h5>}
