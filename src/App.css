@@ -6,15 +6,6 @@
     cursor: pointer;
 }
 
-.wrapper {
-    position: relative;
-}
-
-.align-bottom {
-    position: absolute;
-    bottom: 0;
-}
-
 .ui.form .field>label {
     font-weight: 450;
 }
