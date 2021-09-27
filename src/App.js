@@ -5,7 +5,7 @@ import Conditions from './Conditions';
 import SearchResults from './SearchResults';
 import MeshTree from './MeshTree';
 import MeshTreeNode from './MeshTreeNode';
-import { Container, Grid, Segment, Menu, Label, Icon, List, Form } from 'semantic-ui-react';
+import { Container, Grid, Segment, Menu, Label, Icon, List, Form, Button, Message } from 'semantic-ui-react';
 import './App.css';
 
 function App(props) {
@@ -22,10 +22,10 @@ function App(props) {
   const [meshRoots, setMeshRoots] = useState([]);
   const [meshNodeExpanded, setMeshNodeExpanded] = useState(new Map());
   const [meshNodeSelected, setMeshNodeSelected] = useState(new Map());
-  const [customDateError, setcustomDateError] = useState(false);
-  const [showLastUpdatedCustomDate, setShowLastUpdatedCustomDate] = useState(false);
   const [lastUpdatedSearchString, setLastUpdatedSearchString] = useState('');
-  const [customDatePrefix, setCustomDatePrefix] = useState('eq');
+  const [showLastUpdatedCustomDate, setShowLastUpdatedCustomDate] = useState(false);
+  const [customDatePrefix, setCustomDatePrefix] = useState('ge');
+  const [customDateError, setcustomDateError] = useState(false);
 
   
   /* TODO: The cedar_ui app allows the user to change the count of results per page,
@@ -107,8 +107,8 @@ function App(props) {
   const BACKGROUND_COLOR = props.smart === true ? '#FFFFFF' : '#F8F8F8'
 
   const YYYYMMDD_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-  const YYYYMM_REGEX = /^d{4}-d{2}$/;
-  const YYYY_REGEX = /^[12][0-9]{3}$/;
+  const YYYYMM_REGEX = /^\d{4}-\d{2}$/;
+  const YYYY_REGEX = /^\d{4}$/;
 
   useEffect(() => {
 
@@ -251,24 +251,26 @@ function App(props) {
 
   const handleLastUpdatedChange = (event) => {
     const {target} = event;
-    let dateString;
 
     switch(target.value) {
       case "Within 1 month":
       case "Within 3 months":
       case "Within 6 months":
       case "Within 1 year":
-        dateString = getXMonthsAgo(target.getAttribute("data"));
+        const dateString = getXMonthsAgo(target.getAttribute("data"));
         setLastUpdatedSearchString(`ge${dateString}`);
         setShowLastUpdatedCustomDate(false);
+        setcustomDateError(false);
         break;
       case "Custom":
         setLastUpdatedSearchString('');
         setShowLastUpdatedCustomDate(true);
+        setcustomDateError(false);
         break;
       default:
         setLastUpdatedSearchString('');
         setShowLastUpdatedCustomDate(false);
+        setcustomDateError(false);
         break;
     }
   }
@@ -287,7 +289,6 @@ function App(props) {
 
     if(target.customDate.value !== '') {
       if(dateMatchesValidRegex(target.customDate.value) !== null) {
-        setcustomDateError(false);
         setLastUpdatedSearchString(`${customDatePrefix}${target.customDate.value}`);
       }
       else {
@@ -403,15 +404,16 @@ function App(props) {
                   </Form.Group>
                 </Form>
 
-                <h4>Last Updated</h4>
+                <h4>Artifact Last Updated</h4>
 
-                <Form onSubmit={updateCustomDate}>
+                <Form error onSubmit={updateCustomDate}>
                   <Form.Group grouped>
                     {LAST_UPDATED_PRESETS.map((item) => (
                       <Form.Field
                             control='input'
                             type='radio'
                             name='lastUpdatedRadio'
+                            className='normal-weight'
                             label={item.label}
                             key={item.label}
                             value={item.label}
@@ -422,29 +424,29 @@ function App(props) {
                     ))}
                   </Form.Group>
                   { showLastUpdatedCustomDate && 
+                    <>
                     <Form.Group>
                       <Form.Select 
                         selection 
                         name="type" 
                         options={LAST_UPDATED_CUSTOM_PREFIXES}
-                        defaultValue='eq'
+                        defaultValue='ge'
                         width={5}
-                        style={{minWidth:"8em"}}
+                        style={{minWidth:"10em"}}
                         onChange={handleDatePrefixChange}
                       />
                       <Form.Input
+                        type='text'
                         name='customDate' 
-                        width={5} 
-                        error={customDateError === false ? false : {content: 'Please enter a valid date.', pointing: 'below'}}
+                        placeholder='Custom date...'
+                        width={7} 
                       />
-                      <div className="wrapper">
-                        <Form.Button content='Search Date' 
-                          style={{minWidth:"10em"}} 
-                          width={2} 
-                          className='align-bottom'
-                          type='submit' />
-                      </div>
+                      <Button primary type="submit">Apply Date</Button>
                     </Form.Group>
+                      {customDateError ? <Message error content='Date format is invalid. Format as YYYY-MM-DD, YYYY-MM, or YYYY.'/>
+                                       : <small class="helper">*Format custom date as YYYY-MM-DD, YYYY-MM, or YYYY.</small> 
+                      }
+                    </>
                   }
                 </Form>
 
