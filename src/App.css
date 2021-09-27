@@ -14,3 +14,7 @@
     position: absolute;
     bottom: 0;
 }
+
+.ui.form .field>label {
+    font-weight: 450;
+}
