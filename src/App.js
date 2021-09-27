@@ -410,16 +410,16 @@ function App(props) {
                   <Form.Group grouped>
                     {LAST_UPDATED_PRESETS.map((item) => (
                       <Form.Field
-                            control='input'
-                            type='radio'
-                            name='lastUpdatedRadio'
-                            className='normal-weight'
-                            label={item.label}
-                            key={item.label}
-                            value={item.label}
-                            data={item.time_in_months}
-                            onChange={handleLastUpdatedChange}
-                            defaultChecked={item.label === 'Any time' ? true : false}
+                        control='input'
+                        type='radio'
+                        name='lastUpdatedRadio'
+                        className='normal-weight'
+                        label={item.label}
+                        key={item.label}
+                        value={item.label}
+                        data={item.time_in_months}
+                        onChange={handleLastUpdatedChange}
+                        defaultChecked={item.label === 'Any time' ? true : false}
                       />
                     ))}
                   </Form.Group>
