@@ -320,9 +320,13 @@ function App(props) {
     []
   );
 
-  const handlePageChange = (event, data) => {
-    setSearchPage(data.activePage);
-  };
+  // Memoize this handler so we don't re-render the search results on every overall re-render
+  const handlePageChange = useCallback(
+    (event, data) => {
+      setSearchPage(data.activePage);
+    },
+    []
+  );
 
   const getAllPublishers = async () => {
     const response = await fetch('/api/fhir/Organization');
