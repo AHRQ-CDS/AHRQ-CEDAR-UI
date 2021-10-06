@@ -9,3 +9,8 @@
 .ui.form .field>label {
     font-weight: 450;
 }
+
+.custom-checkbox {
+    margin-right:  0.4em;  
+    margin-left:  0em;
+}

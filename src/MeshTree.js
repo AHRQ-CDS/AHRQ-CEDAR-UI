@@ -18,7 +18,9 @@ function MeshTree({ treeNum, meshNodeSelected, meshNodeExpanded, setMeshNodeSele
             treeNumber: value.valueCoding.extension[0].valueCode, 
             meshCode: value.valueCoding.code,
             hasChildren: value.valueCoding.extension[1].valueBoolean,
-            isGlobalRoot: false
+            isGlobalRoot: false,
+            directArtifacts: value.valueCoding.extension[2].valueUnsignedInt,
+            indirectArtifacts: value.valueCoding.extension[3].valueUnsignedInt
           }));
 
           setMeshChildren(data);
@@ -28,12 +30,8 @@ function MeshTree({ treeNum, meshNodeSelected, meshNodeExpanded, setMeshNodeSele
     }
   }, [meshNodeExpanded, meshChildren, treeNum]);
 
-
-  if(!meshChildren || meshChildren.length === 0) {
-    return null;
-  }
-  return (
-    meshChildren.map((element, i) => (
+  const tree = meshChildren.map((element, i) => (
+    (element.indirectArtifacts > 0 || element.directArtifacts > 0) && (
       <List key={element.treeNumber + i}>
         <List.Item key={element.treeNumber}>
           <React.Fragment>
@@ -55,8 +53,9 @@ function MeshTree({ treeNum, meshNodeSelected, meshNodeExpanded, setMeshNodeSele
           </React.Fragment>
         </List.Item>
       </List>
-    ))
-  );
+  )))
+
+  return <div>{tree}</div>;
 }
 
 export default MeshTree;

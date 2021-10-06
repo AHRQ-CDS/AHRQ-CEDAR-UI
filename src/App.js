@@ -215,12 +215,13 @@ function App(props) {
     const json = await response.json();
     const data = (Object.entries(json.parameter) || []).map(([k, value]) => 
       ({  name: value.valueCoding.display, 
-          treeNumber: value.valueCoding.extension[0].valueCode, 
+          treeNumber: value.valueCoding.extension[0].valueCode,
           meshCode: null, 
           isGlobalRoot: true,
-          hasChildren: value.valueCoding.extension[1].valueBoolean
+          hasChildren: value.valueCoding.extension[1].valueBoolean,
+          directArtifacts: value.valueCoding.extension[2].valueUnsignedInt,
+          indirectArtifacts: value.valueCoding.extension[3].valueUnsignedInt
       }));
-
     setMeshRoots(data);
   }
 
@@ -462,24 +463,27 @@ function App(props) {
                     <h4>Browse By</h4>
                       {meshRoots.map((element, i) => (
                           <List key={element.treeNumber + i}>
-                            <List.Item key={element.treeNumber}>  
-                              <React.Fragment>
-                                <MeshTreeNode element={element} 
-                                              meshNodeExpanded={meshNodeExpanded} 
-                                              meshNodeSelected={meshNodeSelected} 
-                                              setMeshNodeSelected={setMeshNodeSelected}
-                                              setMeshNodeExpanded={setMeshNodeExpanded} 
-                                              key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}/>
-                                <MeshTree
-                                  meshNodeExpanded={meshNodeExpanded}
-                                  meshNodeSelected={meshNodeSelected} 
-                                  setMeshNodeExpanded={setMeshNodeExpanded} 
-                                  setMeshNodeSelected={setMeshNodeSelected}
-                                  key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "tree"}
-                                  treeNum={element.treeNumber}
-                                />
-                              </React.Fragment>
-                            </List.Item>
+                            { (element.indirectArtifacts > 0) && 
+                              <List.Item key={element.treeNumber}>  
+    
+                                <React.Fragment>
+                                  <MeshTreeNode element={element} 
+                                                meshNodeExpanded={meshNodeExpanded} 
+                                                meshNodeSelected={meshNodeSelected} 
+                                                setMeshNodeSelected={setMeshNodeSelected}
+                                                setMeshNodeExpanded={setMeshNodeExpanded} 
+                                                key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}/>
+                                  <MeshTree
+                                    meshNodeExpanded={meshNodeExpanded}
+                                    meshNodeSelected={meshNodeSelected} 
+                                    setMeshNodeExpanded={setMeshNodeExpanded} 
+                                    setMeshNodeSelected={setMeshNodeSelected}
+                                    key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "tree"}
+                                    treeNum={element.treeNumber}
+                                  />
+                                </React.Fragment>
+                              </List.Item>
+                            }
                           </List>
                         )
                       )
