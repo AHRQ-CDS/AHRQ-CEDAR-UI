@@ -464,8 +464,7 @@ function App(props) {
                       {meshRoots.map((element, i) => (
                           <List key={element.treeNumber + i}>
                             { (element.indirectArtifacts > 0) && 
-                              <List.Item key={element.treeNumber}>  
-    
+                              <List.Item key={element.treeNumber}> 
                                 <React.Fragment>
                                   <MeshTreeNode element={element} 
                                                 meshNodeExpanded={meshNodeExpanded} 
