@@ -40,10 +40,13 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, meshNode
   } else if(element.directArtifacts === 0) {
     return (
       <span>
-        <label onClick={handleTreeNodeExpand}>
-            {element.name}
-            {element.hasChildren && <Icon name={getIcon(element.treeNumber, element.indirectArtifacts)}/>}
-        </label></span>
+        <div className='ui checkbox-spacer'>
+          <label onClick={handleTreeNodeExpand}>
+              {element.name}
+              {element.hasChildren && <Icon name={getIcon(element.treeNumber, element.indirectArtifacts)}/>}
+          </label>
+        </div>
+      </span>
     );
   }
   else {
