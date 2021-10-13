@@ -17,8 +17,13 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, meshNode
     setMeshNodeSelected(new Map(meshNodeSelected));
   };
 
-  const getIcon = (treeNumber) => {
-    return meshNodeExpanded.get(treeNumber) !== undefined ? 'caret down' : 'caret right';
+  const getIcon = (treeNumber, indirectArtifacts) => {
+    if(element.indirectArtifacts > 0 ) {
+      return meshNodeExpanded.get(treeNumber) !== undefined ? 'caret down' : 'caret right';
+    }
+    else {
+      return null;
+    }
   }
 
   if (element.isGlobalRoot) {
@@ -32,19 +37,29 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, meshNode
         </div> 
       </span>
     );
-  } else {
+  } else if(element.directArtifacts === 0) {
     return (
       <span>
-        <div className="ui checkbox" >
+        <label onClick={handleTreeNodeExpand}>
+            {element.name}
+            {element.hasChildren && <Icon name={getIcon(element.treeNumber, element.indirectArtifacts)}/>}
+        </label></span>
+    );
+  }
+  else {
+    return (
+      <span>
+        <div className='ui checkbox'>
           <input type="checkbox"
                     name={element.name}
                     onChange={handleTreeNodeSelect}
                     value={element.meshCode}
                     checked={meshNodeSelected.get(element.treeNumber) !== undefined}
+                    className="custom-checkbox"
           />
           <label onClick={handleTreeNodeExpand}>
             {element.name}
-            {element.hasChildren && <Icon name={getIcon(element.treeNumber)}/>}
+            {element.hasChildren && <Icon name={getIcon(element.treeNumber, element.indirectArtifacts)}/>}
           </label>
         </div>
       </span>
