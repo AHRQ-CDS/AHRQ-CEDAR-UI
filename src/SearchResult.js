@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { Card, Button } from 'semantic-ui-react';
+import { Card, Button, Grid, Segment, Divider } from 'semantic-ui-react';
 import ReactMarkdown from 'react-markdown';
 import strip from 'strip-markdown';
 import remark from 'remark';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import _ from 'lodash';
 import Keywords from './Keywords';
 =======
 >>>>>>> 5c2a394 (Distinguish keywords assigned by CEDAR from others by color coding.)
+=======
+import _ from 'lodash';
+>>>>>>> edbafee (Break concepts and keywords into two columns.)
 
 function SearchResult({ resource, onKeywordClick }) {
 
@@ -72,7 +76,18 @@ function SearchResult({ resource, onKeywordClick }) {
         <Card.Description>
           {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
           {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
-          <Keywords keywords={keywords} concepts={concepts} onKeywordClick={onKeywordClick}/>
+          <Segment>
+            <Grid columns={2} relaxed='very'>
+              <Grid.Column style={{paddingRight:0}}>
+                <h4>Artifact Keywords</h4>
+                  {keywords.map(k => <Button basic compact size='mini' key={k} onClick={() => onKeywordClick(k)}>{k}</Button>)}
+              </Grid.Column>
+              <Grid.Column>
+                <h4>CEDAR Concepts</h4>
+                  {concepts.map(k => <Button basic compact size='mini' key={k} onClick={() => onKeywordClick(k)}>{k}</Button>)}
+              </Grid.Column>
+            </Grid>
+          </Segment>
         </Card.Description>
       </Card.Content>
       {url && <Card.Content extra><a href={url}>{url}</a></Card.Content>}
