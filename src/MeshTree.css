@@ -5,3 +5,7 @@
 auto.ui.checkbox .box, .ui.checkbox label {
 	cursor: pointer;
 }
+
+.ui.checkbox-spacer {
+    padding-left: 27px;
+}
