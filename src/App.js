@@ -13,7 +13,7 @@ function App(props) {
 
   const [patient, setPatient] = useState();
   const [conditions, setConditions] = useState([]);
-  const [conditionSearchString, setConditionSearchString] = useState('');
+  const [conditionSearches, setConditionSearches] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [searchString, setSearchString] = useState('');
   const [selectedKeywords, setSelectedKeywords] = useState([]);
@@ -28,11 +28,11 @@ function App(props) {
   const [customDatePrefix, setCustomDatePrefix] = useState('ge');
   const [customDateError, setcustomDateError] = useState(false);
 
-  
+
   /* TODO: The cedar_ui app allows the user to change the count of results per page,
    but cedar_smart does not. Is this something that we want to support?
 
-   const [searchCount, setSearchCount] = useState(10);*/ 
+   const [searchCount, setSearchCount] = useState(10);*/
 
   const [searchStatus, setSearchStatus] = useState({
     Active: true,
@@ -59,7 +59,7 @@ function App(props) {
 
   const LAST_UPDATED_PRESETS = [
     {
-      label: "Any time", 
+      label: "Any time",
       time_in_months: ""
     },
     {
@@ -133,37 +133,38 @@ function App(props) {
       setSearchResults({ status: 'pending' });
 
       let searchParams = {}
-      let textSearchString = conditionSearchString;
-      let keywordSearchString = selectedKeywords;
+      let textSearchString = '';
+      let keywordSearchString = '';
       let titleSearchString = '';
-      
-      if (selectedKeywords.length > 0) {
-        keywordSearchString = `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`;
+      let searchKeywords = selectedKeywords.concat(conditionSearches);
+
+      if (searchKeywords.length > 0) {
+        keywordSearchString = `(${searchKeywords.map(k => `"${k}"`).join(' AND ')})`;
       }
 
       if (searchString.length > 0) {
         switch(searchParameter) {
           case 'classification:text':
-            keywordSearchString += keywordSearchString.length > 0 ? keywordSearchString += ` AND (${searchString})` : keywordSearchString += searchString;
+            keywordSearchString += keywordSearchString.length > 0 ? ` AND (${searchString})` : searchString;
             break;
           case 'title:contains':
             titleSearchString = searchString;
             break;
           default:
             // default is '_content'
-            textSearchString += textSearchString.length > 0 ? textSearchString += ` AND (${searchString})` : textSearchString += searchString;
+            textSearchString += textSearchString.length > 0 ? ` AND (${searchString})` : searchString;
         }
       }
 
       let query = new URLSearchParams();
       let anySearchTerms = false;
       const status = Object.keys(searchStatus).filter(name => searchStatus[name]).map(name => name.toLowerCase());
-      
+
       // TODO: The cedar_ui app allows the user to change the count of results per page, but cedar_smart does not.
       query.append('_count', SEARCH_COUNT);
       query.append('page', searchPage);
       query.append('artifact-current-state', status.join(','));
-      
+
       if(searchPublisher.length > 0) {
         query.append('artifact-publisher', searchPublisher.join(','));
       }
@@ -189,8 +190,8 @@ function App(props) {
         }
       }
 
-      /* Note: By default a fetch() request timeouts at the time indicated by the browser. In Chrome, 
-         a network request times out in 300 seconds, while Firefox will time out in 90 seconds. 
+      /* Note: By default a fetch() request timeouts at the time indicated by the browser. In Chrome,
+         a network request times out in 300 seconds, while Firefox will time out in 90 seconds.
          Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window? */
       if (anySearchTerms && status.length > 0) {
         const response = await fetch(`/api/fhir/Citation?${query.toString()}`);
@@ -205,7 +206,7 @@ function App(props) {
 
     cedarSearch();
 
-  }, [conditionSearchString, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected, lastUpdatedSearchString]);
+  }, [conditionSearches, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected, lastUpdatedSearchString]);
 
   useEffect(() => {
     getAllPublishers();
@@ -214,10 +215,10 @@ function App(props) {
   const getMeshRoots = async () => {
     const response = await fetch('/api/fhir/CodeSystem/$get-mesh-children');
     const json = await response.json();
-    const data = (Object.entries(json.parameter) || []).map(([k, value]) => 
-      ({  name: value.valueCoding.display, 
+    const data = (Object.entries(json.parameter) || []).map(([k, value]) =>
+      ({  name: value.valueCoding.display,
           treeNumber: value.valueCoding.extension[0].valueCode,
-          meshCode: null, 
+          meshCode: null,
           isGlobalRoot: true,
           hasChildren: value.valueCoding.extension[1].valueBoolean,
           directArtifacts: value.valueCoding.extension[2].valueUnsignedInt,
@@ -229,14 +230,9 @@ function App(props) {
   const handleConditionsChange = (conditionNames) => {
     // TODO: parenthisis handling is a temporary workaround for conditions like "Acute bronchitis (disorder)"
     // TODO: punctuation handling is a temporary workaround for conditions like "Alzheimer's"
-    const newConditionSearchString = conditionNames.map(s => `"${s.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '')}"`).join(' AND ');
-    if (newConditionSearchString !== conditionSearchString) {
-      setConditionSearchString(newConditionSearchString);
-      setSearchPage(1);
-    }
-    // If the conditions are changed, whatever is in the additional filter input should be incorporated into search as well
-    if (searchInput !== searchString) {
-      setSearchString(searchInput);
+    const newConditionSearches = conditionNames.map(s => `"${s.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '')}"`);
+    if (newConditionSearches.length !== conditionSearches.length || !(newConditionSearches.every((value, index) => value === conditionSearches[index]))) {
+      setConditionSearches(newConditionSearches);
       setSearchPage(1);
     }
   };
@@ -276,11 +272,11 @@ function App(props) {
         break;
     }
   }
-  
+
   const getXMonthsAgo = (numMonths) => {
     return new Date(
       new Date().getFullYear(),
-      new Date().getMonth() - numMonths, 
+      new Date().getMonth() - numMonths,
       new Date().getDate()).toLocaleDateString('en-CA')
   }
 
@@ -336,7 +332,7 @@ function App(props) {
 
     const data = (json.entry || []).map((entry) => ({ id: entry.resource.id, name: entry.resource.name, alias: entry.resource.alias[0] }))
     const sorted_data = _.orderBy(data, ['alias'])
-    setAllPublishers(sorted_data); 
+    setAllPublishers(sorted_data);
   };
 
   const handlePublisherChange = (event) => {
@@ -405,7 +401,7 @@ function App(props) {
                       width={5}
                       style={{minWidth:"8em"}}
                     />
-               
+
                     <Form.Input placeholder='Search terms...' action={{ primary: true, icon: 'search' }}
                            value={searchInput} onChange={updateSearchInput}  width={11}/>
                   </Form.Group>
@@ -430,12 +426,12 @@ function App(props) {
                       />
                     ))}
                   </Form.Group>
-                  { showLastUpdatedCustomDate && 
+                  { showLastUpdatedCustomDate &&
                     <>
                     <Form.Group>
-                      <Form.Select 
-                        selection 
-                        name="type" 
+                      <Form.Select
+                        selection
+                        name="type"
                         options={LAST_UPDATED_CUSTOM_PREFIXES}
                         defaultValue='ge'
                         width={5}
@@ -444,14 +440,14 @@ function App(props) {
                       />
                       <Form.Input
                         type='text'
-                        name='customDate' 
+                        name='customDate'
                         placeholder='Custom date...'
-                        width={7} 
+                        width={7}
                       />
                       <Button primary type="submit">Apply Date</Button>
                     </Form.Group>
                       {customDateError ? <Message error content='Date format is invalid. Format as YYYY-MM-DD, YYYY-MM, or YYYY.'/>
-                                       : <small class="helper">*Format custom date as YYYY-MM-DD, YYYY-MM, or YYYY.</small> 
+                                       : <small class="helper">*Format custom date as YYYY-MM-DD, YYYY-MM, or YYYY.</small>
                       }
                     </>
                   }
@@ -465,19 +461,19 @@ function App(props) {
                     <h4>Browse By</h4>
                       {meshRoots.map((element, i) => (
                           <List key={element.treeNumber + i}>
-                            { (element.indirectArtifacts > 0) && 
-                              <List.Item key={element.treeNumber}> 
+                            { (element.indirectArtifacts > 0) &&
+                              <List.Item key={element.treeNumber}>
                                 <React.Fragment>
-                                  <MeshTreeNode element={element} 
-                                                meshNodeExpanded={meshNodeExpanded} 
-                                                meshNodeSelected={meshNodeSelected} 
+                                  <MeshTreeNode element={element}
+                                                meshNodeExpanded={meshNodeExpanded}
+                                                meshNodeSelected={meshNodeSelected}
                                                 setMeshNodeSelected={setMeshNodeSelected}
-                                                setMeshNodeExpanded={setMeshNodeExpanded} 
+                                                setMeshNodeExpanded={setMeshNodeExpanded}
                                                 key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}/>
                                   <MeshTree
                                     meshNodeExpanded={meshNodeExpanded}
-                                    meshNodeSelected={meshNodeSelected} 
-                                    setMeshNodeExpanded={setMeshNodeExpanded} 
+                                    meshNodeSelected={meshNodeSelected}
+                                    setMeshNodeExpanded={setMeshNodeExpanded}
                                     setMeshNodeSelected={setMeshNodeSelected}
                                     key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "tree"}
                                     treeNum={element.treeNumber}
@@ -517,7 +513,7 @@ function App(props) {
                               checked={searchPublisher.includes[publisher.id]}
                               onChange={handlePublisherChange}
                               name={publisher.alias}
-                              value={publisher.id} 
+                              value={publisher.id}
                         />
                         <label>
                           <span data-tooltip={publisher.name} data-position="right center">{publisher.alias}</span>
@@ -527,7 +523,7 @@ function App(props) {
                   ))}
                 </List>
               </Segment>
-              
+
               {props.smart && (
                 <Segment>
                   <h3>Conditions</h3>
