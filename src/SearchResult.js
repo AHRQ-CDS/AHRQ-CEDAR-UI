@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import strip from 'strip-markdown';
 import remark from 'remark';
 import _ from 'lodash';
+import Keywords from './Keywords';
 
 function SearchResult({ resource, onKeywordClick }) {
 
@@ -40,9 +41,11 @@ function SearchResult({ resource, onKeywordClick }) {
   // TODO: We may want to handle MeSH keywords separately at some point
   let keywords = [];
   for (const classification of resource.citedArtifact?.classification || []) {
-    for (const classifier of classification.classifier || []) {
-      if (classifier.text) {
-        keywords.push(classifier.text.toLowerCase())
+    if(classification.type.coding[0].code==="keyword") {
+      for (const classifier of classification.classifier || []) {
+        if (classifier.text) {
+          keywords.push(classifier.text.toLowerCase())
+        }
       }
     }
   }
@@ -56,8 +59,7 @@ function SearchResult({ resource, onKeywordClick }) {
         <Card.Description>
           {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
           {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
-          <h4>Keywords</h4>
-          {keywords.map(k => <Button basic compact size='mini' key={k} onClick={() => onKeywordClick(k)}>{k}</Button>)}
+          <Keywords keywords={keywords} onKeywordClick={onKeywordClick}/>
         </Card.Description>
       </Card.Content>
       {url && <Card.Content extra><a href={url}>{url}</a></Card.Content>}
