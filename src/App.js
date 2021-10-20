@@ -13,7 +13,8 @@ function App(props) {
 
   const [patient, setPatient] = useState();
   const [conditions, setConditions] = useState([]);
-  const [conditionSearches, setConditionSearches] = useState([]);
+  const [conditionKeywordSearches, setConditionKeywordSearches] = useState([]);
+  const [conditionCodeSearches, setConditionCodeSearches] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [searchString, setSearchString] = useState('');
   const [selectedKeywords, setSelectedKeywords] = useState([]);
@@ -136,7 +137,7 @@ function App(props) {
       let textSearchString = '';
       let keywordSearchString = '';
       let titleSearchString = '';
-      let searchKeywords = selectedKeywords.concat(conditionSearches);
+      let searchKeywords = selectedKeywords.concat(conditionKeywordSearches);
 
       if (searchKeywords.length > 0) {
         keywordSearchString = `(${searchKeywords.map(k => `"${k}"`).join(' AND ')})`;
@@ -173,15 +174,20 @@ function App(props) {
         query.append('_lastUpdated', lastUpdatedSearchString);
       }
 
-      let meshCodes = '';
+      let meshCodes = [];
       if(meshNodeSelected.size > 0) {
-        meshCodes = [...meshNodeSelected.values()].join(',');
+        meshCodes = [...meshNodeSelected.values()];
+      }
+
+      let conditionCodes = [];
+      if (conditionCodeSearches.length > 0) {
+        conditionCodes = conditionCodeSearches.map(code => code.system ? `${code.system}|${code.code}` : code.code);
       }
 
       searchParams['classification:text'] = keywordSearchString;
       searchParams['_content'] = textSearchString;
       searchParams['title:contains'] = titleSearchString;
-      searchParams['classification'] = meshCodes;
+      searchParams['classification'] = meshCodes.concat(conditionCodes).join(',');
 
       for (const [queryParam, queryValue] of Object.entries(searchParams)) {
         if(queryValue.length > 0) {
@@ -206,7 +212,7 @@ function App(props) {
 
     cedarSearch();
 
-  }, [conditionSearches, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected, lastUpdatedSearchString]);
+  }, [conditionKeywordSearches, conditionCodeSearches, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected, lastUpdatedSearchString]);
 
   useEffect(() => {
     getAllPublishers();
@@ -227,14 +233,15 @@ function App(props) {
     setMeshRoots(data);
   }
 
-  const handleConditionsChange = (conditionNames) => {
+  const handleConditionsChange = (conditionNames, conditionCodes) => {
     // TODO: parenthisis handling is a temporary workaround for conditions like "Acute bronchitis (disorder)"
     // TODO: punctuation handling is a temporary workaround for conditions like "Alzheimer's"
-    const newConditionSearches = conditionNames.map(s => `"${s.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '')}"`);
-    if (newConditionSearches.length !== conditionSearches.length || !(newConditionSearches.every((value, index) => value === conditionSearches[index]))) {
-      setConditionSearches(newConditionSearches);
-      setSearchPage(1);
-    }
+    const newConditionKeywordSearches = conditionNames.map(s => `"${s.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '')}"`);
+    setConditionKeywordSearches(newConditionKeywordSearches);
+    // TODO: once cedar_api supports ORing of classification searches change this to use all of the available codes for each condition
+    const newConditionCodeSearches = conditionCodes.map(c => ({code: c[0].code, system: c[0].system}));
+    setConditionCodeSearches(newConditionCodeSearches);
+    setSearchPage(1);
   };
 
   const updateSearchInput = (event) => {
