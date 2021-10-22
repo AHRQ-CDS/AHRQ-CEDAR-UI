@@ -334,7 +334,7 @@ function App(props) {
     const response = await fetch('/api/fhir/Organization');
     const json = await response.json();
 
-    const data = (json.entry || []).map((entry) => ({ id: entry.resource.id, name: entry.resource.name, alias: entry.resource.alias }))
+    const data = (json.entry || []).map((entry) => ({ id: entry.resource.id, name: entry.resource.name, alias: entry.resource.alias[0] }))
     const sorted_data = _.orderBy(data, ['alias'])
     setAllPublishers(sorted_data); 
   };
@@ -521,7 +521,7 @@ function App(props) {
                         />
                         <label>
                           {publisher.alias}
-                          <Popup trigger={<Icon name='question circle outline' size='med' color='grey' />}
+                          <Popup trigger={<Icon name='question circle outline' color='grey' />}
                                  content={publisher.name}
                                  position='right center'
                           />
