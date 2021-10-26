@@ -520,11 +520,7 @@ function App(props) {
                               value={publisher.id} 
                         />
                         <label>
-                          {publisher.alias}
-                          <Popup trigger={<Icon name='question circle outline' color='grey' />}
-                                 content={publisher.name}
-                                 position='right center'
-                          />
+                          <span data-tooltip={publisher.name} data-position="right center">{publisher.alias}</span>
                         </label>
                       </div>
                     </List.Item>
