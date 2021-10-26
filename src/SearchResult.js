@@ -41,7 +41,7 @@ function SearchResult({ resource, onKeywordClick }) {
   // TODO: We may want to handle MeSH keywords separately at some point
   let keywords = [];
   for (const classification of resource.citedArtifact?.classification || []) {
-    if(classification.type.coding[0].code==="keyword") {
+    if(classification.type.coding[0].code === "keyword") {
       for (const classifier of classification.classifier || []) {
         if (classifier.text) {
           keywords.push(classifier.text.toLowerCase())
