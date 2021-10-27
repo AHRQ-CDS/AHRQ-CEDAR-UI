@@ -7,6 +7,7 @@ import MeshTree from './MeshTree';
 import MeshTreeNode from './MeshTreeNode';
 import { Container, Grid, Segment, Menu, Label, Icon, List, Form, Button, Message } from 'semantic-ui-react';
 import './App.css';
+import _ from 'lodash';
 
 function App(props) {
 
@@ -333,8 +334,9 @@ function App(props) {
     const response = await fetch('/api/fhir/Organization');
     const json = await response.json();
 
-    const data = (json.entry || []).map((entry) => ({ id: entry.resource.id, name: entry.resource.name}))
-    setAllPublishers(data);
+    const data = (json.entry || []).map((entry) => ({ id: entry.resource.id, name: entry.resource.name, alias: entry.resource.alias[0] }))
+    const sorted_data = _.orderBy(data, ['alias'])
+    setAllPublishers(sorted_data); 
   };
 
   const handlePublisherChange = (event) => {
@@ -514,10 +516,12 @@ function App(props) {
                         <input type="checkbox"
                               checked={searchPublisher.includes[publisher.id]}
                               onChange={handlePublisherChange}
-                              name={publisher.name}
+                              name={publisher.alias}
                               value={publisher.id} 
                         />
-                        <label>{publisher.name}</label>
+                        <label>
+                          <span data-tooltip={publisher.name} data-position="right center">{publisher.alias}</span>
+                        </label>
                       </div>
                     </List.Item>
                   ))}
