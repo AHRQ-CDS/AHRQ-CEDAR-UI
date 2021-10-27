@@ -153,7 +153,7 @@ function App(props) {
             break;
           default:
             // default is '_content'
-            textSearchString += textSearchString.length > 0 ? ` AND (${searchString})` : searchString;
+            textSearchString = searchString;
         }
       }
 

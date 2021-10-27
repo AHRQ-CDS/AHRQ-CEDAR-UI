@@ -1,23 +1,14 @@
 import React, { useState } from 'react';
 import { Card, Icon, List } from 'semantic-ui-react';
 import moment from 'moment';
+import Constants from './constants';
 
 function Conditions({ conditions, onChange }) {
 
   const [selectedConditionIds, setSelectedConditionIds] = useState([]);
 
-  const CODE_SYSTEMS = {
-    'http://snomed.info/sct': 'SNOMED-CT',
-    'https://www.nlm.nih.gov/mesh/': 'MeSH',
-    'http://www.nlm.nih.gov/research/umls/medlineplus': 'Medline Plus',
-    'http://snomed.info/sct/449081005': 'SNOMED-CT (ESP)',
-    'http://www.nlm.nih.gov/research/umls/mshspa': 'MeSH (ESP)',
-    'http://hl7.org/fhir/sid/icd-10-cm': 'ICD-10-CM',
-    'http://www.nlm.nih.gov/research/umls/rxnorm': 'RxNorm'
-  }
-
   const getCodeSystemName = (codeSystemUrl) => {
-    let codeSystemName = CODE_SYSTEMS[codeSystemUrl];
+    let codeSystemName = Constants.CODE_SYSTEMS[codeSystemUrl];
     if (codeSystemName === null) {
       codeSystemName = 'Unknown';
     }
@@ -40,14 +31,17 @@ function Conditions({ conditions, onChange }) {
         newSelectedConditionIds = selectedConditionIds.concat(clickedId);
       }
       setSelectedConditionIds(newSelectedConditionIds);
-      const newSelectedConditions = conditions.filter(c => newSelectedConditionIds.includes(c.id));
-      // Get names for conditions that don't include codes
-      const conditionsWithoutCodes = newSelectedConditions.filter(c => (c.code?.coding == null || c.code?.coding?.length === 0));
-      const conditionNames = conditionsWithoutCodes.map(c => c.code?.text || '[unknown]');
-      // For each condition with codes, extract them
-      const conditionsWithCodes = newSelectedConditions.filter(c => c.code?.coding?.length > 0);
-      const conditionCodes = conditionsWithCodes.map(condition => condition.code.coding.map(
-        coding => ({code: coding.code, system: coding?.system})));
+
+      let conditionNames = []; // Names for conditions that don't include codes
+      let conditionCodes = []; // Codes for conditions that include them
+      conditions.filter(c => newSelectedConditionIds.includes(c.id)).forEach((condition) => {
+        if(condition.code?.coding == null || condition.code?.coding?.length === 0) {
+          conditionNames.push(condition.code?.text || 'unknown');
+        } else {
+          let coding = condition.code.coding.map(c => ({code: c.code, system: c?.system}));
+          conditionCodes.push(coding);
+        }
+      });
       onChange(conditionNames, conditionCodes);
     };
 
