@@ -59,7 +59,7 @@ function SearchResult({ resource, onKeywordClick }) {
 
   // Sort the lists
   keywords = _.uniq(keywords).sort();
-  concepts = _.orderBy(concepts, ['text'],['asc']);
+  concepts = _.orderBy(concepts, ['text'], ['asc']);
 
   // NOTE: When keying by classifier.text, there should not be duplicate concepts, unless UMLS uses the same name for multiple concepts.
   // concepts = _.uniqBy(concepts, 'text');
