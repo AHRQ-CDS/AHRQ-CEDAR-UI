@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
-import { Card, Icon } from 'semantic-ui-react';
+import { Card, Icon, List } from 'semantic-ui-react';
 import moment from 'moment';
+import Constants from './constants';
 
 function Conditions({ conditions, onChange }) {
 
   const [selectedConditionIds, setSelectedConditionIds] = useState([]);
+
+  const getCodeSystemName = (codeSystemUrl) => {
+    let codeSystemName = Constants.CODE_SYSTEMS[codeSystemUrl];
+    if (codeSystemName === null) {
+      codeSystemName = 'Unknown';
+    }
+    return codeSystemName;
+  }
 
   const Condition = (props) => {
     const condition = props.condition;
@@ -22,8 +31,18 @@ function Conditions({ conditions, onChange }) {
         newSelectedConditionIds = selectedConditionIds.concat(clickedId);
       }
       setSelectedConditionIds(newSelectedConditionIds);
-      const conditionNames = conditions.filter(c => newSelectedConditionIds.includes(c.id)).map(c => c?.code?.text || '[unknown]');
-      onChange(conditionNames);
+
+      let conditionNames = []; // Names for conditions that don't include codes
+      let conditionCodes = []; // Codes for conditions that include them
+      conditions.filter(c => newSelectedConditionIds.includes(c.id)).forEach((condition) => {
+        if(condition.code?.coding == null || condition.code?.coding?.length === 0) {
+          conditionNames.push(condition.code?.text || 'unknown');
+        } else {
+          let coding = condition.code.coding.map(c => ({code: c.code, system: c?.system}));
+          conditionCodes.push(coding);
+        }
+      });
+      onChange(conditionNames, conditionCodes);
     };
 
     return (
@@ -31,6 +50,11 @@ function Conditions({ conditions, onChange }) {
         <Card.Content>
           <Card.Header>{text} {selected ? <Icon name='check' /> : null}</Card.Header>
           <Card.Meta>{date} [{status}]</Card.Meta>
+        </Card.Content>
+        <Card.Content extra>
+          <List size='mini'>
+            {condition.code?.coding?.map(c => <List.Item key={c.code}><Icon name='code' /> {getCodeSystemName(c.system)}: {c.code} ({c.display})</List.Item>)}
+          </List>
         </Card.Content>
       </Card>
     );
