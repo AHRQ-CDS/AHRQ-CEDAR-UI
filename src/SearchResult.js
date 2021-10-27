@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
-import { Card, Button, Grid, Tab } from 'semantic-ui-react';
+import { Card, Button } from 'semantic-ui-react';
 import ReactMarkdown from 'react-markdown';
 import strip from 'strip-markdown';
 import remark from 'remark';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import _ from 'lodash';
-import Keywords from './Keywords';
-=======
->>>>>>> 5c2a394 (Distinguish keywords assigned by CEDAR from others by color coding.)
-=======
-import _ from 'lodash';
->>>>>>> edbafee (Break concepts and keywords into two columns.)
+import SearchResultTags from './SearchResultTags';
 
 function SearchResult({ resource, onKeywordClick }) {
 
@@ -54,7 +47,7 @@ function SearchResult({ resource, onKeywordClick }) {
         if (classifier.text) {
           const text = classifier.text.toLowerCase();
           if(classification.whoClassified?.publisher.display === "AHRQ CEDAR") {
-            concepts.push(text);
+            concepts.push({text: text, coding: classifier.coding});
           }
           else {
             keywords.push(text);
@@ -64,14 +57,12 @@ function SearchResult({ resource, onKeywordClick }) {
     }
   }
 
-  // Deduplicate the lists
+  // Sort the lists
   keywords = _.uniq(keywords).sort();
-  concepts = _.uniq(concepts).sort();
+  concepts = _.orderBy(concepts, ['text'],['asc']);
 
-  const panes = [
-    { menuItem: 'Artifact Keywords', render: () => <Tab.Pane>{keywords.map(k => <Button basic compact size='mini' key={k} onClick={() => onKeywordClick(k)}>{k}</Button>)}</Tab.Pane> },
-    { menuItem: 'CEDAR Concepts', render: () => <Tab.Pane>{concepts.map(k => <Button basic compact size='mini' key={k} onClick={() => onKeywordClick(k)}>{k}</Button>)}</Tab.Pane> },
-  ]
+  // NOTE: When keying by classifier.text, there should not be duplicate concepts, unless UMLS uses the same name for multiple concepts.
+  // concepts = _.uniqBy(concepts, 'text');
 
   return (
     <Card fluid id={resource.id}>
@@ -81,7 +72,7 @@ function SearchResult({ resource, onKeywordClick }) {
         <Card.Description>
           {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
           {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
-          <Tab panes={panes} menu={{ secondary: true, pointing: true }} />
+          <SearchResultTags keywords={keywords} concepts={concepts} onKeywordClick={onKeywordClick}/>
         </Card.Description>
       </Card.Content>
       {url && <Card.Content extra><a href={url}>{url}</a></Card.Content>}
