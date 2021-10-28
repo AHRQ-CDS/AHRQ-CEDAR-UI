@@ -22,20 +22,13 @@ function SearchResultTags({ keywords, concepts, onKeywordClick }) {
   const ConceptsPane = () => {
 
     const ConceptCodingPopup = (props) => {
-      if(props.concept.coding !== undefined) {
-        return (
-          <List size='small'>
-            {props.concept.coding?.map((code, i) =>
-              <List.Item key={code.code + i}><Icon name='code' key={code.code + i + "icon"} /> {Constants.CODE_SYSTEMS[code.system]}: {code.code} ({code.display})</List.Item>
-            )}
-          </List>
-        )
-      }
-      else {
-        return (
-          <p>No codes defined.</p>
-        )
-      }
+      return (
+        <List size='small'>
+          {props.concept.coding?.map((code, i) =>
+            <List.Item key={code.code + i}><Icon name='code' key={code.code + i + "icon"} /> {Constants.CODE_SYSTEMS[code.system]}: {code.code} ({code.display})</List.Item>
+          )}
+        </List>
+      )
     }
 
     if(concepts.length !== 0) {
