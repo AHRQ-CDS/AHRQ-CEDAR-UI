@@ -46,7 +46,7 @@ function SearchResult({ resource, onKeywordClick }) {
       for (const classifier of classification.classifier || []) {
         if (classifier.text) {
           const text = classifier.text.toLowerCase();
-          if(classification.whoClassified?.publisher.display === "AHRQ CEDAR") {
+          if(classifier.coding !== undefined) {
             concepts.push({text: text, coding: classifier.coding});
           }
           else {
