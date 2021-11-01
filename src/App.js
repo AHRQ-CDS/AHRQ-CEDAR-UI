@@ -180,6 +180,9 @@ function App(props) {
         meshCodes = [...meshNodeSelected.values()];
       }
 
+      // Add the system to the MeSH codes selected from the MeSH tree browser so we can deduplicate these codes against the other coded concepts
+      meshCodes = meshCodes.map(code => `https://www.nlm.nih.gov/mesh/|${code}`)
+
       let conditionCodes = [];
       if (conditionCodeSearches.length > 0) {
         conditionCodes = conditionCodeSearches.map(code => code.system ? `${code.system}|${code.code}` : code.code);
@@ -187,15 +190,18 @@ function App(props) {
 
       let selectedConceptCodes = [];
       if(selectedConcepts.length > 0) {
-        selectedConceptCodes = selectedConcepts.map(concept => (
+        selectedConceptCodes = selectedConcepts.flatMap(concept => (
           concept.coding.map(code => code.system ? `${code.system}|${code.code}` : code.code)
         ))
       }
 
+      // Deduplicate all the sources of coded concepts
+      const allConceptCodes = _.union(meshCodes, conditionCodes, selectedConceptCodes)
+
       searchParams['classification:text'] = keywordSearchString;
       searchParams['_content'] = textSearchString;
       searchParams['title:contains'] = titleSearchString;
-      searchParams['classification'] = meshCodes.concat(conditionCodes).concat(selectedConceptCodes).join(',');
+      searchParams['classification'] = allConceptCodes.join(',');
 
       for (const [queryParam, queryValue] of Object.entries(searchParams)) {
         if(queryValue.length > 0) {
