@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Tab, Popup, Icon, List } from 'semantic-ui-react';
 import Constants from './constants';
 
-function SearchResultTags({ keywords, concepts, onKeywordClick }) {
+function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick }) {
 
   const KeywordsPane = () => {
     if(keywords.length !== 0) {
@@ -20,7 +20,6 @@ function SearchResultTags({ keywords, concepts, onKeywordClick }) {
   };
 
   const ConceptsPane = () => {
-
     const ConceptCodingPopup = (props) => {
       return (
         <List size='small'>
@@ -30,7 +29,6 @@ function SearchResultTags({ keywords, concepts, onKeywordClick }) {
         </List>
       )
     }
-
     if(concepts.length !== 0) {
       return (
         <>
@@ -38,7 +36,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick }) {
             concepts.map((concept) => {
               return(
                 <Popup key={concept.text} 
-                       trigger={<Button basic compact size='mini' key={concept.text} onClick={() => onKeywordClick(concept.text)}>{concept.text}</Button>} 
+                       trigger={<Button basic compact size='mini' key={concept.text} onClick={() => onConceptClick(concept)}>{concept.text}</Button>} 
                        flowing 
                        hoverable
                 >

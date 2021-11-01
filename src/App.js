@@ -18,6 +18,7 @@ function App(props) {
   const [searchInput, setSearchInput] = useState('');
   const [searchString, setSearchString] = useState('');
   const [selectedKeywords, setSelectedKeywords] = useState([]);
+  const [selectedConcepts, setSelectedConcepts] = useState([]);
   const [searchResults, setSearchResults] = useState({ status: 'none' });
   const [searchPage, setSearchPage] = useState(1);
   const [searchParameter, setSearchParameter] = useState('_content');
@@ -184,10 +185,17 @@ function App(props) {
         conditionCodes = conditionCodeSearches.map(code => code.system ? `${code.system}|${code.code}` : code.code);
       }
 
+      let selectedConceptCodes = [];
+      if(selectedConcepts.length > 0) {
+        selectedConceptCodes = selectedConcepts.map(concept => (
+          concept.coding.map(code => code.system ? `${code.system}|${code.code}` : code.code)
+        ))
+      }
+
       searchParams['classification:text'] = keywordSearchString;
       searchParams['_content'] = textSearchString;
       searchParams['title:contains'] = titleSearchString;
-      searchParams['classification'] = meshCodes.concat(conditionCodes).join(',');
+      searchParams['classification'] = meshCodes.concat(conditionCodes).concat(selectedConceptCodes).join(',');
 
       for (const [queryParam, queryValue] of Object.entries(searchParams)) {
         if(queryValue.length > 0) {
@@ -212,7 +220,7 @@ function App(props) {
 
     cedarSearch();
 
-  }, [conditionKeywordSearches, conditionCodeSearches, selectedKeywords, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected, lastUpdatedSearchString]);
+  }, [conditionKeywordSearches, conditionCodeSearches, selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected, lastUpdatedSearchString]);
 
   useEffect(() => {
     getAllPublishers();
@@ -318,6 +326,21 @@ function App(props) {
           return previousSelectedKeywords.filter(k => k !== keyword);
         } else {
           return previousSelectedKeywords.concat(keyword);
+        }
+      });
+      setSearchPage(1);
+    },
+    []
+  );
+
+  // Memoize this handler so we don't re-render the search results on every overall re-render
+    const handleConceptClick = useCallback(
+    (concept) => {
+      setSelectedConcepts((previousSelectedConcepts) => {
+        if (previousSelectedConcepts.includes(concept)) {
+          return previousSelectedConcepts.filter(c => c !== concept);
+        } else {
+          return previousSelectedConcepts.concat(concept);
         }
       });
       setSearchPage(1);
@@ -463,6 +486,10 @@ function App(props) {
                 {selectedKeywords.length > 0 && <h5>Additional Search Keywords</h5>}
                 {selectedKeywords.map(k => <p key={k}><Label color='blue'><Icon name='delete' onClick={() => handleKeywordClick(k)}/> {k}</Label></p>)}
 
+
+                {selectedConcepts.length > 0 && <h5>Additional Search Concepts</h5>}
+                {selectedConcepts.map(k => <p key={k.text}><Label color='green'><Icon name='delete' onClick={() => handleConceptClick(k)}/> {k.text}</Label></p>)}
+
                 {!props.smart && meshRoots && (
                   <React.Fragment>
                     <h4>Browse By</h4>
@@ -540,7 +567,12 @@ function App(props) {
 
             </Grid.Column>
             <Grid.Column width={11}>
-              <SearchResults searchResults={searchResults} page={searchPage} onPageChange={handlePageChange} onKeywordClick={handleKeywordClick} />
+              <SearchResults searchResults={searchResults} 
+                             page={searchPage} 
+                             onPageChange={handlePageChange} 
+                             onKeywordClick={handleKeywordClick} 
+                             onConceptClick={handleConceptClick}
+                             />
             </Grid.Column>
           </Grid.Row>
         </Grid>
