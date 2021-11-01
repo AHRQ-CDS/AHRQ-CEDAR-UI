@@ -4,9 +4,9 @@ import ReactMarkdown from 'react-markdown';
 import strip from 'strip-markdown';
 import remark from 'remark';
 import _ from 'lodash';
-import Keywords from './Keywords';
+import SearchResultTags from './SearchResultTags';
 
-function SearchResult({ resource, onKeywordClick }) {
+function SearchResult({ resource, onKeywordClick, onConceptClick }) {
 
   const [fullDescription, setFullDescription] = useState(false);
 
@@ -40,16 +40,29 @@ function SearchResult({ resource, onKeywordClick }) {
   // Grab all the keywords
   // TODO: We may want to handle MeSH keywords separately at some point
   let keywords = [];
+  let concepts = [];
   for (const classification of resource.citedArtifact?.classification || []) {
     if(classification.type.coding[0].code === "keyword") {
       for (const classifier of classification.classifier || []) {
         if (classifier.text) {
-          keywords.push(classifier.text.toLowerCase())
+          const text = classifier.text.toLowerCase();
+          if(classifier.coding !== undefined) {
+            concepts.push({text: text, coding: classifier.coding});
+          }
+          else {
+            keywords.push(text);
+          }
         }
       }
     }
   }
-  keywords = _.uniq(keywords);
+
+  // Sort the lists
+  keywords = _.uniq(keywords).sort();
+  concepts = _.orderBy(concepts, ['text'], ['asc']);
+
+  // NOTE: When keying by classifier.text, there should not be duplicate concepts, unless UMLS uses the same name for multiple concepts.
+  // concepts = _.uniqBy(concepts, 'text');
 
   return (
     <Card fluid id={resource.id}>
@@ -59,7 +72,7 @@ function SearchResult({ resource, onKeywordClick }) {
         <Card.Description>
           {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
           {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
-          <Keywords keywords={keywords} onKeywordClick={onKeywordClick}/>
+          <SearchResultTags keywords={keywords} concepts={concepts} onKeywordClick={onKeywordClick} onConceptClick={onConceptClick}/>
         </Card.Description>
       </Card.Content>
       {url && <Card.Content extra><a href={url}>{url}</a></Card.Content>}
