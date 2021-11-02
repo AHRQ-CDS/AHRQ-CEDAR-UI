@@ -8,7 +8,7 @@
                 "display": "Angiography"
             },
             {
-                "system": "https://www.nlm.nih.gov/mesh/",
+                "system": "http://terminology.hl7.org/CodeSystem/MSH",
                 "code": "D000792",
                 "display": "Angiography"
             },

@@ -181,7 +181,7 @@ function App(props) {
       }
 
       // Add the system to the MeSH codes selected from the MeSH tree browser so we can deduplicate these codes against the other coded concepts
-      meshCodes = meshCodes.map(code => `https://www.nlm.nih.gov/mesh/|${code}`)
+      meshCodes = meshCodes.map(code => `http://terminology.hl7.org/CodeSystem/MSH|${code}`)
 
       let conditionCodes = [];
       if (conditionCodeSearches.length > 0) {
@@ -573,10 +573,10 @@ function App(props) {
 
             </Grid.Column>
             <Grid.Column width={11}>
-              <SearchResults searchResults={searchResults} 
-                             page={searchPage} 
-                             onPageChange={handlePageChange} 
-                             onKeywordClick={handleKeywordClick} 
+              <SearchResults searchResults={searchResults}
+                             page={searchPage}
+                             onPageChange={handlePageChange}
+                             onKeywordClick={handleKeywordClick}
                              onConceptClick={handleConceptClick}
                              />
             </Grid.Column>
