@@ -133,12 +133,18 @@ function App(props) {
   useEffect(() => {
     const cedarSearch = async () => {
       setSearchResults({ status: 'pending' });
-
       let searchParams = {}
+      let query = new URLSearchParams();
+      let anySearchTerms = false;
+
       let textSearchString = '';
       let keywordSearchString = '';
       let titleSearchString = '';
       let searchKeywords = selectedKeywords.concat(conditionKeywordSearches);
+      let meshCodes = [];
+      let conditionCodes = [];
+      let selectedConceptCodes = [];
+      const status = Object.keys(searchStatus).filter(name => searchStatus[name]).map(name => name.toLowerCase());
 
       if (searchKeywords.length > 0) {
         keywordSearchString = `(${searchKeywords.map(k => `"${k}"`).join(' AND ')})`;
@@ -158,11 +164,22 @@ function App(props) {
         }
       }
 
-      let query = new URLSearchParams();
-      let anySearchTerms = false;
-      const status = Object.keys(searchStatus).filter(name => searchStatus[name]).map(name => name.toLowerCase());
+      // Add the system to the MeSH codes selected from the MeSH tree browser so we can deduplicate these codes against the other coded concepts
+      if(meshNodeSelected.size > 0) {
+        meshCodes = [...meshNodeSelected.values()].map(code => `http://terminology.hl7.org/CodeSystem/MSH|${code}`);
+      }
 
-      // TODO: The cedar_ui app allows the user to change the count of results per page, but cedar_smart does not.
+      if (conditionCodeSearches.length > 0) {
+        conditionCodes = conditionCodeSearches.map(code => code.system ? `${code.system}|${code.code}` : code.code);
+      }
+
+      if(selectedConcepts.length > 0) {
+        selectedConceptCodes = selectedConcepts.flatMap(concept => (
+          concept.coding.map(code => code.system ? `${code.system}|${code.code}` : code.code)
+        ))
+      }
+
+      // TODO: allow the user to change the count of results per page?
       query.append('_count', SEARCH_COUNT);
       query.append('page', searchPage);
       query.append('artifact-current-state', status.join(','));
@@ -175,38 +192,26 @@ function App(props) {
         query.append('_lastUpdated', lastUpdatedSearchString);
       }
 
-      let meshCodes = [];
-      if(meshNodeSelected.size > 0) {
-        meshCodes = [...meshNodeSelected.values()];
-      }
-
-      // Add the system to the MeSH codes selected from the MeSH tree browser so we can deduplicate these codes against the other coded concepts
-      meshCodes = meshCodes.map(code => `http://terminology.hl7.org/CodeSystem/MSH|${code}`)
-
-      let conditionCodes = [];
-      if (conditionCodeSearches.length > 0) {
-        conditionCodes = conditionCodeSearches.map(code => code.system ? `${code.system}|${code.code}` : code.code);
-      }
-
-      let selectedConceptCodes = [];
-      if(selectedConcepts.length > 0) {
-        selectedConceptCodes = selectedConcepts.flatMap(concept => (
-          concept.coding.map(code => code.system ? `${code.system}|${code.code}` : code.code)
-        ))
-      }
-
-      // Deduplicate all the sources of coded concepts
-      const allConceptCodes = _.union(meshCodes, conditionCodes, selectedConceptCodes)
-
       searchParams['classification:text'] = keywordSearchString;
       searchParams['_content'] = textSearchString;
       searchParams['title:contains'] = titleSearchString;
-      searchParams['classification'] = allConceptCodes.join(',');
+      searchParams['classification'] = _.union(meshCodes, conditionCodes, selectedConceptCodes);
 
+      // TODO: Setting a flag here, anySearchTerms, and checking for it below before making a request to the API seems less than ideal.
+      // Essentially, we only want to make a request if the user has interacted with any of the search filters in the UI (searchParams object), i.e., 
+      // artifact keywords, artifact concepts, free-text search, condition search (SMART on FHIR app), MeSH search via MeSH browser, and
+      // at least one artifact status has been selected. 
       for (const [queryParam, queryValue] of Object.entries(searchParams)) {
         if(queryValue.length > 0) {
           anySearchTerms = true;
-          query.append(queryParam, queryValue);
+          if(Array.isArray(queryValue)) {
+            for(const value of queryValue) {
+              query.append(queryParam, value);   
+            }
+          }
+          else {
+            query.append(queryParam, queryValue);
+          }
         }
       }
 
@@ -227,7 +232,7 @@ function App(props) {
     cedarSearch();
 
   }, [conditionKeywordSearches, conditionCodeSearches, selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected, lastUpdatedSearchString]);
-
+  
   useEffect(() => {
     getAllPublishers();
   }, []);
