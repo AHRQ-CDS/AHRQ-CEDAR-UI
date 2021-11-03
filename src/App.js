@@ -201,16 +201,16 @@ function App(props) {
       // Essentially, we only want to make a request if the user has interacted with any of the search filters in the UI (searchParams object), i.e., 
       // artifact keywords, artifact concepts, free-text search, condition search (SMART on FHIR app), MeSH search via MeSH browser, and
       // at least one artifact status has been selected. 
-      for (const [queryParam, queryValue] of Object.entries(searchParams)) {
-        if(queryValue.length > 0) {
+      for (const [queryParamKey, queryParamValue] of Object.entries(searchParams)) {
+        if(queryParamValue.length > 0) {
           anySearchTerms = true;
-          if(Array.isArray(queryValue)) {
-            for(const value of queryValue) {
-              query.append(queryParam, value);   
+          if(Array.isArray(queryParamValue)) {
+            for(const value of queryParamValue) {
+              query.append(queryParamKey, value);   
             }
           }
           else {
-            query.append(queryParam, queryValue);
+            query.append(queryParamKey, queryParamValue);
           }
         }
       }
