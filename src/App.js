@@ -174,8 +174,6 @@ function App(props) {
         conditionCodes = conditionCodeSearches.map(code => [code.system ? `${code.system}|${code.code}` : code.code]);
       }
 
-      console.log(selectedConcepts);
-
       if(selectedConcepts.length > 0) {
         selectedConceptCodes = selectedConcepts.map(concept => (
           concept.coding.map(code => code.system ? `${code.system}|${code.code}` : code.code)
