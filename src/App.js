@@ -144,6 +144,7 @@ function App(props) {
       let meshCodes = [];
       let conditionCodes = [];
       let selectedConceptCodes = [];
+
       const status = Object.keys(searchStatus).filter(name => searchStatus[name]).map(name => name.toLowerCase());
 
       if (searchKeywords.length > 0) {
@@ -166,15 +167,17 @@ function App(props) {
 
       // Add the system to the MeSH codes selected from the MeSH tree browser so we can deduplicate these codes against the other coded concepts
       if(meshNodeSelected.size > 0) {
-        meshCodes = [...meshNodeSelected.values()].map(code => `http://terminology.hl7.org/CodeSystem/MSH|${code}`);
+        meshCodes = [...meshNodeSelected.values()].map(code => [`http://terminology.hl7.org/CodeSystem/MSH|${code}`]);
       }
 
       if (conditionCodeSearches.length > 0) {
-        conditionCodes = conditionCodeSearches.map(code => code.system ? `${code.system}|${code.code}` : code.code);
+        conditionCodes = conditionCodeSearches.map(code => [code.system ? `${code.system}|${code.code}` : code.code]);
       }
 
+      console.log(selectedConcepts);
+
       if(selectedConcepts.length > 0) {
-        selectedConceptCodes = selectedConcepts.flatMap(concept => (
+        selectedConceptCodes = selectedConcepts.map(concept => (
           concept.coding.map(code => code.system ? `${code.system}|${code.code}` : code.code)
         ))
       }
@@ -195,7 +198,7 @@ function App(props) {
       searchParams['classification:text'] = keywordSearchString;
       searchParams['_content'] = textSearchString;
       searchParams['title:contains'] = titleSearchString;
-      searchParams['classification'] = _.union(meshCodes, conditionCodes, selectedConceptCodes);
+      searchParams['classification'] = meshCodes.concat(conditionCodes, selectedConceptCodes);
 
       // TODO: Setting a flag here, anySearchTerms, and checking for it below before making a request to the API seems less than ideal.
       // Essentially, we only want to make a request if the user has interacted with any of the search filters in the UI (searchParams object), i.e., 
