@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import Constants from './constants';
 import { SMART } from './FHIRClientWrapper';
 import Patient from './Patient';
 import Conditions from './Conditions';
@@ -167,11 +168,13 @@ function App(props) {
 
       // Add the system to the MeSH codes selected from the MeSH tree browser so we can deduplicate these codes against the other coded concepts
       if(meshNodeSelected.size > 0) {
-        meshCodes = [...meshNodeSelected.values()].map(code => [`http://terminology.hl7.org/CodeSystem/MSH|${code}`]);
+        meshCodes = [...meshNodeSelected.values()].map(code => [`${Constants.MESH_CODE_SYSTEM_ID}|${code}`]);
       }
 
       if (conditionCodeSearches.length > 0) {
-        conditionCodes = conditionCodeSearches.map(code => [code.system ? `${code.system}|${code.code}` : code.code]);
+        conditionCodes = conditionCodeSearches.map(condition => (
+          condition.map(code => code.system ? `${code.system}|${code.code}` : code.code)
+        ))
       }
 
       if(selectedConcepts.length > 0) {
@@ -199,15 +202,15 @@ function App(props) {
       searchParams['classification'] = meshCodes.concat(conditionCodes, selectedConceptCodes);
 
       // TODO: Setting a flag here, anySearchTerms, and checking for it below before making a request to the API seems less than ideal.
-      // Essentially, we only want to make a request if the user has interacted with any of the search filters in the UI (searchParams object), i.e., 
+      // Essentially, we only want to make a request if the user has interacted with any of the search filters in the UI (searchParams object), i.e.,
       // artifact keywords, artifact concepts, free-text search, condition search (SMART on FHIR app), MeSH search via MeSH browser, and
-      // at least one artifact status has been selected. 
+      // at least one artifact status has been selected.
       for (const [queryParamKey, queryParamValue] of Object.entries(searchParams)) {
         if(queryParamValue.length > 0) {
           anySearchTerms = true;
           if(Array.isArray(queryParamValue)) {
             for(const value of queryParamValue) {
-              query.append(queryParamKey, value);   
+              query.append(queryParamKey, value);
             }
           }
           else {
@@ -233,7 +236,7 @@ function App(props) {
     cedarSearch();
 
   }, [conditionKeywordSearches, conditionCodeSearches, selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected, lastUpdatedSearchString]);
-  
+
   useEffect(() => {
     getAllPublishers();
   }, []);
@@ -258,8 +261,9 @@ function App(props) {
     // TODO: punctuation handling is a temporary workaround for conditions like "Alzheimer's"
     const newConditionKeywordSearches = conditionNames.map(s => `"${s.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '')}"`);
     setConditionKeywordSearches(newConditionKeywordSearches);
-    // TODO: once cedar_api supports ORing of classification searches change this to use all of the available codes for each condition
-    const newConditionCodeSearches = conditionCodes.map(c => ({code: c[0].code, system: c[0].system}));
+    const newConditionCodeSearches = conditionCodes.map(condition => (
+      condition.map(code => ({code: code.code, system: code.system}))
+    ));
     setConditionCodeSearches(newConditionCodeSearches);
     setSearchPage(1);
   };
