@@ -6,7 +6,7 @@ import remark from 'remark';
 import _ from 'lodash';
 import SearchResultTags from './SearchResultTags';
 
-function SearchResult({ resource, onKeywordClick, onConceptClick }) {
+function SearchResult({ resource, onKeywordClick, onConceptClick, conceptIsSelected }) {
 
   const [fullDescription, setFullDescription] = useState(false);
 
@@ -72,7 +72,7 @@ function SearchResult({ resource, onKeywordClick, onConceptClick }) {
         <Card.Description>
           {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
           {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
-          <SearchResultTags keywords={keywords} concepts={concepts} onKeywordClick={onKeywordClick} onConceptClick={onConceptClick}/>
+          <SearchResultTags keywords={keywords} concepts={concepts} onKeywordClick={onKeywordClick} onConceptClick={onConceptClick} conceptIsSelected={conceptIsSelected} />
         </Card.Description>
       </Card.Content>
       {url && <Card.Content extra><a href={url}>{url}</a></Card.Content>}

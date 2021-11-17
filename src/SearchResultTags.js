@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, Tab, Popup, Icon, List } from 'semantic-ui-react';
-import Constants from './constants';
+import { Button, Tab, Popup } from 'semantic-ui-react';
+import ConceptCodingPopup from './ConceptCodingPopup';
 
-function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick }) {
+function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, conceptIsSelected }) {
 
   const KeywordsPane = () => {
     if(keywords.length !== 0) {
@@ -20,15 +20,15 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick }
   };
 
   const ConceptsPane = () => {
-    const ConceptCodingPopup = (props) => {
-      return (
-        <List size='small'>
-          {props.concept.coding?.map((code, i) =>
-            <List.Item key={code.code + i}><Icon name='code' key={code.code + i + "icon"} /> {Constants.CODE_SYSTEMS[code.system]}: {code.code} ({code.display})</List.Item>
-          )}
-        </List>
-      )
+    const getConceptButton = (concept) => {
+      if(conceptIsSelected(concept)) {
+        return <Button basic compact color='green' size='mini' key={concept.text} onClick={() => onConceptClick(concept)}>{concept.text}</Button>
+      }
+      else {
+        return <Button basic compact size='mini' key={concept.text} onClick={() => onConceptClick(concept)}>{concept.text}</Button>
+      }
     }
+
     if(concepts.length !== 0) {
       return (
         <>
@@ -36,7 +36,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick }
             concepts.map((concept) => {
               return(
                 <Popup key={concept.text} 
-                       trigger={<Button basic compact size='mini' key={concept.text} onClick={() => onConceptClick(concept)}>{concept.text}</Button>} 
+                       trigger={getConceptButton(concept)} 
                        flowing 
                        hoverable
                 >

@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Icon, List } from 'semantic-ui-react';
 import moment from 'moment';
 import Constants from './constants';
+import _ from 'lodash';
 
-function Conditions({ conditions, onChange }) {
-
-  const [selectedConditionIds, setSelectedConditionIds] = useState([]);
+function Conditions({ conditions, handleSelectedConcepts, handleKeywordClick, selectedConcepts, selectedKeywords, conceptIsSelected }) {
 
   const getCodeSystemName = (codeSystemUrl) => {
     let codeSystemName = Constants.CODE_SYSTEMS[codeSystemUrl];
@@ -17,38 +16,54 @@ function Conditions({ conditions, onChange }) {
 
   const Condition = (props) => {
     const condition = props.condition;
-    const selected = selectedConditionIds.includes(condition.id);
+    const selectedConcepts = props.selectedConcepts;
+
     const text = condition?.code?.text || '[unknown]';
     const status = condition?.clinicalStatus?.coding?.[0]?.code || '[unknown]'
     const date = condition?.recordedDate ? moment(condition.recordedDate).format('MMMM Do YYYY') : '[unknown]';
 
-    const handleClick = (event, data) => {
-      const clickedId = data.id;
-      let newSelectedConditionIds = null;
-      if (selectedConditionIds.includes(clickedId)) {
-        newSelectedConditionIds = selectedConditionIds.filter(id => id !== clickedId);
-      } else {
-        newSelectedConditionIds = selectedConditionIds.concat(clickedId);
-      }
-      setSelectedConditionIds(newSelectedConditionIds);
+    const [selected, setSelected] = useState(false);
 
-      let conditionNames = []; // Names for conditions that don't include codes
-      let conditionCodes = []; // Codes for conditions that include them
-      conditions.filter(c => newSelectedConditionIds.includes(c.id)).forEach((condition) => {
-        if(condition.code?.coding == null || condition.code?.coding?.length === 0) {
-          conditionNames.push(condition.code?.text || 'unknown');
-        } else {
-          let coding = condition.code.coding.map(c => ({code: c.code, system: c?.system}));
-          conditionCodes.push(coding);
+    const getConditionKeyWord = () => {
+      return condition.code?.text ? condition.code.text.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '').toLowerCase() : 'unknown';
+    }
+
+    const getConditionConcept = useCallback(
+      () => {
+        let codes = [];
+
+        for(const code of condition.code.coding) {
+          codes.push({code: code.code, system: code.system, display: code.display});
         }
-      });
-      onChange(conditionNames, conditionCodes);
-    };
+        const text = condition.code.text !== undefined ? condition.code.text : codes[0].display;
+        return {text: text.toLowerCase(), coding: codes};
+      },
+      [condition.code.coding, condition.code.text]
+    );
+
+    useEffect(() => {
+      const conditionConcept = getConditionConcept();
+      if(!_.isEmpty(conditionConcept) && conceptIsSelected(conditionConcept)) {
+        setSelected(true);
+      }
+      else {
+        setSelected(false);
+      }
+    }, [selectedConcepts, getConditionConcept]);
+
+    const handleClick = () => {
+      if(!condition.code?.coding || condition.code?.coding?.length === 0) {
+        handleKeywordClick(getConditionKeyWord());
+      }
+      else {
+        handleSelectedConcepts(getConditionConcept())
+      }
+    }
 
     return (
-      <Card fluid id={condition.id} onClick={handleClick}>
+      <Card fluid id={condition.id} value={condition} onClick={!selected ? handleClick : undefined}>
         <Card.Content>
-          <Card.Header>{text} {selected ? <Icon name='check' /> : null}</Card.Header>
+          <Card.Header>{text} {selected ? <Icon name='check' color='green' /> : null}</Card.Header>
           <Card.Meta>{date} [{status}]</Card.Meta>
         </Card.Content>
         <Card.Content extra>
@@ -62,7 +77,15 @@ function Conditions({ conditions, onChange }) {
 
   return (
       <React.Fragment>
-        {conditions.map(c => <Condition key={c.id} condition={c} />)}
+        {conditions.map(c => 
+          <Condition key={c.id} 
+                     condition={c} 
+                     selectedConcepts={selectedConcepts}
+                     selectedKeywords={selectedKeywords}
+                     handleKeywordClick={handleKeywordClick}
+                     handleSelectedConcepts={handleSelectedConcepts}
+          />
+        )}
       </React.Fragment>
   );
 }

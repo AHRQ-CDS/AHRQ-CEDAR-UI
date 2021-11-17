@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Constants from './constants';
 import { SMART } from './FHIRClientWrapper';
 import Patient from './Patient';
 import Conditions from './Conditions';
+import ConceptCodingPopup from './ConceptCodingPopup';
 import SearchResults from './SearchResults';
 import MeshTree from './MeshTree';
 import MeshTreeNode from './MeshTreeNode';
-import { Container, Grid, Segment, Menu, Label, Icon, List, Form, Button, Message } from 'semantic-ui-react';
+import { Container, Grid, Segment, Menu, Label, Icon, List, Form, Button, Message, Popup } from 'semantic-ui-react';
 import './App.css';
 import _ from 'lodash';
 
@@ -14,8 +14,6 @@ function App(props) {
 
   const [patient, setPatient] = useState();
   const [conditions, setConditions] = useState([]);
-  const [conditionKeywordSearches, setConditionKeywordSearches] = useState([]);
-  const [conditionCodeSearches, setConditionCodeSearches] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [searchString, setSearchString] = useState('');
   const [selectedKeywords, setSelectedKeywords] = useState([]);
@@ -25,7 +23,6 @@ function App(props) {
   const [searchParameter, setSearchParameter] = useState('_content');
   const [meshRoots, setMeshRoots] = useState([]);
   const [meshNodeExpanded, setMeshNodeExpanded] = useState(new Map());
-  const [meshNodeSelected, setMeshNodeSelected] = useState(new Map());
   const [lastUpdatedSearchString, setLastUpdatedSearchString] = useState('');
   const [showLastUpdatedCustomDate, setShowLastUpdatedCustomDate] = useState(false);
   const [customDatePrefix, setCustomDatePrefix] = useState('ge');
@@ -141,9 +138,7 @@ function App(props) {
       let textSearchString = '';
       let keywordSearchString = '';
       let titleSearchString = '';
-      let searchKeywords = selectedKeywords.concat(conditionKeywordSearches);
-      let meshCodes = [];
-      let conditionCodes = [];
+      let searchKeywords = selectedKeywords;
       let selectedConceptCodes = [];
 
       const status = Object.keys(searchStatus).filter(name => searchStatus[name]).map(name => name.toLowerCase());
@@ -164,17 +159,6 @@ function App(props) {
             // default is '_content'
             textSearchString = searchString;
         }
-      }
-
-      // Add the system to the MeSH codes selected from the MeSH tree browser so we can deduplicate these codes against the other coded concepts
-      if(meshNodeSelected.size > 0) {
-        meshCodes = [...meshNodeSelected.values()].map(code => [`${Constants.MESH_CODE_SYSTEM_ID}|${code}`]);
-      }
-
-      if (conditionCodeSearches.length > 0) {
-        conditionCodes = conditionCodeSearches.map(condition => (
-          condition.map(code => code.system ? `${code.system}|${code.code}` : code.code)
-        ))
       }
 
       if(selectedConcepts.length > 0) {
@@ -199,7 +183,7 @@ function App(props) {
       searchParams['classification:text'] = keywordSearchString;
       searchParams['_content'] = textSearchString;
       searchParams['title:contains'] = titleSearchString;
-      searchParams['classification'] = meshCodes.concat(conditionCodes, selectedConceptCodes);
+      searchParams['classification'] = selectedConceptCodes;
 
       // TODO: Setting a flag here, anySearchTerms, and checking for it below before making a request to the API seems less than ideal.
       // Essentially, we only want to make a request if the user has interacted with any of the search filters in the UI (searchParams object), i.e.,
@@ -235,7 +219,7 @@ function App(props) {
 
     cedarSearch();
 
-  }, [conditionKeywordSearches, conditionCodeSearches, selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, meshNodeSelected, lastUpdatedSearchString]);
+  }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString]);
 
   useEffect(() => {
     getAllPublishers();
@@ -248,6 +232,7 @@ function App(props) {
       ({  name: value.valueCoding.display,
           treeNumber: value.valueCoding.extension[0].valueCode,
           meshCode: null,
+          system: value.valueCoding.system,
           isGlobalRoot: true,
           hasChildren: value.valueCoding.extension[1].valueBoolean,
           directArtifacts: value.valueCoding.extension[2].valueUnsignedInt,
@@ -255,18 +240,6 @@ function App(props) {
       }));
     setMeshRoots(data);
   }
-
-  const handleConditionsChange = (conditionNames, conditionCodes) => {
-    // TODO: parenthisis handling is a temporary workaround for conditions like "Acute bronchitis (disorder)"
-    // TODO: punctuation handling is a temporary workaround for conditions like "Alzheimer's"
-    const newConditionKeywordSearches = conditionNames.map(s => `"${s.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '')}"`);
-    setConditionKeywordSearches(newConditionKeywordSearches);
-    const newConditionCodeSearches = conditionCodes.map(condition => (
-      condition.map(code => ({code: code.code, system: code.system}))
-    ));
-    setConditionCodeSearches(newConditionCodeSearches);
-    setSearchPage(1);
-  };
 
   const updateSearchInput = (event) => {
     setSearchInput(event.target.value);
@@ -350,7 +323,7 @@ function App(props) {
   );
 
   // Memoize this handler so we don't re-render the search results on every overall re-render
-    const handleConceptClick = useCallback(
+  const handleConceptClick = useCallback(
     (concept) => {
       setSelectedConcepts((previousSelectedConcepts) => {
         if (previousSelectedConcepts.includes(concept)) {
@@ -362,6 +335,49 @@ function App(props) {
       setSearchPage(1);
     },
     []
+  );
+
+  // Memoize this handler so we don't re-render on every overall re-render
+  const handleSelectedConcepts = useCallback(
+    (newlySelectedConcept) => {
+      const newlySelectedConceptCodes = newlySelectedConcept.coding.map(code => `${code.code}|${code?.system}`);
+      const previouslySelectedConceptCodes = selectedConcepts.map(condition => condition.coding.map(code => `${code.code}|${code?.system}`));
+      
+      let newlySelectedConceptCodesAreSubset = false;
+      let previouslySelectedConcepts = selectedConcepts;
+
+      for(const [index, concept] of previouslySelectedConceptCodes.entries()) {
+        if(newlySelectedConceptCodes.every(c=> concept.includes(c))) {
+          newlySelectedConceptCodesAreSubset = true;
+        }
+        else if(concept.every(c => newlySelectedConceptCodes.includes(c))) {
+          previouslySelectedConcepts.splice(index, 1);
+        }
+      }
+
+      if(!newlySelectedConceptCodesAreSubset) {
+        setSelectedConcepts([...previouslySelectedConcepts, newlySelectedConcept]);
+        setSearchPage(1);
+      }
+    },
+    [selectedConcepts]
+  );
+
+  // Memoize this handler so we don't re-render on every overall re-render
+  const conceptIsSelected = useCallback(
+    (conceptToTest) => {
+      const conceptCodesToTest = conceptToTest.coding.map(code => `${code.code}|${code?.system}`);
+      const previouslySelectedConceptCodes = selectedConcepts.map(condition => condition.coding.map(code => `${code.code}|${code?.system}`));
+
+      for(const concept of previouslySelectedConceptCodes) {
+        if(conceptCodesToTest.every(c=> concept.includes(c))) {
+          return true;
+        } 
+      }
+
+      return false;
+    },
+    [selectedConcepts]
   );
 
   // Memoize this handler so we don't re-render the search results on every overall re-render
@@ -504,7 +520,16 @@ function App(props) {
 
 
                 {selectedConcepts.length > 0 && <h5>Additional Search Concepts</h5>}
-                {selectedConcepts.map(k => <p key={k.text}><Label color='green'><Icon name='delete' onClick={() => handleConceptClick(k)}/> {k.text}</Label></p>)}
+                {selectedConcepts.map(concept => 
+                  <Popup key={concept.text} 
+                       trigger={<Label color='green'><Icon name='delete' onClick={() => handleConceptClick(concept)}/> {concept.text}</Label>} 
+                       flowing 
+                       hoverable
+                  >
+                    <h4>Concept: {concept.text}</h4>
+                    <ConceptCodingPopup concept={concept}/>
+                  </Popup>
+                )}
 
                 {!props.smart && meshRoots && (
                   <React.Fragment>
@@ -516,17 +541,18 @@ function App(props) {
                                 <React.Fragment>
                                   <MeshTreeNode element={element}
                                                 meshNodeExpanded={meshNodeExpanded}
-                                                meshNodeSelected={meshNodeSelected}
-                                                setMeshNodeSelected={setMeshNodeSelected}
                                                 setMeshNodeExpanded={setMeshNodeExpanded}
-                                                key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}/>
+                                                key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}
+                                                handleSelectedConcepts={handleSelectedConcepts}
+                                                conceptIsSelected={conceptIsSelected}
+                                  />
                                   <MeshTree
                                     meshNodeExpanded={meshNodeExpanded}
-                                    meshNodeSelected={meshNodeSelected}
                                     setMeshNodeExpanded={setMeshNodeExpanded}
-                                    setMeshNodeSelected={setMeshNodeSelected}
                                     key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "tree"}
                                     treeNum={element.treeNumber}
+                                    handleSelectedConcepts={handleSelectedConcepts}
+                                    conceptIsSelected={conceptIsSelected}
                                   />
                                 </React.Fragment>
                               </List.Item>
@@ -577,7 +603,13 @@ function App(props) {
               {props.smart && (
                 <Segment>
                   <h3>Conditions</h3>
-                  <Conditions conditions={conditions} onChange={handleConditionsChange}/>
+                  <Conditions conditions={conditions}
+                              handleSelectedConcepts={handleSelectedConcepts}
+                              handleKeywordClick={handleKeywordClick}
+                              conceptIsSelected={conceptIsSelected}
+                              selectedConcepts={selectedConcepts}
+                              selectedKeywords={selectedKeywords}
+                  />
                 </Segment>
               )}
 
@@ -587,7 +619,8 @@ function App(props) {
                              page={searchPage}
                              onPageChange={handlePageChange}
                              onKeywordClick={handleKeywordClick}
-                             onConceptClick={handleConceptClick}
+                             onConceptClick={handleSelectedConcepts}
+                             conceptIsSelected={conceptIsSelected}
                              />
             </Grid.Column>
           </Grid.Row>
