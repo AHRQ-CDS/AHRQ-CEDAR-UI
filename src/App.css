@@ -2,8 +2,12 @@
     margin-top: 1rem;
 }
 
-.expander {
+.cursor-pointer {
     cursor: pointer;
+}
+
+.cursor-auto {
+    cursor:  auto !important;
 }
 
 .ui.form .field>label {

@@ -56,7 +56,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSe
   if (element.isGlobalRoot) {
     return (
       <span>
-        <div className="expander">
+        <div className="cursor-pointer">
           <span onClick={handleTreeNodeExpand}> 
             {element.name}
             {element.hasChildren && <Icon name={getCaretIcon(element.treeNumber)}/>}
@@ -66,7 +66,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSe
     );
   } else if(element.directArtifacts === 0) {
     return (
-      <span class="ui checkbox-spacer">
+      <span className="ui checkbox-spacer">
           <label onClick={handleTreeNodeExpand}>
               {element.name}
               {element.hasChildren && <Icon name={getCaretIcon(element.treeNumber, element.indirectArtifacts)}/>}

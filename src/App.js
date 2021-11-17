@@ -606,9 +606,9 @@ function App(props) {
                   <Conditions conditions={conditions}
                               handleSelectedConcepts={handleSelectedConcepts}
                               handleKeywordClick={handleKeywordClick}
-                              conceptIsSelected={conceptIsSelected}
                               selectedConcepts={selectedConcepts}
                               selectedKeywords={selectedKeywords}
+                              conceptIsSelected={conceptIsSelected}
                   />
                 </Segment>
               )}
@@ -620,6 +620,8 @@ function App(props) {
                              onPageChange={handlePageChange}
                              onKeywordClick={handleKeywordClick}
                              onConceptClick={handleSelectedConcepts}
+                             selectedConcepts={selectedConcepts}
+                             selectedKeywords={selectedKeywords}
                              conceptIsSelected={conceptIsSelected}
                              />
             </Grid.Column>

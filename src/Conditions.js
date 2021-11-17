@@ -17,6 +17,7 @@ function Conditions({ conditions, handleSelectedConcepts, handleKeywordClick, se
   const Condition = (props) => {
     const condition = props.condition;
     const selectedConcepts = props.selectedConcepts;
+    const selectedKeywords = props.selectedKeywords;
 
     const text = condition?.code?.text || '[unknown]';
     const status = condition?.clinicalStatus?.coding?.[0]?.code || '[unknown]'
@@ -24,9 +25,12 @@ function Conditions({ conditions, handleSelectedConcepts, handleKeywordClick, se
 
     const [selected, setSelected] = useState(false);
 
-    const getConditionKeyWord = () => {
-      return condition.code?.text ? condition.code.text.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '').toLowerCase() : 'unknown';
-    }
+    const getConditionKeyWord = useCallback(
+      () => {
+        return condition.code?.text ? condition.code.text.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '').toLowerCase() : 'unknown';
+      },
+      [condition.code.text]
+    );
 
     const getConditionConcept = useCallback(
       () => {
@@ -41,14 +45,16 @@ function Conditions({ conditions, handleSelectedConcepts, handleKeywordClick, se
       [condition.code.coding, condition.code.text]
     );
 
+    useEffect(() => {     
+      _.isEmpty(getConditionConcept()) && selectedKeywords.includes(getConditionKeyWord()) ? setSelected(true) : setSelected(false);
+
+    }, [selectedKeywords, getConditionConcept, getConditionKeyWord]);
+
     useEffect(() => {
       const conditionConcept = getConditionConcept();
-      if(!_.isEmpty(conditionConcept) && conceptIsSelected(conditionConcept)) {
-        setSelected(true);
-      }
-      else {
-        setSelected(false);
-      }
+      
+      !_.isEmpty(conditionConcept) && conceptIsSelected(conditionConcept) ? setSelected(true) : setSelected(false);
+
     }, [selectedConcepts, getConditionConcept]);
 
     const handleClick = () => {
@@ -80,10 +86,10 @@ function Conditions({ conditions, handleSelectedConcepts, handleKeywordClick, se
         {conditions.map(c => 
           <Condition key={c.id} 
                      condition={c} 
+                     handleSelectedConcepts={handleSelectedConcepts}
+                     handleKeywordClick={handleKeywordClick}
                      selectedConcepts={selectedConcepts}
                      selectedKeywords={selectedKeywords}
-                     handleKeywordClick={handleKeywordClick}
-                     handleSelectedConcepts={handleSelectedConcepts}
           />
         )}
       </React.Fragment>
