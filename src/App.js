@@ -325,16 +325,10 @@ function App(props) {
   // Memoize this handler so we don't re-render the search results on every overall re-render
   const handleConceptClick = useCallback(
     (concept) => {
-      setSelectedConcepts((previousSelectedConcepts) => {
-        if (previousSelectedConcepts.includes(concept)) {
-          return previousSelectedConcepts.filter(c => c !== concept);
-        } else {
-          return previousSelectedConcepts.concat(concept);
-        }
-      });
+      setSelectedConcepts(selectedConcepts.filter(c => c !== concept));
       setSearchPage(1);
     },
-    []
+    [selectedConcepts]
   );
 
   // Memoize this handler so we don't re-render on every overall re-render
