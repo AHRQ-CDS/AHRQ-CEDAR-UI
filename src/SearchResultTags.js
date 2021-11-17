@@ -12,7 +12,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
       const [selected, setSelected] = useState(false);
 
       useEffect(() => {
-        if(selectedKeywords.includes(keyword)) {
+        if(selectedKeywords && selectedKeywords.includes(keyword)) {
           setSelected(true);
         }
         else {
@@ -31,7 +31,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
     if(keywords.length !== 0) {
       return (
         <>
-          {keywords.map(k => <Keyword selectedKeywords={selectedKeywords} keyword={k} />)}
+          {keywords.map(k => <Keyword selectedKeywords={selectedKeywords} keyword={k} key={k} />)}
         </>
       )
     }
