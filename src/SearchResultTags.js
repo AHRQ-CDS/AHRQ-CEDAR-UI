@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Tab, Popup } from 'semantic-ui-react';
+import { Button, Tab, Popup, Icon } from 'semantic-ui-react';
 import ConceptCodingPopup from './ConceptCodingPopup';
 
 function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, conceptIsSelected, selectedKeywords, selectedConcepts }) {
@@ -21,10 +21,12 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
       }, [selectedKeywords, keyword]);
 
       if(selected) {
-        return  <Button compact color='blue' size='mini' key={keyword.text} className='cursor-auto'>{keyword}</Button>
+        return <Button basic compact icon='check' size='mini' key={keyword.text} className='cursor-auto'>{keyword}
+                 <Icon name='check' color='blue' className='custom-icon-padding' />
+               </Button>
       }
       else {
-        return  <Button basic compact size='mini' key={keyword.text} onClick={() => onKeywordClick(keyword)}>{keyword}</Button>
+        return <Button basic compact size='mini' key={keyword.text} onClick={() => onKeywordClick(keyword)}>{keyword}</Button>
       }
     }
 
@@ -61,9 +63,11 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
       if(selected) {
         return (
           <Popup key={concept.text} 
-             trigger={<Button compact color='green' size='mini' key={concept.text} className='cursor-auto'>{concept.text}</Button>} 
-             flowing 
-             hoverable
+                 trigger={<Button basic compact size='mini' key={concept.text} className='cursor-auto'>{concept.text} 
+                            <Icon name='check' color='green' className='custom-icon-padding' />
+                          </Button>} 
+                 flowing 
+                 hoverable
           >
           <h4>Concept: {concept.text}</h4>
           <ConceptCodingPopup concept={concept}/>
@@ -73,9 +77,9 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
       else {
         return (
           <Popup key={concept.text} 
-             trigger={<Button basic compact size='mini' key={concept.text} onClick={() => onConceptClick(concept)}>{concept.text}</Button>} 
-             flowing 
-             hoverable
+                 trigger={<Button basic compact size='mini' key={concept.text} onClick={() => onConceptClick(concept)}>{concept.text}</Button>} 
+                 flowing 
+                 hoverable
           >
           <h4>Concept: {concept.text}</h4>
           <ConceptCodingPopup concept={concept}/>

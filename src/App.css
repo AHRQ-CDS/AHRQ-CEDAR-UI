@@ -18,3 +18,7 @@
     margin-right:  0.4em;  
     margin-left:  0em;
 }
+
+.custom-icon-padding {
+    margin-left: 4px !important;
+}
