@@ -46,7 +46,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSe
     }
     else {
       return (
-        <Popup trigger={ <Icon link name="square outline" onClick={handleTreeNodeSelect} value={element.meshCode} />}>
+        <Popup trigger={<Icon link name="square outline" onClick={handleTreeNodeSelect} value={element.meshCode} />}>
           Add <Icon name='code'></Icon>{Constants.CODE_SYSTEMS[element.system]}: {element.meshCode} ({element.name}) to Additional Search Concepts.
         </Popup>
       )
