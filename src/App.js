@@ -357,23 +357,6 @@ function App(props) {
     [selectedConcepts]
   );
 
-  // Memoize this handler so we don't re-render on every overall re-render
-  const conceptIsSelected = useCallback(
-    (conceptToTest) => {
-      const conceptCodesToTest = conceptToTest.coding.map(code => `${code.code}|${code?.system}`);
-      const previouslySelectedConceptCodes = selectedConcepts.map(condition => condition.coding.map(code => `${code.code}|${code?.system}`));
-
-      for(const concept of previouslySelectedConceptCodes) {
-        if(conceptCodesToTest.every(c=> concept.includes(c))) {
-          return true;
-        } 
-      }
-
-      return false;
-    },
-    [selectedConcepts]
-  );
-
   // Memoize this handler so we don't re-render the search results on every overall re-render
   const handlePageChange = useCallback(
     (event, data) => {
