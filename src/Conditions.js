@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Icon, List } from 'semantic-ui-react';
 import moment from 'moment';
 import Constants from './constants';
+import { conceptIsSelected } from './utils'
 import _ from 'lodash';
 
-function Conditions({ conditions, handleSelectConcepts, handleKeywordClick, selectedConcepts, selectedKeywords, conceptIsSelected }) {
+function Conditions({ conditions, handleSelectConcepts, handleKeywordClick, selectedConcepts, selectedKeywords }) {
 
   const getCodeSystemName = (codeSystemUrl) => {
     let codeSystemName = Constants.CODE_SYSTEMS[codeSystemUrl];
@@ -53,7 +54,7 @@ function Conditions({ conditions, handleSelectConcepts, handleKeywordClick, sele
     useEffect(() => {
       const conditionConcept = getConditionConcept();
       
-      !_.isEmpty(conditionConcept) && conceptIsSelected(conditionConcept) ? setSelected(true) : setSelected(false);
+      !_.isEmpty(conditionConcept) && conceptIsSelected(conditionConcept, selectedConcepts) ? setSelected(true) : setSelected(false);
 
     }, [selectedConcepts, getConditionConcept]);
 

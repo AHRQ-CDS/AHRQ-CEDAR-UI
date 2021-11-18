@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Tab, Popup, Icon } from 'semantic-ui-react';
 import ConceptCodingPopup from './ConceptCodingPopup';
+import { conceptIsSelected } from './utils'
 
-function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, conceptIsSelected, selectedKeywords, selectedConcepts }) {
+function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts }) {
 
   const KeywordsPane = () => {
     const Keyword = (props) => {
@@ -52,7 +53,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
       const [selected, setSelected] = useState(false);
 
       useEffect(() => {
-        if(conceptIsSelected(concept)) {
+        if(conceptIsSelected(concept, selectedConcepts)) {
           setSelected(true);
         }
         else {

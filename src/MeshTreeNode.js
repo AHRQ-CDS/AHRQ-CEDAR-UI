@@ -1,8 +1,9 @@
 import React from 'react';
 import { Icon, Popup } from 'semantic-ui-react';
 import Constants from './constants';
+import { conceptIsSelected } from './utils'
 
-function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSelectConcepts, conceptIsSelected }) {
+function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSelectConcepts, selectedConcepts }) {
 
   const handleTreeNodeExpand = () => {
     const nodeExpanded = meshNodeExpanded.get(element.treeNumber);
@@ -37,7 +38,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSe
   }
 
   const getSelectionIcon = () => {
-    if(conceptIsSelected(getMeshConcept())) {
+    if(conceptIsSelected(getMeshConcept(), selectedConcepts)) {
       return (
         <Popup trigger={<Icon name="check square" color="green" onClick={handleTreeNodeSelect} value={element.meshCode} />}>
           <Icon name='code'></Icon>{Constants.CODE_SYSTEMS[element.system]}: {element.meshCode} ({element.name}) added to Additional Search Concepts.

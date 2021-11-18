@@ -538,7 +538,7 @@ function App(props) {
                                                 setMeshNodeExpanded={setMeshNodeExpanded}
                                                 key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}
                                                 handleSelectConcepts={handleSelectConcepts}
-                                                conceptIsSelected={conceptIsSelected}
+                                                selectedConcepts={selectedConcepts}
                                   />
                                   <MeshTree
                                     meshNodeExpanded={meshNodeExpanded}
@@ -546,7 +546,7 @@ function App(props) {
                                     key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "tree"}
                                     treeNum={element.treeNumber}
                                     handleSelectConcepts={handleSelectConcepts}
-                                    conceptIsSelected={conceptIsSelected}
+                                    selectedConcepts={selectedConcepts}
                                   />
                                 </React.Fragment>
                               </List.Item>
@@ -602,7 +602,6 @@ function App(props) {
                               handleKeywordClick={handleKeywordClick}
                               selectedConcepts={selectedConcepts}
                               selectedKeywords={selectedKeywords}
-                              conceptIsSelected={conceptIsSelected}
                   />
                 </Segment>
               )}
@@ -616,7 +615,6 @@ function App(props) {
                              onConceptClick={handleSelectConcepts}
                              selectedConcepts={selectedConcepts}
                              selectedKeywords={selectedKeywords}
-                             conceptIsSelected={conceptIsSelected}
                              />
             </Grid.Column>
           </Grid.Row>

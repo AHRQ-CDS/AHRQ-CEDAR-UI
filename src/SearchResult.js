@@ -6,7 +6,7 @@ import remark from 'remark';
 import _ from 'lodash';
 import SearchResultTags from './SearchResultTags';
 
-function SearchResult({ resource, onKeywordClick, onConceptClick, conceptIsSelected, selectedKeywords, selectedConcepts }) {
+function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts }) {
 
   const [fullDescription, setFullDescription] = useState(false);
 
@@ -75,8 +75,7 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, conceptIsSelec
           <SearchResultTags keywords={keywords} 
                             concepts={concepts} 
                             onKeywordClick={onKeywordClick} 
-                            onConceptClick={onConceptClick} 
-                            conceptIsSelected={conceptIsSelected}
+                            onConceptClick={onConceptClick}
                             selectedKeywords={selectedKeywords}
                             selectedConcepts={selectedConcepts} 
           />

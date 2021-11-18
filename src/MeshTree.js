@@ -3,7 +3,7 @@ import { List } from 'semantic-ui-react';
 import './MeshTree.css'
 import MeshTreeNode from './MeshTreeNode';
 
-function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleSelectConcepts, conceptIsSelected }) {
+function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleSelectConcepts, selectedConcepts }) {
   const [meshChildren, setMeshChildren] = useState([]);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleSelect
               setMeshNodeExpanded={setMeshNodeExpanded}
               key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}
               handleSelectConcepts={handleSelectConcepts}
-              conceptIsSelected={conceptIsSelected}
+              selectedConcepts={selectedConcepts}
             />
             <MeshTree
               meshNodeExpanded={meshNodeExpanded}
@@ -49,7 +49,7 @@ function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleSelect
               treeNum={element.treeNumber}
               key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber}
               handleSelectConcepts={handleSelectConcepts}
-              conceptIsSelected={conceptIsSelected}
+              selectedConcepts={selectedConcepts}
             />
           </React.Fragment>
         </List.Item>
