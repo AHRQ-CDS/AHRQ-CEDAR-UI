@@ -16,6 +16,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSe
     handleSelectConcepts(getMeshConcept());
   };
 
+  // Note: This makes the MeSH tree node look like a coded concept so there is a uniform data format for all concepts.
   const getMeshConcept = () => {
     const elementName = element.name.toLowerCase();
     return { 
