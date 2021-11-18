@@ -4,7 +4,7 @@ import moment from 'moment';
 import Constants from './constants';
 import _ from 'lodash';
 
-function Conditions({ conditions, handleSelectedConcepts, handleKeywordClick, selectedConcepts, selectedKeywords, conceptIsSelected }) {
+function Conditions({ conditions, handleSelectConcepts, handleKeywordClick, selectedConcepts, selectedKeywords, conceptIsSelected }) {
 
   const getCodeSystemName = (codeSystemUrl) => {
     let codeSystemName = Constants.CODE_SYSTEMS[codeSystemUrl];
@@ -62,7 +62,7 @@ function Conditions({ conditions, handleSelectedConcepts, handleKeywordClick, se
         handleKeywordClick(getConditionKeyWord());
       }
       else {
-        handleSelectedConcepts(getConditionConcept())
+        handleSelectConcepts(getConditionConcept())
       }
     }
 
@@ -86,7 +86,7 @@ function Conditions({ conditions, handleSelectedConcepts, handleKeywordClick, se
         {conditions.map(c => 
           <Condition key={c.id} 
                      condition={c} 
-                     handleSelectedConcepts={handleSelectedConcepts}
+                     handleSelectConcepts={handleSelectConcepts}
                      handleKeywordClick={handleKeywordClick}
                      selectedConcepts={selectedConcepts}
                      selectedKeywords={selectedKeywords}

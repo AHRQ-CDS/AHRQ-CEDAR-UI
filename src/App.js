@@ -323,7 +323,7 @@ function App(props) {
   );
 
   // Memoize this handler so we don't re-render the search results on every overall re-render
-  const handleConceptClick = useCallback(
+  const handleConceptRemove = useCallback(
     (concept) => {
       setSelectedConcepts(selectedConcepts.filter(c => c !== concept));
       setSearchPage(1);
@@ -332,7 +332,7 @@ function App(props) {
   );
 
   // Memoize this handler so we don't re-render on every overall re-render
-  const handleSelectedConcepts = useCallback(
+  const handleSelectConcepts = useCallback(
     (newlySelectedConcept) => {
       const newlySelectedConceptCodes = newlySelectedConcept.coding.map(code => `${code.code}|${code?.system}`);
       const previouslySelectedConceptCodes = selectedConcepts.map(condition => condition.coding.map(code => `${code.code}|${code?.system}`));
@@ -516,7 +516,7 @@ function App(props) {
                 {selectedConcepts.length > 0 && <h5>Additional Search Concepts</h5>}
                 {selectedConcepts.map(concept => 
                   <Popup key={concept.text} 
-                       trigger={<Label color='green'><Icon name='delete' onClick={() => handleConceptClick(concept)}/> {concept.text}</Label>} 
+                       trigger={<Label color='green'><Icon name='delete' onClick={() => handleConceptRemove(concept)}/> {concept.text}</Label>} 
                        flowing 
                        hoverable
                   >
@@ -537,7 +537,7 @@ function App(props) {
                                                 meshNodeExpanded={meshNodeExpanded}
                                                 setMeshNodeExpanded={setMeshNodeExpanded}
                                                 key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}
-                                                handleSelectedConcepts={handleSelectedConcepts}
+                                                handleSelectConcepts={handleSelectConcepts}
                                                 conceptIsSelected={conceptIsSelected}
                                   />
                                   <MeshTree
@@ -545,7 +545,7 @@ function App(props) {
                                     setMeshNodeExpanded={setMeshNodeExpanded}
                                     key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "tree"}
                                     treeNum={element.treeNumber}
-                                    handleSelectedConcepts={handleSelectedConcepts}
+                                    handleSelectConcepts={handleSelectConcepts}
                                     conceptIsSelected={conceptIsSelected}
                                   />
                                 </React.Fragment>
@@ -598,7 +598,7 @@ function App(props) {
                 <Segment>
                   <h3>Conditions</h3>
                   <Conditions conditions={conditions}
-                              handleSelectedConcepts={handleSelectedConcepts}
+                              handleSelectConcepts={handleSelectConcepts}
                               handleKeywordClick={handleKeywordClick}
                               selectedConcepts={selectedConcepts}
                               selectedKeywords={selectedKeywords}
@@ -613,7 +613,7 @@ function App(props) {
                              page={searchPage}
                              onPageChange={handlePageChange}
                              onKeywordClick={handleKeywordClick}
-                             onConceptClick={handleSelectedConcepts}
+                             onConceptClick={handleSelectConcepts}
                              selectedConcepts={selectedConcepts}
                              selectedKeywords={selectedKeywords}
                              conceptIsSelected={conceptIsSelected}

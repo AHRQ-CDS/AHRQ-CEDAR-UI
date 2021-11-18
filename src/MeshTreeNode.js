@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon, Popup } from 'semantic-ui-react';
 import Constants from './constants';
 
-function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSelectedConcepts, conceptIsSelected }) {
+function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSelectConcepts, conceptIsSelected }) {
 
   const handleTreeNodeExpand = () => {
     const nodeExpanded = meshNodeExpanded.get(element.treeNumber);
@@ -12,7 +12,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSe
   }
 
   const handleTreeNodeSelect = () => {
-    handleSelectedConcepts(getMeshConcept());
+    handleSelectConcepts(getMeshConcept());
   };
 
   const getMeshConcept = () => {
