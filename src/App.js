@@ -493,19 +493,21 @@ function App(props) {
                 </Form>
 
                 {selectedKeywords.length > 0 && <h5>Additional Search Keywords</h5>}
-                {selectedKeywords.map(k => <p key={k}><Label color='blue'><Icon name='delete' onClick={() => handleKeywordClick(k)}/> {k}</Label></p>)}
+                {selectedKeywords.map(k => <div className='search-tags' key={k}><Label color='blue'><Icon name='delete' onClick={() => handleKeywordClick(k)}/> {k}</Label></div>)}
 
 
                 {selectedConcepts.length > 0 && <h5>Additional Search Concepts</h5>}
                 {selectedConcepts.map(concept => 
-                  <Popup key={concept.text} 
-                       trigger={<Label color='green'><Icon name='delete' onClick={() => handleConceptRemove(concept)}/> {concept.text}</Label>} 
-                       flowing 
-                       hoverable
-                  >
-                    <h4>Concept: {concept.text}</h4>
-                    <ConceptCodingPopup concept={concept}/>
-                  </Popup>
+                  <div className='search-tags'>
+                    <Popup key={concept.text} 
+                           trigger={<Label color='green'><Icon name='delete' onClick={() => handleConceptRemove(concept)}/> {concept.text}</Label>} 
+                           flowing 
+                           hoverable
+                    >
+                      <h4>Concept: {concept.text}</h4>
+                      <ConceptCodingPopup concept={concept}/>
+                    </Popup>
+                  </div>
                 )}
 
                 {!props.smart && meshRoots && (

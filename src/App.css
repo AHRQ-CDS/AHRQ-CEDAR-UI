@@ -22,3 +22,8 @@
 .custom-icon-padding {
     margin-left: 4px !important;
 }
+
+.search-tags {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
