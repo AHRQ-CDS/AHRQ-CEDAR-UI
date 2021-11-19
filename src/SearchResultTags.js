@@ -4,30 +4,32 @@ import ConceptCodingPopup from './ConceptCodingPopup';
 import { conceptIsSelected } from './utils'
 
 function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts }) {
+  const buttonProps = {
+    basic: true,
+    compact: true,
+    size: 'mini',
+  };
 
   const KeywordsPane = () => {
     const Keyword = (props) => {
       const selectedKeywords = props.selectedKeywords;
       const keyword = props.keyword;
-      
+
       const [selected, setSelected] = useState(false);
 
       useEffect(() => {
-        if(selectedKeywords && selectedKeywords.includes(keyword)) {
-          setSelected(true);
-        }
-        else {
-          setSelected(false);
-        }
+        selectedKeywords && selectedKeywords.includes(keyword) ? setSelected(true) : setSelected(false);
       }, [selectedKeywords, keyword]);
 
       if(selected) {
-        return <Button basic compact icon='check' size='mini' key={keyword.text} className='cursor-auto'>{keyword}
-                 <Icon name='check' color='blue' className='custom-icon-padding' />
-               </Button>
+        return (
+          <Button {...buttonProps} className='cursor-auto' key={keyword.text}>{keyword}
+            <Icon name='check' color='blue' className='custom-icon-padding' />
+          </Button>
+        );
       }
       else {
-        return <Button basic compact size='mini' key={keyword.text} onClick={() => onKeywordClick(keyword)}>{keyword}</Button>
+        return <Button {...buttonProps} onClick={() => onKeywordClick(keyword)} key={keyword.text}>{keyword}</Button>
       }
     }
 
@@ -49,53 +51,44 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
     const Concept = (props) => {
       const selectedConcepts = props.selectedConcepts;
       const concept = props.concept;
-      
       const [selected, setSelected] = useState(false);
 
       useEffect(() => {
-        if(conceptIsSelected(concept, selectedConcepts)) {
-          setSelected(true);
-        }
-        else {
-          setSelected(false);
-        }
+        conceptIsSelected(concept, selectedConcepts) ? setSelected(true) : setSelected(false);
       }, [selectedConcepts, concept]);
 
-      if(selected) {
-        return (
-          <Popup key={concept.text} 
-                 trigger={<Button basic compact size='mini' key={concept.text} className='cursor-auto'>{concept.text} 
-                            <Icon name='check' color='green' className='custom-icon-padding' />
-                          </Button>} 
-                 flowing 
-                 hoverable
-          >
+      const ConceptButton = () => {
+        if(selected) {
+          return (
+            <Button {...buttonProps} key={concept.text} className='cursor-auto'>{concept.text} 
+              <Icon name='check' color='green' className='custom-icon-padding' />
+            </Button>
+          );
+        }
+        else {
+          return <Button {...buttonProps} key={concept.text} onClick={() => onConceptClick(concept)}>{concept.text}</Button>;
+        }
+      }
+
+      // NOTE: We must wrap the ConceptButton inside of another set of tags or the Popup won't fire
+      // See: https://stackoverflow.com/questions/63611315/semantics-popup-does-not-show-up-when-passing-a-custom-component-as-trigger
+      return (
+        <Popup key={concept.text} 
+               trigger={<span><ConceptButton /></span>}
+               flowing 
+               hoverable
+        >
           <h4>Concept: {concept.text}</h4>
           <ConceptCodingPopup concept={concept}/>
-          </Popup>
-        )
-      }
-      else {
-        return (
-          <Popup key={concept.text} 
-                 trigger={<Button basic compact size='mini' key={concept.text} onClick={() => onConceptClick(concept)}>{concept.text}</Button>} 
-                 flowing 
-                 hoverable
-          >
-          <h4>Concept: {concept.text}</h4>
-          <ConceptCodingPopup concept={concept}/>
-          </Popup>
-        )
-      }
+        </Popup>
+      );
     }
 
     if(concepts.length !== 0) {
-      return concepts.map((concept) => <Concept concept={concept} selectedConcepts={selectedConcepts} />);
+      return concepts.map((concept) => <Concept concept={concept} selectedConcepts={selectedConcepts} key={concept.text} />);
     }
     else {
-      return (
-        <p>No Concepts Assigned</p>
-      );
+      return <p>No Concepts Assigned</p>;
     }
   }
 
