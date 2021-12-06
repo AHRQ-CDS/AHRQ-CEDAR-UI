@@ -7,11 +7,15 @@ import SearchResults from './SearchResults';
 import MeshTree from './MeshTree';
 import MeshTreeNode from './MeshTreeNode';
 import { Container, Grid, Segment, Menu, Label, Icon, List, Form, Button, Message, Popup } from 'semantic-ui-react';
+import { useLocation } from 'react-router-dom';
+import urlSearchObject from './urlSearchObject'
+
 import './App.css';
 import _ from 'lodash';
 
 function App(props) {
 
+  const location = useLocation();
   const [patient, setPatient] = useState();
   const [conditions, setConditions] = useState([]);
   const [searchInput, setSearchInput] = useState('');
@@ -111,6 +115,22 @@ function App(props) {
   const YYYYMM_REGEX = /^\d{4}-\d{2}$/;
   const YYYY_REGEX = /^\d{4}$/;
 
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    console.log(location.search);
+    let searchObject = queryParams.get("search");
+    console.log(searchObject);
+    if(searchObject) {
+
+    }
+    
+    for(var key of queryParams.keys()) {
+      console.log(key);
+    }   
+  }, [location])
+
+
   useEffect(() => {
 
     // If we're running in a SMART on FHIR context, load the patient and all resources
@@ -205,12 +225,25 @@ function App(props) {
       /* Note: By default a fetch() request timeouts at the time indicated by the browser. In Chrome,
          a network request times out in 300 seconds, while Firefox will time out in 90 seconds.
          Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window? */
+      let urlComponents = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+      let url = new URL(urlComponents);
       if (anySearchTerms && status.length > 0) {
         const response = await fetch(`/api/fhir/Citation?${query.toString()}`);
         const json = await response.json();
         // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
         // idea: for each search, increment a "most recent search" counter and don't set search results if the counter has moved on from this search
         setSearchResults({ status: 'complete', data: json });
+
+        // Set the searchParams on the URL object, so that they can be exposed in the browser
+        // query.forEach((queryValue, queryParam) => {
+        //   url.searchParams.set(queryParam, queryValue);
+        // })
+
+        const urlSearchObj = new urlSearchObject(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, 
+                                                    searchParameter, lastUpdatedSearchString).getAsBase64();
+
+        url.searchParams.set("search", urlSearchObj);
+        window.history.replaceState({}, '', url);
       } else {
         setSearchResults({ status: 'none' });
       }
