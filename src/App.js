@@ -7,15 +7,13 @@ import SearchResults from './SearchResults';
 import MeshTree from './MeshTree';
 import MeshTreeNode from './MeshTreeNode';
 import { Container, Grid, Segment, Menu, Label, Icon, List, Form, Button, Message, Popup } from 'semantic-ui-react';
-import { useLocation } from 'react-router-dom';
-import urlSearchObject from './urlSearchObject'
+import urlSearchObject from './utils'
 
 import './App.css';
 import _ from 'lodash';
 
 function App(props) {
 
-  const location = useLocation();
   const [patient, setPatient] = useState();
   const [conditions, setConditions] = useState([]);
   const [searchInput, setSearchInput] = useState('');
@@ -31,6 +29,7 @@ function App(props) {
   const [showLastUpdatedCustomDate, setShowLastUpdatedCustomDate] = useState(false);
   const [customDatePrefix, setCustomDatePrefix] = useState('ge');
   const [customDateError, setcustomDateError] = useState(false);
+  const [customDateInput, setCustomDateInput] = useState('');
 
 
   /* TODO: The cedar_ui app allows the user to change the count of results per page,
@@ -61,32 +60,16 @@ function App(props) {
     'classification:text': 'Keywords'
   }
 
-  const LAST_UPDATED_PRESETS = [
-    {
-      label: "Any time",
-      time_in_months: ""
-    },
-    {
-      label: "Within 1 month",
-      time_in_months: 1
-    },
-    {
-      label: "Within 3 months",
-      time_in_months: 3
-    },
-    {
-      label: "Within 6 months",
-      time_in_months: 6
-    },
-    {
-      label: "Within 1 year",
-      time_in_months: 12
-    },
-    {
-      label: "Custom",
-      time_in_months: ""
-    }
-  ]
+  const [lastUpdatedPreset, setLastUpdatedPreset] = useState('Any time') 
+
+  const LAST_UPDATED_PRESETS =  {
+    "Any time": "",
+    "Within 1 month": 1,
+    "Within 3 months": 3,
+    "Within 6 months": 6,
+    "Within 1 year": 12,
+    "Custom": "",
+  }
 
   const LAST_UPDATED_CUSTOM_PREFIXES = [
     {
@@ -117,19 +100,49 @@ function App(props) {
 
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    console.log(location.search);
-    let searchObject = queryParams.get("search");
-    console.log(searchObject);
-    if(searchObject) {
+    const url = new URLSearchParams(document.location.search);
+    const userSearch = url.get("user-search");
 
-    }
-    
-    for(var key of queryParams.keys()) {
-      console.log(key);
-    }   
-  }, [location])
+    if(userSearch) {
+      const userSearchObject = urlSearchObject.convertFromBase64(userSearch);
 
+      for(const [key, value] of Object.entries(userSearchObject)) {
+        if(key === 'lastUpdatedSearchString') {
+          setLastUpdatedSearchString(value);
+          if(value !== '') {
+            setShowLastUpdatedCustomDate(true);
+            setCustomDatePrefix(value.substring(0,2));
+            setCustomDateInput(value.substring(2, value.length));
+          }
+        }
+        else if(key === 'lastUpdatedPreset') {
+          setLastUpdatedPreset(value);
+        }
+        else if(key === 'searchParameter') {
+          setSearchParameter(value);
+        }
+        else if(key === 'searchPage') {
+          setSearchPage(value);
+        }
+        else if(key === 'searchPublisher') {
+          setSearchPublisher(value);
+        }
+        else if(key === 'searchStatus') {
+          setSearchStatus(value);
+        }
+        else if(key === 'searchString') {
+          setSearchString(value);
+          setSearchInput(value);
+        }
+        else if(key === 'selectedConcepts') {
+          setSelectedConcepts(value);
+        }
+        else if(key === 'selectedKeywords') {
+          setSelectedKeywords(value);
+        }
+      }
+    } 
+  }, [])
 
   useEffect(() => {
 
@@ -225,8 +238,8 @@ function App(props) {
       /* Note: By default a fetch() request timeouts at the time indicated by the browser. In Chrome,
          a network request times out in 300 seconds, while Firefox will time out in 90 seconds.
          Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window? */
-      let urlComponents = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-      let url = new URL(urlComponents);
+      let baseUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+      let url = new URL(baseUrl);
       if (anySearchTerms && status.length > 0) {
         const response = await fetch(`/api/fhir/Citation?${query.toString()}`);
         const json = await response.json();
@@ -234,24 +247,20 @@ function App(props) {
         // idea: for each search, increment a "most recent search" counter and don't set search results if the counter has moved on from this search
         setSearchResults({ status: 'complete', data: json });
 
-        // Set the searchParams on the URL object, so that they can be exposed in the browser
-        // query.forEach((queryValue, queryParam) => {
-        //   url.searchParams.set(queryParam, queryValue);
-        // })
-
         const urlSearchObj = new urlSearchObject(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, 
-                                                    searchParameter, lastUpdatedSearchString).getAsBase64();
+                                                    searchParameter, lastUpdatedSearchString, lastUpdatedPreset).getAsBase64();
 
-        url.searchParams.set("search", urlSearchObj);
+        url.searchParams.set("user-search", urlSearchObj);
         window.history.replaceState({}, '', url);
       } else {
         setSearchResults({ status: 'none' });
+        window.history.replaceState({}, '', baseUrl);
       }
     };
 
     cedarSearch();
 
-  }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString]);
+  }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, lastUpdatedPreset]);
 
   useEffect(() => {
     getAllPublishers();
@@ -277,6 +286,10 @@ function App(props) {
     setSearchInput(event.target.value);
   };
 
+  const updateCustomDateInput = (event) => {
+    setCustomDateInput(event.target.value);
+  }
+
   const updateSearchString = (event) => {
     event.preventDefault();
     setSearchString(searchInput);
@@ -285,13 +298,19 @@ function App(props) {
 
   const handleLastUpdatedChange = (event) => {
     const {target} = event;
+    const lastUpdatedPreset = target.value;
+    setLastUpdatedPreset(lastUpdatedPreset);
+    setLastUpdatedStates(lastUpdatedPreset);
+  }
 
-    switch(target.value) {
+  const setLastUpdatedStates = (lastUpdatedPreset) => {
+    switch(lastUpdatedPreset) {
       case "Within 1 month":
       case "Within 3 months":
       case "Within 6 months":
       case "Within 1 year":
-        const dateString = getXMonthsAgo(target.getAttribute("data"));
+        const timeInMonths = LAST_UPDATED_PRESETS[lastUpdatedPreset];
+        const dateString = getXMonthsAgo(timeInMonths);
         setLastUpdatedSearchString(`ge${dateString}`);
         setShowLastUpdatedCustomDate(false);
         setcustomDateError(false);
@@ -335,7 +354,7 @@ function App(props) {
     return dateString.match(YYYYMMDD_REGEX) || dateString.match(YYYYMM_REGEX) || dateString.match(YYYY_REGEX);
   }
 
-  const handleDatePrefixChange = (event, data) => {
+  const handleLastUpdatedCustomPrefixChange = (event, data) => {
     setCustomDatePrefix(data.value);
   }
 
@@ -470,10 +489,10 @@ function App(props) {
                       selection
                       name="type"
                       options={searchTypeOptions()}
-                      defaultValue='_content'
                       onChange={handleSearchTypeChange}
                       width={5}
                       style={{minWidth:"8em"}}
+                      value={searchParameter}
                     />
 
                     <Form.Input placeholder='Search terms...' action={{ primary: true, icon: 'search' }}
@@ -485,18 +504,18 @@ function App(props) {
 
                 <Form error onSubmit={updateCustomDate}>
                   <Form.Group grouped>
-                    {LAST_UPDATED_PRESETS.map((item) => (
+                    {Object.keys(LAST_UPDATED_PRESETS).map((key) => (
                       <Form.Field
                         control='input'
                         type='radio'
                         name='lastUpdatedRadio'
                         className='normal-weight'
-                        label={item.label}
-                        key={item.label}
-                        value={item.label}
-                        data={item.time_in_months}
+                        label={key}
+                        key={key}
+                        value={key}
+                        data={LAST_UPDATED_PRESETS[key]}
                         onChange={handleLastUpdatedChange}
-                        defaultChecked={item.label === 'Any time' ? true : false}
+                        checked={lastUpdatedPreset === key ? true : false}
                       />
                     ))}
                   </Form.Group>
@@ -507,15 +526,17 @@ function App(props) {
                         selection
                         name="type"
                         options={LAST_UPDATED_CUSTOM_PREFIXES}
-                        defaultValue='ge'
+                        value={customDatePrefix}
                         width={5}
                         style={{minWidth:"10em"}}
-                        onChange={handleDatePrefixChange}
+                        onChange={handleLastUpdatedCustomPrefixChange}
                       />
                       <Form.Input
                         type='text'
                         name='customDate'
                         placeholder='Custom date...'
+                        value={customDateInput}
+                        onChange={updateCustomDateInput}
                         width={7}
                       />
                       <Button primary type="submit">Apply Date</Button>
@@ -599,7 +620,7 @@ function App(props) {
                     <List.Item key={publisher.id}>
                       <div className="ui checkbox">
                         <input type="checkbox"
-                              checked={searchPublisher.includes[publisher.id]}
+                              checked={searchPublisher.includes(publisher.id)}
                               onChange={handlePublisherChange}
                               name={publisher.alias}
                               value={publisher.id}
