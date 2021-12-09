@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Button, Tab, Popup, Icon } from 'semantic-ui-react';
 import ConceptCodingPopup from './ConceptCodingPopup';
 import { conceptIsSelected } from './utils'
@@ -14,12 +14,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
     const Keyword = (props) => {
       const selectedKeywords = props.selectedKeywords;
       const keyword = props.keyword;
-
-      const [selected, setSelected] = useState(false);
-
-      useEffect(() => {
-        selectedKeywords && selectedKeywords.includes(keyword) ? setSelected(true) : setSelected(false);
-      }, [selectedKeywords, keyword]);
+      const selected = selectedKeywords && selectedKeywords.includes(keyword) ? true : false;
 
       if(selected) {
         return (
@@ -51,11 +46,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
     const Concept = (props) => {
       const selectedConcepts = props.selectedConcepts;
       const concept = props.concept;
-      const [selected, setSelected] = useState(false);
-
-      useEffect(() => {
-        conceptIsSelected(concept, selectedConcepts) ? setSelected(true) : setSelected(false);
-      }, [selectedConcepts, concept]);
+      const selected = conceptIsSelected(concept, selectedConcepts) ? true : false;
 
       const ConceptButton = () => {
         if(selected) {

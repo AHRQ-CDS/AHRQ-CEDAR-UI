@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Card, Icon, List } from 'semantic-ui-react';
 import moment from 'moment';
 import Constants from './constants';
@@ -24,7 +24,17 @@ function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selec
     const status = condition?.clinicalStatus?.coding?.[0]?.code || '[unknown]'
     const date = condition?.recordedDate ? moment(condition.recordedDate).format('MMMM Do YYYY') : '[unknown]';
 
-    const [selected, setSelected] = useState(false);
+    const IsSelected = () => {
+      const conditionConcept = getConditionConcept();
+      
+      if(_.isEmpty(conditionConcept)) {
+        return selectedKeywords.includes(getConditionKeyWord()) ? true : false;
+      }
+      else {
+        return conceptIsSelected(conditionConcept, selectedConcepts) ? true : false;
+      }
+
+    } 
 
     const getConditionKeyWord = useCallback(
       () => {
@@ -46,18 +56,6 @@ function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selec
       [condition.code.coding, condition.code.text]
     );
 
-    useEffect(() => {     
-      _.isEmpty(getConditionConcept()) && selectedKeywords.includes(getConditionKeyWord()) ? setSelected(true) : setSelected(false);
-
-    }, [selectedKeywords, getConditionConcept, getConditionKeyWord]);
-
-    useEffect(() => {
-      const conditionConcept = getConditionConcept();
-      
-      !_.isEmpty(conditionConcept) && conceptIsSelected(conditionConcept, selectedConcepts) ? setSelected(true) : setSelected(false);
-
-    }, [selectedConcepts, getConditionConcept]);
-
     const handleClick = () => {
       if(!condition.code?.coding || condition.code?.coding?.length === 0) {
         handleKeywordClick(getConditionKeyWord());
@@ -68,9 +66,9 @@ function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selec
     }
 
     return (
-      <Card fluid id={condition.id} value={condition} onClick={!selected ? handleClick : undefined}>
+      <Card fluid id={condition.id} value={condition} onClick={!IsSelected() ? handleClick : undefined}>
         <Card.Content>
-          <Card.Header>{text} {selected ? <Icon name='check' color='green' /> : null}</Card.Header>
+          <Card.Header>{text} {IsSelected() ? <Icon name='check' color='green' /> : null}</Card.Header>
           <Card.Meta>{date} [{status}]</Card.Meta>
         </Card.Content>
         <Card.Content extra>
