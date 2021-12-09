@@ -138,13 +138,12 @@ function App(props) {
       let textSearchString = '';
       let keywordSearchString = '';
       let titleSearchString = '';
-      let searchKeywords = selectedKeywords;
       let selectedConceptCodes = [];
 
       const status = Object.keys(searchStatus).filter(name => searchStatus[name]).map(name => name.toLowerCase());
 
-      if (searchKeywords.length > 0) {
-        keywordSearchString = `(${searchKeywords.map(k => `"${k}"`).join(' AND ')})`;
+      if (selectedKeywords.length > 0) {
+        keywordSearchString = `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`;
       }
 
       if (searchString.length > 0) {
