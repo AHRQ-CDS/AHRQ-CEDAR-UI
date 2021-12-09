@@ -5,7 +5,7 @@ import Constants from './constants';
 import { conceptIsSelected } from './utils'
 import _ from 'lodash';
 
-function Conditions({ conditions, handleSelectConcepts, handleKeywordClick, selectedConcepts, selectedKeywords }) {
+function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selectedConcepts, selectedKeywords }) {
 
   const getCodeSystemName = (codeSystemUrl) => {
     let codeSystemName = Constants.CODE_SYSTEMS[codeSystemUrl];
@@ -63,7 +63,7 @@ function Conditions({ conditions, handleSelectConcepts, handleKeywordClick, sele
         handleKeywordClick(getConditionKeyWord());
       }
       else {
-        handleSelectConcepts(getConditionConcept())
+        handleConceptSelect(getConditionConcept())
       }
     }
 
@@ -87,7 +87,7 @@ function Conditions({ conditions, handleSelectConcepts, handleKeywordClick, sele
         {conditions.map(c => 
           <Condition key={c.id} 
                      condition={c} 
-                     handleSelectConcepts={handleSelectConcepts}
+                     handleConceptSelect={handleConceptSelect}
                      handleKeywordClick={handleKeywordClick}
                      selectedConcepts={selectedConcepts}
                      selectedKeywords={selectedKeywords}

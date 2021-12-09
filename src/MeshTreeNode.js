@@ -3,7 +3,7 @@ import { Icon, Popup } from 'semantic-ui-react';
 import Constants from './constants';
 import { conceptIsSelected } from './utils'
 
-function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSelectConcepts, selectedConcepts }) {
+function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleConceptSelect, selectedConcepts }) {
 
   const handleTreeNodeExpand = () => {
     const nodeExpanded = meshNodeExpanded.get(element.treeNumber);
@@ -13,7 +13,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSe
   }
 
   const handleTreeNodeSelect = () => {
-    handleSelectConcepts(getMeshConcept());
+    handleConceptSelect(getMeshConcept());
   };
 
   // Note: This makes the MeSH tree node look like a coded concept so there is a uniform data format for all concepts.

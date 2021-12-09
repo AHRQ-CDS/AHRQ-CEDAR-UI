@@ -331,7 +331,7 @@ function App(props) {
   );
 
   // Memoize this handler so we don't re-render on every overall re-render
-  const handleSelectConcepts = useCallback(
+  const handleConceptSelect = useCallback(
     (newlySelectedConcept) => {
       const newlySelectedConceptCodes = newlySelectedConcept.coding.map(code => `${code.code}|${code?.system}`);
       const previouslySelectedConceptCodes = selectedConcepts.map(condition => condition.coding.map(code => `${code.code}|${code?.system}`));
@@ -521,7 +521,7 @@ function App(props) {
                                                 meshNodeExpanded={meshNodeExpanded}
                                                 setMeshNodeExpanded={setMeshNodeExpanded}
                                                 key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}
-                                                handleSelectConcepts={handleSelectConcepts}
+                                                handleConceptSelect={handleConceptSelect}
                                                 selectedConcepts={selectedConcepts}
                                   />
                                   <MeshTree
@@ -529,7 +529,7 @@ function App(props) {
                                     setMeshNodeExpanded={setMeshNodeExpanded}
                                     key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "tree"}
                                     treeNum={element.treeNumber}
-                                    handleSelectConcepts={handleSelectConcepts}
+                                    handleConceptSelect={handleConceptSelect}
                                     selectedConcepts={selectedConcepts}
                                   />
                                 </React.Fragment>
@@ -582,7 +582,7 @@ function App(props) {
                 <Segment>
                   <h3>Conditions</h3>
                   <Conditions conditions={conditions}
-                              handleSelectConcepts={handleSelectConcepts}
+                              handleConceptSelect={handleConceptSelect}
                               handleKeywordClick={handleKeywordClick}
                               selectedConcepts={selectedConcepts}
                               selectedKeywords={selectedKeywords}
@@ -596,7 +596,7 @@ function App(props) {
                              page={searchPage}
                              onPageChange={handlePageChange}
                              onKeywordClick={handleKeywordClick}
-                             onConceptClick={handleSelectConcepts}
+                             onConceptClick={handleConceptSelect}
                              selectedConcepts={selectedConcepts}
                              selectedKeywords={selectedKeywords}
                              />
