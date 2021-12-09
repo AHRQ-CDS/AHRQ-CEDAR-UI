@@ -497,9 +497,8 @@ function App(props) {
 
                 {selectedConcepts.length > 0 && <h5>Additional Search Concepts</h5>}
                 {selectedConcepts.map(concept => 
-                  <div className='search-tags'>
-                    <Popup key={concept.text} 
-                           trigger={<Label color='green'><Icon name='delete' onClick={() => handleConceptRemove(concept)}/> {concept.text}</Label>} 
+                  <div className='search-tags' key={concept.text}>
+                    <Popup trigger={<Label color='green'><Icon name='delete' onClick={() => handleConceptRemove(concept)}/> {concept.text}</Label>} 
                            flowing 
                            hoverable
                     >
