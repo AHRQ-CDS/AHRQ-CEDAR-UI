@@ -6,6 +6,7 @@ import ConceptCodingPopup from './ConceptCodingPopup';
 import SearchResults from './SearchResults';
 import MeshTree from './MeshTree';
 import MeshTreeNode from './MeshTreeNode';
+import ArtifactType from './ArtifactType';
 import { Container, Grid, Segment, Menu, Label, Icon, List, Form, Button, Message, Popup } from 'semantic-ui-react';
 import urlSearchObject from './utils'
 
@@ -31,6 +32,7 @@ function App(props) {
   const [customDateError, setcustomDateError] = useState(false);
   const [customDateInput, setCustomDateInput] = useState('');
   const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [selectedArtifactTypes, setSelectedArtifactTypes] = useState([]);
 
   /* TODO: The cedar_ui app allows the user to change the count of results per page,
    but cedar_smart does not. Is this something that we want to support?
@@ -260,7 +262,7 @@ function App(props) {
 
     cedarSearch();
 
-  }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, lastUpdatedPreset]);
+  }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, lastUpdatedPreset, selectedArtifactTypes]);
 
   useEffect(() => {
     getAllPublishers();
@@ -597,6 +599,9 @@ function App(props) {
                     }
                   </React.Fragment>
                 )}
+
+                <h4>Artifact Type</h4>
+                <ArtifactType selectedArtifactTypes={selectedArtifactTypes} setSelectedArtifactTypes={setSelectedArtifactTypes} />
 
                 <h4>Status</h4>
                 <List>
