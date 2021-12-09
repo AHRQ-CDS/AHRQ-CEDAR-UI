@@ -41,7 +41,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleSe
   const getSelectionIcon = () => {
     if(conceptIsSelected(getMeshConcept(), selectedConcepts)) {
       return (
-        <Popup trigger={<Icon name="check square" color="green" onClick={handleTreeNodeSelect} value={element.meshCode} />}>
+        <Popup trigger={<Icon name="check" color="green" onClick={handleTreeNodeSelect} value={element.meshCode} />}>
           <Icon name='code'></Icon>{Constants.CODE_SYSTEMS[element.system]}: {element.meshCode} ({element.name}) added to Additional Search Concepts.
         </Popup>
       )
