@@ -332,26 +332,29 @@ function App(props) {
 
   // Memoize this handler so we don't re-render on every overall re-render
   const handleConceptSelect = useCallback(
+    // This method handles selection of a concept, including checking to see if the codes in that concept are a
+    // subset of the codes from an already-selected concept
+    // 
+    // Example: hypertension, with codes = [SNOMED-CT: 38341003] is a subset of hypertensive disease, with codes = [MeSH: D006973, SNOMED-CT: 38341003, 
+    // SNOMED-CT (ESP): 38341003, MeSH (ESP): D006973]
     (newlySelectedConcept) => {
       const newlySelectedConceptCodes = newlySelectedConcept.coding.map(code => `${code.code}|${code?.system}`);
       const previouslySelectedConceptCodes = selectedConcepts.map(condition => condition.coding.map(code => `${code.code}|${code?.system}`));
-      
-      let newlySelectedConceptCodesAreSubset = false;
-      let previouslySelectedConcepts = selectedConcepts;
 
-      for(const [index, concept] of previouslySelectedConceptCodes.entries()) {
-        if(newlySelectedConceptCodes.every(c=> concept.includes(c))) {
-          newlySelectedConceptCodesAreSubset = true;
-        }
-        else if(concept.every(c => newlySelectedConceptCodes.includes(c))) {
-          previouslySelectedConcepts.splice(index, 1);
+      // Look through each previously selected concept
+      for (const [index, concept] of previouslySelectedConceptCodes.entries()) {
+        if (newlySelectedConceptCodes.every(c => concept.includes(c))) {
+          // This concept's codes are a subset of a previously selected concept, so we don't need to do anything
+          return;
+        } else if (concept.every(c => newlySelectedConceptCodes.includes(c))) {
+          // This concept's codes are a superset of a previously selected concept, so we can replace that concept
+          // Use functional updates as per https://reactjs.org/docs/hooks-reference.html#functional-updates
+          setSelectedConcepts(prevSelectedConcepts => [...prevSelectedConcepts.slice(0, index), ...prevSelectedConcepts.slice(index + 1)]);
         }
       }
 
-      if(!newlySelectedConceptCodesAreSubset) {
-        setSelectedConcepts([...previouslySelectedConcepts, newlySelectedConcept]);
-        setSearchPage(1);
-      }
+      setSelectedConcepts(prevSelectedConcepts => [...prevSelectedConcepts, newlySelectedConcept]);
+      setSearchPage(1);
     },
     [selectedConcepts]
   );
