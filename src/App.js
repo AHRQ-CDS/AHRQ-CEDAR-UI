@@ -218,6 +218,10 @@ function App(props) {
       searchParams['_content'] = textSearchString;
       searchParams['title:contains'] = titleSearchString;
       searchParams['classification'] = selectedConceptCodes;
+      if(selectedArtifactTypes.length > 0) {
+        searchParams['artifact-type'] = selectedArtifactTypes.join(',');
+        console.log(searchParams['artifact-type'])
+      }
 
       // TODO: Setting a flag here, anySearchTerms, and checking for it below before making a request to the API seems less than ideal.
       // Essentially, we only want to make a request if the user has interacted with any of the search filters in the UI (searchParams object), i.e.,

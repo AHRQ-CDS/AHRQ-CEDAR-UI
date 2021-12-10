@@ -20,7 +20,8 @@ function ArtifactType({selectedArtifactTypes, setSelectedArtifactTypes}) {
     }
   ))
 
-  const handleArtifactTypeChange = (event) => {
+  const handleArtifactTypeChange = (event, {value}) => {
+    setSelectedArtifactTypes(value);
   }
 
   return (
@@ -31,9 +32,9 @@ function ArtifactType({selectedArtifactTypes, setSelectedArtifactTypes}) {
       multiple
       search
       selection
-      value={selectedArtifactTypes || ""}
       onChange={handleArtifactTypeChange}
       options={artifactTypeOptions}
+      value={selectedArtifactTypes}
     />
 
   );

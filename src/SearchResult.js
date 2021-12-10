@@ -18,6 +18,15 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
   if (resource.citedArtifact?.publicationForm[0].articleDate) {
     subheaderFields.push(resource.citedArtifact.publicationForm[0].articleDate);
   }
+  for (const classification of resource.citedArtifact?.classification || []) {
+    if(classification.type.coding[0].code === "knowledge-artifact-type") {
+      for (const classifier of classification.classifier || []) {
+        if (classifier.text) {
+           subheaderFields.push(classifier.text);
+        }
+      }
+    }  
+  }
 
   // Find the length nearest 300 characters to a space break
   const description = resource.citedArtifact?.abstract ? resource.citedArtifact.abstract[0].text : '';
