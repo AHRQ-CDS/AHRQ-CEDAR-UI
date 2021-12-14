@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Card, Icon, List } from 'semantic-ui-react';
 import moment from 'moment';
 import Constants from './constants';
@@ -30,7 +30,7 @@ function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selec
       const conditionConcept = getConditionConcept();
       
       if(_.isEmpty(conditionConcept)) {
-        return selectedKeywords.includes(getConditionKeyWord());
+        return selectedKeywords.includes(conditionKeyword);
       }
       else {
         return conceptIsSelected(conditionConcept, selectedConcepts);
@@ -49,7 +49,7 @@ function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selec
 
     const handleClick = () => {
       if(!condition.code?.coding || condition.code?.coding?.length === 0) {
-        handleKeywordClick(getConditionKeyWord());
+        handleKeywordClick(conditionKeyword);
       }
       else {
         handleConceptSelect(getConditionConcept())
