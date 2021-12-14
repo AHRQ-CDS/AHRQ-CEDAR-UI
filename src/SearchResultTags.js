@@ -14,7 +14,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
     const Keyword = (props) => {
       const selectedKeywords = props.selectedKeywords;
       const keyword = props.keyword;
-      const selected = selectedKeywords && selectedKeywords.includes(keyword) ? true : false;
+      const selected = selectedKeywords && selectedKeywords.includes(keyword);
 
       if(selected) {
         return (
@@ -46,7 +46,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
     const Concept = (props) => {
       const selectedConcepts = props.selectedConcepts;
       const concept = props.concept;
-      const selected = conceptIsSelected(concept, selectedConcepts) ? true : false;
+      const selected = conceptIsSelected(concept, selectedConcepts);
 
       const ConceptButton = () => {
         if(selected) {
