@@ -2,8 +2,12 @@
     margin-top: 1rem;
 }
 
-.expander {
+.cursor-pointer {
     cursor: pointer;
+}
+
+.cursor-auto {
+    cursor:  auto !important;
 }
 
 .ui.form .field>label {
@@ -13,4 +17,13 @@
 .custom-checkbox {
     margin-right:  0.4em;  
     margin-left:  0em;
+}
+
+.custom-icon-padding {
+    margin-left: 4px !important;
+}
+
+.search-tags {
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
