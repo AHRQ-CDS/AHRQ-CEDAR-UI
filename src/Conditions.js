@@ -3,7 +3,6 @@ import { Card, Icon, List } from 'semantic-ui-react';
 import moment from 'moment';
 import Constants from './constants';
 import { conceptIsSelected } from './utils'
-import _ from 'lodash';
 
 function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selectedConcepts, selectedKeywords }) {
 
