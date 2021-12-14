@@ -24,37 +24,28 @@ function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selec
     const status = condition?.clinicalStatus?.coding?.[0]?.code || '[unknown]'
     const date = condition?.recordedDate ? moment(condition.recordedDate).format('MMMM Do YYYY') : '[unknown]';
 
+    const conditionKeyword = condition.code?.text ? condition.code.text.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '').toLowerCase() : 'unknown';
+
     const IsSelected = () => {
       const conditionConcept = getConditionConcept();
       
       if(_.isEmpty(conditionConcept)) {
-        return selectedKeywords.includes(getConditionKeyWord()) ? true : false;
+        return selectedKeywords.includes(getConditionKeyWord());
       }
       else {
-        return conceptIsSelected(conditionConcept, selectedConcepts) ? true : false;
+        return conceptIsSelected(conditionConcept, selectedConcepts);
       }
-
     } 
 
-    const getConditionKeyWord = useCallback(
-      () => {
-        return condition.code?.text ? condition.code.text.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '').toLowerCase() : 'unknown';
-      },
-      [condition.code.text]
-    );
+    const getConditionConcept = () => {
+      let codes = [];
 
-    const getConditionConcept = useCallback(
-      () => {
-        let codes = [];
-
-        for(const code of condition.code.coding) {
-          codes.push({code: code.code, system: code.system, display: code.display});
-        }
-        const text = condition.code.text !== undefined ? condition.code.text : codes[0].display;
-        return {text: text.toLowerCase(), coding: codes};
-      },
-      [condition.code.coding, condition.code.text]
-    );
+      for(const code of condition.code.coding) {
+        codes.push({code: code.code, system: code.system, display: code.display});
+      }
+      const text = condition.code.text !== undefined ? condition.code.text : codes[0].display;
+      return {text: text.toLowerCase(), coding: codes};
+    }
 
     const handleClick = () => {
       if(!condition.code?.coding || condition.code?.coding?.length === 0) {
