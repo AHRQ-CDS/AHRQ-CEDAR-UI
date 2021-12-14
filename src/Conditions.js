@@ -25,18 +25,6 @@ function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selec
     const date = condition?.recordedDate ? moment(condition.recordedDate).format('MMMM Do YYYY') : '[unknown]';
 
     const conditionKeyword = condition.code?.text ? condition.code.text.replace(/ *\([^)]+\)/, '').replace(/[^\w\s]+/, '').toLowerCase() : 'unknown';
-
-    const IsSelected = () => {
-      const conditionConcept = getConditionConcept();
-      
-      if(_.isEmpty(conditionConcept)) {
-        return selectedKeywords.includes(conditionKeyword);
-      }
-      else {
-        return conceptIsSelected(conditionConcept, selectedConcepts);
-      }
-    } 
-
     const getConditionConcept = () => {
       let codes = [];
 
@@ -47,19 +35,22 @@ function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selec
       return {text: text.toLowerCase(), coding: codes};
     }
 
+    const conditionConcept = getConditionConcept();
+    const selected = selectedKeywords.includes(conditionKeyword) || conceptIsSelected(conditionConcept, selectedConcepts);
+
     const handleClick = () => {
       if(!condition.code?.coding || condition.code?.coding?.length === 0) {
         handleKeywordClick(conditionKeyword);
       }
       else {
-        handleConceptSelect(getConditionConcept())
+        handleConceptSelect(conditionConcept)
       }
     }
 
     return (
-      <Card fluid id={condition.id} value={condition} onClick={!IsSelected() ? handleClick : undefined}>
+      <Card fluid id={condition.id} value={condition} onClick={!selected ? handleClick : undefined}>
         <Card.Content>
-          <Card.Header>{text} {IsSelected() ? <Icon name='check' color='green' /> : null}</Card.Header>
+          <Card.Header>{text} {selected ? <Icon name='check' color='green' /> : null}</Card.Header>
           <Card.Meta>{date} [{status}]</Card.Meta>
         </Card.Content>
         <Card.Content extra>
