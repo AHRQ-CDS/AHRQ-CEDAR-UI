@@ -247,8 +247,8 @@ function App(props) {
         // idea: for each search, increment a "most recent search" counter and don't set search results if the counter has moved on from this search
         setSearchResults({ status: 'complete', data: json });
 
-        const urlSearchObj = new urlSearchObject(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, 
-                                                    searchParameter, lastUpdatedSearchString, lastUpdatedPreset).getAsBase64();
+        const urlSearchObj = urlSearchObject.getAsBase64(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, 
+                                                    searchParameter, lastUpdatedSearchString, lastUpdatedPreset);
 
         url.searchParams.set("user-search", urlSearchObj);
         window.history.replaceState({}, '', url);

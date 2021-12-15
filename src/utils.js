@@ -14,29 +14,17 @@ export const conceptIsSelected = (conceptToTest, selectedConcepts) => {
 }
 
 export default class urlSearchObject {
-  constructor(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, lastUpdatedPreset) {
-    this.selectedKeywords = selectedKeywords;
-    this.selectedConcepts = selectedConcepts;
-    this.searchString = searchString;
-    this.searchPage = searchPage;
-    this.searchPublisher = searchPublisher;
-    this.searchStatus = searchStatus;
-    this.searchParameter = searchParameter;
-    this.lastUpdatedSearchString = lastUpdatedSearchString;
-    this.lastUpdatedPreset = lastUpdatedPreset;
-  }
-
-  getAsBase64() {
+  static getAsBase64(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, lastUpdatedPreset) {
     const urlSearchObj = {
-      selectedKeywords: this.selectedKeywords,
-      selectedConcepts: this.selectedConcepts,
-      searchString: this.searchString,
-      searchPage: this.searchPage,
-      searchPublisher: this.searchPublisher,
-      searchStatus: this.searchStatus,
-      searchParameter: this.searchParameter,
-      lastUpdatedSearchString: this.lastUpdatedPreset === 'Custom' ? this.lastUpdatedSearchString : '',
-      lastUpdatedPreset: this.lastUpdatedPreset
+      selectedKeywords: selectedKeywords,
+      selectedConcepts: selectedConcepts,
+      searchString: searchString,
+      searchPage: searchPage,
+      searchPublisher: searchPublisher,
+      searchStatus: searchStatus,
+      searchParameter: searchParameter,
+      lastUpdatedSearchString: lastUpdatedPreset === 'Custom' ? lastUpdatedSearchString : '',
+      lastUpdatedPreset: lastUpdatedPreset
     }
 
     return compressToBase64(JSON.stringify(urlSearchObj));
