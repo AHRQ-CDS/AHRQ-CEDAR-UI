@@ -30,7 +30,7 @@ function App(props) {
   const [customDatePrefix, setCustomDatePrefix] = useState('ge');
   const [customDateError, setcustomDateError] = useState(false);
   const [customDateInput, setCustomDateInput] = useState('');
-
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   /* TODO: The cedar_ui app allows the user to change the count of results per page,
    but cedar_smart does not. Is this something that we want to support?
@@ -655,6 +655,8 @@ function App(props) {
                              onConceptClick={handleConceptSelect}
                              selectedConcepts={selectedConcepts}
                              selectedKeywords={selectedKeywords}
+                             activeTabIndex={activeTabIndex}
+                             setActiveTabIndex={setActiveTabIndex}
                              />
             </Grid.Column>
           </Grid.Row>
