@@ -3,7 +3,7 @@ import { List } from 'semantic-ui-react';
 import './MeshTree.css'
 import MeshTreeNode from './MeshTreeNode';
 
-function MeshTree({ treeNum, meshNodeSelected, meshNodeExpanded, setMeshNodeSelected, setMeshNodeExpanded }) {
+function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleConceptSelect, selectedConcepts }) {
   const [meshChildren, setMeshChildren] = useState([]);
 
   useEffect(() => {
@@ -17,6 +17,7 @@ function MeshTree({ treeNum, meshNodeSelected, meshNodeExpanded, setMeshNodeSele
             name: value.valueCoding.display, 
             treeNumber: value.valueCoding.extension[0].valueCode, 
             meshCode: value.valueCoding.code,
+            system: value.valueCoding.system,
             hasChildren: value.valueCoding.extension[1].valueBoolean,
             isGlobalRoot: false,
             directArtifacts: value.valueCoding.extension[2].valueUnsignedInt,
@@ -38,17 +39,17 @@ function MeshTree({ treeNum, meshNodeSelected, meshNodeExpanded, setMeshNodeSele
             <MeshTreeNode element={element}
               meshNodeExpanded={meshNodeExpanded}
               setMeshNodeExpanded={setMeshNodeExpanded}
-              meshNodeSelected={meshNodeSelected}
-              setMeshNodeSelected={setMeshNodeSelected}
               key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber + "root"}
+              handleConceptSelect={handleConceptSelect}
+              selectedConcepts={selectedConcepts}
             />
             <MeshTree
               meshNodeExpanded={meshNodeExpanded}
-              meshNodeSelected={meshNodeSelected}
               setMeshNodeExpanded={setMeshNodeExpanded}
-              setMeshNodeSelected={setMeshNodeSelected}
               treeNum={element.treeNumber}
               key={meshNodeExpanded.get(element.treeNumber) + element.treeNumber}
+              handleConceptSelect={handleConceptSelect}
+              selectedConcepts={selectedConcepts}
             />
           </React.Fragment>
         </List.Item>
