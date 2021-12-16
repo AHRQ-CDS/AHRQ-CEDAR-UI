@@ -1,7 +1,7 @@
 # CEDAR UI Demonstration
 
 ## Background
-CEDAR UI is a client application that enables users to interact with the CEDAR Service. The CEDAR Service is a backend system that provides a machine-accessible API to CEDAR repository data. CEDAR's API is intended to allow a diverse set of existing or new systems to access the data that CEDAR aggregates from multiple source repositories. This approach allows CEDAR to support many different types of uses. For example, a clinician and a researcher may both find CEDAR valuable, but the way they would like to use CEDAR may be very different. This means that different user types could potentially benefit from having different user interfaces to interact with. 
+CEDAR UI is a client application that enables users to interact with the CEDAR Service. The CEDAR Service is a backend system that provides a machine-accessible API to CEDAR repository data. Decoupling the CEDAR UI from repository data access methods. This means that different user types could potentially benefit from having different user interfaces to interact with. 
 
 In this vein, the CEDAR UI demonstration offers two different user experiences: (1) a SMART on FHIR application using the SMART on FHIR Sandbox environment and synthetic patient data; (2) a Standalone application, which offers a notional search interface.
 
