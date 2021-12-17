@@ -217,7 +217,6 @@ function App(props) {
       searchParams['classification'] = selectedConceptCodes;
       if(selectedArtifactTypes.length > 0) {
         searchParams['artifact-type'] = selectedArtifactTypes.join(',');
-        console.log(searchParams['artifact-type'])
       }
 
       // TODO: Setting a flag here, anySearchTerms, and checking for it below before making a request to the API seems less than ideal.
