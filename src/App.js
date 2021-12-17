@@ -32,6 +32,7 @@ function App(props) {
   const [customDateError, setcustomDateError] = useState(false);
   const [customDateInput, setCustomDateInput] = useState('');
   const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [allArtifactTypes, setAllArtifactTypes] = useState([]);
   const [selectedArtifactTypes, setSelectedArtifactTypes] = useState([]);
 
   /* TODO: The cedar_ui app allows the user to change the count of results per page,
@@ -160,10 +161,6 @@ function App(props) {
   }, [props.smart]);
 
   useEffect(() => {
-    getMeshRoots();
-  }, []);
-
-  useEffect(() => {
     const cedarSearch = async () => {
       setSearchResults({ status: 'pending' });
       let searchParams = {}
@@ -270,6 +267,8 @@ function App(props) {
 
   useEffect(() => {
     getAllPublishers();
+    getMeshRoots();
+    getAllArtifactTypes();
   }, []);
 
   const getMeshRoots = async () => {
@@ -434,6 +433,15 @@ function App(props) {
     setAllPublishers(sorted_data);
   };
 
+  const getAllArtifactTypes = async () => {
+    const response = await fetch('api/fhir/Citation/$get-artifact-types');
+    const json = await response.json();
+
+    const data = (json.parameter|| []).map((parameter) => ({ key: parameter.valueCoding.display, text: parameter.valueCoding.display, value: parameter.valueCoding.display }))
+    const sorted_data = _.orderBy(data, ['key'])
+    setAllArtifactTypes(sorted_data);
+  };
+
   const handlePublisherChange = (event) => {
     if (event.target.checked && !searchPublisher.includes(event.target.value)) {
       setSearchPublisher([ ...searchPublisher, event.target.value]);
@@ -571,6 +579,12 @@ function App(props) {
                   </div>
                 )}
 
+                <h4>Artifact Type</h4>
+                <ArtifactType selectedArtifactTypes={selectedArtifactTypes} 
+                              setSelectedArtifactTypes={setSelectedArtifactTypes} 
+                              allArtifactTypes={allArtifactTypes}
+                />
+
                 {!props.smart && meshRoots && (
                   <React.Fragment>
                     <h4>Browse By</h4>
@@ -603,9 +617,6 @@ function App(props) {
                     }
                   </React.Fragment>
                 )}
-
-                <h4>Artifact Type</h4>
-                <ArtifactType selectedArtifactTypes={selectedArtifactTypes} setSelectedArtifactTypes={setSelectedArtifactTypes} />
 
                 <h4>Status</h4>
                 <List>
