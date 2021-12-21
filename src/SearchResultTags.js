@@ -71,7 +71,6 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
         <Popup key={concept.text} 
                trigger={<span><ConceptButton /></span>}
                flowing 
-               hoverable
         >
           <h4>Concept: {concept.text}</h4>
           <ConceptCodingPopup concept={concept}/>
