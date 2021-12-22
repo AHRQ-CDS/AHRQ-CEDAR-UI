@@ -1,7 +1,7 @@
 # CEDAR UI Demonstration
 
 ## Background
-CEDAR UI is a client application that enables users to interact with the CEDAR Service. The CEDAR Service is a backend system that provides a machine-accessible API to CEDAR repository data. Decoupling the CEDAR UI from repository data access methods. This means that different user types could potentially benefit from having different user interfaces to interact with. 
+CEDAR UI is a client application that enables users to interact with the CEDAR Service. The CEDAR Service is a backend system that provides a machine-accessible API to CEDAR repository data. Decoupling the CEDAR UI from repository data access methods means that different user types could potentially benefit from having different user interfaces to interact with.
 
 In this vein, the CEDAR UI demonstration offers two different user experiences: (1) a SMART on FHIR application using the SMART on FHIR Sandbox environment and synthetic patient data; (2) a Standalone application, which offers a notional search interface.
 
@@ -22,7 +22,7 @@ yarn install
 
 This application relies on the CEDAR API application, a Ruby and Sinatra app, for the CEDAR search API functionality. To run the CEDAR API locally on port 4567:
 
-Clone the CEDAR API repository. Follow the instructions on the CEDAR API README for any required dependencies specific to CEDAR API. 
+Clone the CEDAR API repository. Follow the instructions on the CEDAR API README for any required dependencies specific to CEDAR API.
 ```
 git clone https://yourusername@bitbucket.org/ahrq/cedar_api.git
 cd cedar_api
