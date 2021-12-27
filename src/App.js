@@ -143,6 +143,9 @@ function App(props) {
         else if(key === 'selectedKeywords') {
           setSelectedKeywords(value);
         }
+        else if(key === 'selectedArtifactTypes') {
+          setSelectedArtifactTypes(value);
+        }
       }
     } 
   }, [])
@@ -250,7 +253,7 @@ function App(props) {
         setSearchResults({ status: 'complete', data: json });
 
         const urlSearchObj = urlSearchObject.getAsBase64(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, 
-                                                    searchParameter, lastUpdatedSearchString, lastUpdatedPreset);
+                                                    searchParameter, lastUpdatedSearchString, lastUpdatedPreset, selectedArtifactTypes);
 
         url.searchParams.set("user-search", urlSearchObj);
         window.history.replaceState({}, '', url);
