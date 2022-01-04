@@ -6,7 +6,7 @@ import remark from 'remark';
 import _ from 'lodash';
 import SearchResultTags from './SearchResultTags';
 
-function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts }) {
+function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts, activeTabIndex, setActiveTabIndex }) {
 
   const [fullDescription, setFullDescription] = useState(false);
 
@@ -78,6 +78,8 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
                             onConceptClick={onConceptClick}
                             selectedKeywords={selectedKeywords}
                             selectedConcepts={selectedConcepts} 
+                            activeTabIndex={activeTabIndex} 
+                            setActiveTabIndex={setActiveTabIndex}
           />
         </Card.Description>
       </Card.Content>

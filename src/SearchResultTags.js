@@ -3,12 +3,16 @@ import { Button, Tab, Popup, Icon } from 'semantic-ui-react';
 import ConceptCodingPopup from './ConceptCodingPopup';
 import { conceptIsSelected } from './utils'
 
-function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts }) {
+function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts, activeTabIndex, setActiveTabIndex }) {
   const buttonProps = {
     basic: true,
     compact: true,
     size: 'mini',
   };
+
+  const handleTabChange = (e, { activeIndex }) => {
+    setActiveTabIndex(activeIndex);
+  }
 
   const KeywordsPane = () => {
     const Keyword = (props) => {
@@ -89,7 +93,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
   ]
 
   return (
-    <Tab panes={panes} menu={{ secondary: true, pointing: true }} />
+    <Tab panes={panes} menu={{ secondary: true, pointing: true }} activeIndex={activeTabIndex} onTabChange={handleTabChange} />
   )
 }
 

@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { Pagination, Loader } from 'semantic-ui-react';
 import SearchResult from './SearchResult';
 
-function SearchResults({ searchResults, page, onPageChange, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts }) {
+function SearchResults({ searchResults, page, onPageChange, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts, activeTabIndex, setActiveTabIndex }) {
   if (searchResults?.status === 'complete') {
     return (
         <React.Fragment>
@@ -16,6 +16,8 @@ function SearchResults({ searchResults, page, onPageChange, onKeywordClick, onCo
                             onConceptClick={onConceptClick}
                             selectedConcepts={selectedConcepts}
                             selectedKeywords={selectedKeywords}
+                            activeTabIndex={activeTabIndex} 
+                            setActiveTabIndex={setActiveTabIndex}
               />
             )
           }
