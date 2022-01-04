@@ -6,6 +6,7 @@ import ConceptCodingPopup from './ConceptCodingPopup';
 import SearchResults from './SearchResults';
 import MeshTree from './MeshTree';
 import MeshTreeNode from './MeshTreeNode';
+import ArtifactType from './ArtifactType';
 import { Container, Grid, Segment, Menu, Label, Icon, List, Form, Button, Message, Popup } from 'semantic-ui-react';
 import urlSearchObject from './utils'
 
@@ -31,6 +32,8 @@ function App(props) {
   const [customDateError, setcustomDateError] = useState(false);
   const [customDateInput, setCustomDateInput] = useState('');
   const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [allArtifactTypes, setAllArtifactTypes] = useState([]);
+  const [selectedArtifactTypes, setSelectedArtifactTypes] = useState([]);
 
   /* TODO: The cedar_ui app allows the user to change the count of results per page,
    but cedar_smart does not. Is this something that we want to support?
@@ -140,6 +143,9 @@ function App(props) {
         else if(key === 'selectedKeywords') {
           setSelectedKeywords(value);
         }
+        else if(key === 'selectedArtifactTypes') {
+          setSelectedArtifactTypes(value);
+        }
       }
     } 
   }, [])
@@ -156,10 +162,6 @@ function App(props) {
     }
 
   }, [props.smart]);
-
-  useEffect(() => {
-    getMeshRoots();
-  }, []);
 
   useEffect(() => {
     const cedarSearch = async () => {
@@ -216,6 +218,9 @@ function App(props) {
       searchParams['_content'] = textSearchString;
       searchParams['title:contains'] = titleSearchString;
       searchParams['classification'] = selectedConceptCodes;
+      if(selectedArtifactTypes.length > 0) {
+        searchParams['artifact-type'] = selectedArtifactTypes.join(',');
+      }
 
       // TODO: Setting a flag here, anySearchTerms, and checking for it below before making a request to the API seems less than ideal.
       // Essentially, we only want to make a request if the user has interacted with any of the search filters in the UI (searchParams object), i.e.,
@@ -248,7 +253,7 @@ function App(props) {
         setSearchResults({ status: 'complete', data: json });
 
         const urlSearchObj = urlSearchObject.getAsBase64(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, 
-                                                    searchParameter, lastUpdatedSearchString, lastUpdatedPreset);
+                                                    searchParameter, lastUpdatedSearchString, lastUpdatedPreset, selectedArtifactTypes);
 
         url.searchParams.set("user-search", urlSearchObj);
         window.history.replaceState({}, '', url);
@@ -260,10 +265,12 @@ function App(props) {
 
     cedarSearch();
 
-  }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, lastUpdatedPreset]);
+  }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, lastUpdatedPreset, selectedArtifactTypes]);
 
   useEffect(() => {
     getAllPublishers();
+    getMeshRoots();
+    getAllArtifactTypes();
   }, []);
 
   const getMeshRoots = async () => {
@@ -428,6 +435,15 @@ function App(props) {
     setAllPublishers(sorted_data);
   };
 
+  const getAllArtifactTypes = async () => {
+    const response = await fetch('api/fhir/Citation/$get-artifact-types');
+    const json = await response.json();
+
+    const data = (json.parameter|| []).map((parameter) => ({ key: parameter.valueCoding.display, text: parameter.valueCoding.display, value: parameter.valueCoding.display }))
+    const sorted_data = _.orderBy(data, ['key'])
+    setAllArtifactTypes(sorted_data);
+  };
+
   const handlePublisherChange = (event) => {
     if (event.target.checked && !searchPublisher.includes(event.target.value)) {
       setSearchPublisher([ ...searchPublisher, event.target.value]);
@@ -564,6 +580,12 @@ function App(props) {
                     </Popup>
                   </div>
                 )}
+
+                <h4>Artifact Type</h4>
+                <ArtifactType selectedArtifactTypes={selectedArtifactTypes} 
+                              setSelectedArtifactTypes={setSelectedArtifactTypes} 
+                              allArtifactTypes={allArtifactTypes}
+                />
 
                 {!props.smart && meshRoots && (
                   <React.Fragment>

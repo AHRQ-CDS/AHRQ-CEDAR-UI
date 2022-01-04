@@ -14,7 +14,8 @@ export const conceptIsSelected = (conceptToTest, selectedConcepts) => {
 }
 
 export default class urlSearchObject {
-  static getAsBase64(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, lastUpdatedPreset) {
+  static getAsBase64(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, 
+    lastUpdatedPreset, selectedArtifactTypes) {
     const urlSearchObj = {
       selectedKeywords: selectedKeywords,
       selectedConcepts: selectedConcepts,
@@ -24,7 +25,8 @@ export default class urlSearchObject {
       searchStatus: searchStatus,
       searchParameter: searchParameter,
       lastUpdatedSearchString: lastUpdatedPreset === 'Custom' ? lastUpdatedSearchString : '',
-      lastUpdatedPreset: lastUpdatedPreset
+      lastUpdatedPreset: lastUpdatedPreset,
+      selectedArtifactTypes: selectedArtifactTypes
     }
 
     return compressToBase64(JSON.stringify(urlSearchObj));
