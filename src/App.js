@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { SMART } from './FHIRClientWrapper';
 import Patient from './Patient';
 import Conditions from './Conditions';
@@ -65,14 +65,15 @@ function App(props) {
 
   const [lastUpdatedPreset, setLastUpdatedPreset] = useState('Any time') 
 
-  const LAST_UPDATED_PRESETS =  {
-    "Any time": "",
-    "Within 1 month": 1,
-    "Within 3 months": 3,
-    "Within 6 months": 6,
-    "Within 1 year": 12,
-    "Custom": "",
-  }
+  const LAST_UPDATED_PRESETS = useMemo(() => ({
+      "Any time": "",
+      "Within 1 month": 1,
+      "Within 3 months": 3,
+      "Within 6 months": 6,
+      "Within 1 year": 12,
+      "Custom": "",
+    }), []
+  );
 
   const LAST_UPDATED_CUSTOM_PREFIXES = [
     {
@@ -101,6 +102,34 @@ function App(props) {
   const YYYYMM_REGEX = /^\d{4}-\d{2}$/;
   const YYYY_REGEX = /^\d{4}$/;
 
+  const setLastUpdatedStates = useCallback(
+    (lastUpdatedPreset) => {
+      // Clear the Custom date input text when the user changes the 'Artifact Last Updated' radio 
+      setCustomDateInput('');
+      switch(lastUpdatedPreset) {
+        case "Within 1 month":
+        case "Within 3 months":
+        case "Within 6 months":
+        case "Within 1 year":
+          const timeInMonths = LAST_UPDATED_PRESETS[lastUpdatedPreset];
+          const dateString = getXMonthsAgo(timeInMonths);
+          setLastUpdatedSearchString(`ge${dateString}`);
+          setShowLastUpdatedCustomDate(false);
+          setcustomDateError(false);
+          break;
+        case "Custom":
+          setLastUpdatedSearchString('');
+          setShowLastUpdatedCustomDate(true);
+          setcustomDateError(false);
+          break;
+        default:
+          setLastUpdatedSearchString('');
+          setShowLastUpdatedCustomDate(false);
+          setcustomDateError(false);
+          break;
+      }
+    },[LAST_UPDATED_PRESETS]
+  ); 
 
   useEffect(() => {
     const url = new URLSearchParams(document.location.search);
@@ -111,15 +140,20 @@ function App(props) {
 
       for(const [key, value] of Object.entries(userSearchObject)) {
         if(key === 'lastUpdatedSearchString') {
-          setLastUpdatedSearchString(value);
+          // Only 'Custom' dates set the lastUpdated search string to a specific date (e.g., 20211011)
+          // All other date presets (e.g., 'Within 3 months') are relative to today's date; thus in these cases the lastUpdated search string must be re-computed
           if(value !== '') {
             setShowLastUpdatedCustomDate(true);
+            setLastUpdatedSearchString(value);
             setCustomDatePrefix(value.substring(0,2));
             setCustomDateInput(value.substring(2, value.length));
           }
         }
         else if(key === 'lastUpdatedPreset') {
           setLastUpdatedPreset(value);
+          if(value !== 'Custom') {
+            setLastUpdatedStates(value);
+          }
         }
         else if(key === 'searchParameter') {
           setSearchParameter(value);
@@ -148,7 +182,7 @@ function App(props) {
         }
       }
     } 
-  }, [])
+  }, [setLastUpdatedStates])
 
   useEffect(() => {
 
@@ -308,31 +342,6 @@ function App(props) {
     const lastUpdatedPreset = target.value;
     setLastUpdatedPreset(lastUpdatedPreset);
     setLastUpdatedStates(lastUpdatedPreset);
-  }
-
-  const setLastUpdatedStates = (lastUpdatedPreset) => {
-    switch(lastUpdatedPreset) {
-      case "Within 1 month":
-      case "Within 3 months":
-      case "Within 6 months":
-      case "Within 1 year":
-        const timeInMonths = LAST_UPDATED_PRESETS[lastUpdatedPreset];
-        const dateString = getXMonthsAgo(timeInMonths);
-        setLastUpdatedSearchString(`ge${dateString}`);
-        setShowLastUpdatedCustomDate(false);
-        setcustomDateError(false);
-        break;
-      case "Custom":
-        setLastUpdatedSearchString('');
-        setShowLastUpdatedCustomDate(true);
-        setcustomDateError(false);
-        break;
-      default:
-        setLastUpdatedSearchString('');
-        setShowLastUpdatedCustomDate(false);
-        setcustomDateError(false);
-        break;
-    }
   }
 
   const getXMonthsAgo = (numMonths) => {
