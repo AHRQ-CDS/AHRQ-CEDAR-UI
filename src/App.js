@@ -8,7 +8,7 @@ import MeshTree from './MeshTree';
 import MeshTreeNode from './MeshTreeNode';
 import ArtifactType from './ArtifactType';
 import { Container, Grid, Segment, Menu, Label, Icon, List, Form, Button, Message, Popup } from 'semantic-ui-react';
-import urlSearchObject from './utils'
+import urlSearchObject from './utils';
 
 import './App.css';
 import _ from 'lodash';
