@@ -639,15 +639,15 @@ function App(props) {
                 <h4>Status</h4>
                 <List>
                 {STATUS.map((name) => (
-                  <List.Item key={name}>
-                    <div className="ui checkbox">
-                    <input type="checkbox"
+                  <List.Item key={name} className="pill-list-item">
+                    <label>
+                      <input type="checkbox"
                               checked={searchStatus.includes(name)}
                               onChange={handleStatusChange}
                               name={name}
-                    />
-                    <label>{name}</label>
-                    </div>
+                      />
+                      <span className="pill-list-label ui label">{name}</span>
+                    </label>
                   </List.Item>
                 ))}
                 </List>
@@ -655,18 +655,20 @@ function App(props) {
                 <h4>Publishers</h4>
                 <List>
                   {allPublishers.map((publisher) => (
-                    <List.Item key={publisher.id}>
-                      <div className="ui checkbox">
+                    <List.Item key={publisher.id} className="pill-list-item">
+                      <label>
                         <input type="checkbox"
                               checked={searchPublisher.includes(publisher.id)}
                               onChange={handlePublisherChange}
                               name={publisher.alias}
                               value={publisher.id}
+                            
                         />
-                        <label>
-                          <span data-tooltip={publisher.name} data-position="right center">{publisher.alias}</span>
-                        </label>
-                      </div>
+                        <span data-tooltip={publisher.name} data-position="right center" 
+                          className="pill-list-label ui label">
+                          {publisher.alias}
+                        </span>
+                      </label>
                     </List.Item>
                   ))}
                 </List>
