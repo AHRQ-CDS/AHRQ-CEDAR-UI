@@ -39,21 +39,16 @@ function App(props) {
    but cedar_smart does not. Is this something that we want to support?
 
    const [searchCount, setSearchCount] = useState(10);*/
-
-  const [searchStatus, setSearchStatus] = useState({
-    Active: true,
-    Retired: false,
-    Draft: false,
-    Unknown: false
-  });
-  const [allPublishers, setAllPublishers] = useState([]);
-  const [searchPublisher, setSearchPublisher] = useState([]);
-
-  /* TODO: Related to above. Currently, have a constant here in lieu of supporting a user-selected
+   
+   const [searchStatus, setSearchStatus] = useState([]);
+   const [allPublishers, setAllPublishers] = useState([]);
+   const [searchPublisher, setSearchPublisher] = useState([]);
+   
+   /* TODO: Related to above. Currently, have a constant here in lieu of supporting a user-selected
    number of page results returned (e.g., 10, 20, etc.) */
-  const SEARCH_COUNT = 10;
-
-  const STATUS = [
+   const SEARCH_COUNT = 10;
+   
+   const STATUS = [
     "Active", "Retired", "Draft", "Unknown"
   ];
 
@@ -209,8 +204,6 @@ function App(props) {
       let titleSearchString = '';
       let selectedConceptCodes = [];
 
-      const status = Object.keys(searchStatus).filter(name => searchStatus[name]).map(name => name.toLowerCase());
-
       if (selectedKeywords.length > 0) {
         keywordSearchString = `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`;
       }
@@ -238,7 +231,14 @@ function App(props) {
       // TODO: allow the user to change the count of results per page?
       query.append('_count', SEARCH_COUNT);
       query.append('page', searchPage);
-      query.append('artifact-current-state', status.join(','));
+
+      // Return all possible statuses by default if user hasn't filtered by any yet
+      if(searchStatus.length === 0) {
+        query.append('artifact-current-state', ["active", "retired", "draft", "unknown"].join(','));
+      }
+      else if(searchStatus.length > 0) { // Regular filtering
+        query.append('artifact-current-state', searchStatus.map(name => name.toLowerCase()).join(','));
+      }
 
       if(searchPublisher.length > 0) {
         query.append('artifact-publisher', searchPublisher.join(','));
@@ -279,7 +279,7 @@ function App(props) {
          Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window? */
       let baseUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
       let url = new URL(baseUrl);
-      if (anySearchTerms && status.length > 0) {
+      if (anySearchTerms) {
         const response = await fetch(`/api/fhir/Citation?${query.toString()}`);
         const json = await response.json();
         // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
@@ -466,8 +466,15 @@ function App(props) {
   }
 
   const handleStatusChange = (event) => {
-    setSearchStatus({ ...searchStatus, [event.name]: event.checked });
-    setSearchPage(1);
+    if (event.target.checked && !searchStatus.includes(event.target.name)) {
+      setSearchStatus([ ...searchStatus, event.target.name]);
+      setSearchPage(1);
+    }
+    else if (!event.target.checked && searchStatus.includes(event.target.name)) {
+      const status = searchStatus.filter(item => item !== event.target.name);
+      setSearchStatus(status);
+      setSearchPage(1);
+    }
   };
 
   // Handle changes to the type of search
@@ -635,8 +642,8 @@ function App(props) {
                   <List.Item key={name}>
                     <div className="ui checkbox">
                     <input type="checkbox"
-                              checked={searchStatus[name]}
-                              onChange={event=>{handleStatusChange(event.target)}}
+                              checked={searchStatus.includes(name)}
+                              onChange={handleStatusChange}
                               name={name}
                     />
                     <label>{name}</label>
