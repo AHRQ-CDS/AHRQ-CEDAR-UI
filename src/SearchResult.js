@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Button } from 'semantic-ui-react';
 import ReactMarkdown from 'react-markdown';
 import SearchResultTags from './SearchResultTags';
-import SearchResultHistory from './SearchResultHistory';
+import SearchResultHistoryModal from './SearchResultHistoryModal';
 import citationParser from './citationParser';
 
 function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts, activeTabIndex, setActiveTabIndex }) {
@@ -69,12 +69,7 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
       <Card.Content extra>
         {url && <a href={url}>{url}</a> }
         { resource.meta?.versionId > 1 && 
-          <SearchResultHistory 
-            currentResource={resource} 
-            currentKeywords={keywordsAndConcepts.keywords} 
-            currentConcepts={keywordsAndConcepts.concepts}
-            currentText={textDescription}
-          /> 
+          <SearchResultHistoryModal resource={resource} /> 
         }
       </Card.Content>
     </Card>
