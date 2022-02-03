@@ -35,20 +35,19 @@ function App(props) {
   const [allArtifactTypes, setAllArtifactTypes] = useState([]);
   const [selectedArtifactTypes, setSelectedArtifactTypes] = useState([]);
 
-  /* TODO: The cedar_ui app allows the user to change the count of results per page,
-   but cedar_smart does not. Is this something that we want to support?
+  // TODO: The cedar_ui app allows the user to change the count of results per page,
+  // but cedar_smart does not. Is this something that we want to support?
+  // const [searchCount, setSearchCount] = useState(10);
 
-   const [searchCount, setSearchCount] = useState(10);*/
-   
-   const [searchStatus, setSearchStatus] = useState([]);
-   const [allPublishers, setAllPublishers] = useState([]);
-   const [searchPublisher, setSearchPublisher] = useState([]);
-   
-   /* TODO: Related to above. Currently, have a constant here in lieu of supporting a user-selected
-   number of page results returned (e.g., 10, 20, etc.) */
-   const SEARCH_COUNT = 10;
-   
-   const STATUS = [
+  const [searchStatus, setSearchStatus] = useState([]);
+  const [allPublishers, setAllPublishers] = useState([]);
+  const [searchPublisher, setSearchPublisher] = useState([]);
+
+  // TODO: Related to above. Currently, have a constant here in lieu of supporting a user-selected
+  // number of page results returned (e.g., 10, 20, etc.)
+  const SEARCH_COUNT = 10;
+
+  const STATUS = [
     "Active", "Retired", "Draft", "Unknown"
   ];
 
