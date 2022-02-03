@@ -27,3 +27,22 @@
     padding-top: 4px;
     padding-bottom: 4px;
 }
+
+.pill-list-item {
+    display: inline-block !important;
+}
+.pill-list-item label {
+    cursor: pointer;
+}
+.pill-list-item input[type="checkbox"] {
+    display: none;
+}
+
+.pill-list-label {
+    text-decoration: none;
+}
+.pill-list-item input[type="checkbox"]:checked + .pill-list-label {
+    background-color: #2185D0;
+    border: 1px solid #2185D0;
+    color: #FFF;
+}
