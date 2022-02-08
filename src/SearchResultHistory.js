@@ -26,8 +26,8 @@ function SearchResultHistory({ leftResource, rightResource }) {
   const leftText = getTextDescription(leftResource);
   const rightText = getTextDescription(rightResource);
 
-  const leftTitle = leftResource.title.trim();
-  const rightTitle = rightResource.title.trim();
+  const leftTitle = leftResource.title?.trim();
+  const rightTitle = rightResource.title?.trim();
 
   const diffViewerProps = { splitView: true, hideLineNumbers: true };
 
