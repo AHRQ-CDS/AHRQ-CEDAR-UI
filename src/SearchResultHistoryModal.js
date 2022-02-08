@@ -150,9 +150,9 @@ function SearchResultHistoryModal({ resource }) {
       return (<h4>Could not load versions for this artifact.</h4>)
     }
   }
-	
-	return (
-		<Modal onClose={closeModal} onOpen={openModal} open={open} trigger={<Button size='small' className='artifact-changes-button'>Artifact Changes</Button>} size='large'>
+  
+  return (
+    <Modal onClose={closeModal} onOpen={openModal} open={open} trigger={<Button size='small' className='artifact-changes-button'>Artifact Changes</Button>} size='large'>
       <Modal.Header>
         Artifact Changes   
         <Popup trigger={<Icon name='question circle outline' className='artifact-changes-tooltip' />}
@@ -173,7 +173,7 @@ function SearchResultHistoryModal({ resource }) {
       </Modal.Content>
       <Modal.Actions><Button color='grey' onClick={closeModal}>Close</Button></Modal.Actions>
     </Modal>
-	);
+  );
 }
 
 export default SearchResultHistoryModal;
