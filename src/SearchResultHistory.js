@@ -6,26 +6,33 @@ import './SearchResultHistory.css'
 
 function SearchResultHistory({ leftResource, rightResource }) {
   const getTextDescription = (resource) => {
-    const textDescription = resource.citedArtifact?.abstract && resource.citedArtifact?.abstract[0].text ? resource.citedArtifact?.abstract[0].text : '';
+    const textDescription = resource.citedArtifact?.abstract && resource.citedArtifact?.abstract[0].text ?
+        resource.citedArtifact?.abstract[0].text : '';
     return citationParser.getTextDescription(textDescription).trim();
   }
   
-  const leftKeywordsAndConcepts = citationParser.getKeywordsAndConcepts(leftResource.data);
-  const rightKeywordsAndConcepts = citationParser.getKeywordsAndConcepts(rightResource.data);
+  const leftKeywordsAndConcepts = citationParser.getKeywordsAndConcepts(leftResource);
+  const rightKeywordsAndConcepts = citationParser.getKeywordsAndConcepts(rightResource);
+
   const leftKeywords = leftKeywordsAndConcepts.keywords.join(', ');
   const rightKeywords = rightKeywordsAndConcepts.keywords.join(', ');
+
   const leftConcepts = leftKeywordsAndConcepts.concepts.map(c => c?.text).join(', ') || '';
   const rightConcepts = rightKeywordsAndConcepts.concepts.map(c => c?.text).join(', ') || '';
-  const leftStatus = leftResource.data.citedArtifact.currentState[0].coding[0].code;
-  const rightStatus = rightResource.data.citedArtifact.currentState[0].coding[0].code;
-  const leftText = getTextDescription(leftResource.data);
-  const rightText = getTextDescription(rightResource.data);
-  const leftTitle = leftResource.data.title.trim();
-  const rightTitle = rightResource.data.title.trim();
+
+  const leftStatus = citationParser.getStatus(leftResource);
+  const rightStatus = citationParser.getStatus(rightResource);
+
+  const leftText = getTextDescription(leftResource);
+  const rightText = getTextDescription(rightResource);
+
+  const leftTitle = leftResource.title.trim();
+  const rightTitle = rightResource.title.trim();
+
   const diffViewerProps = { splitView: true, hideLineNumbers: true };
 
   const anyDiffBetweenVersions = (rightTitle !== leftTitle) || (rightKeywords !== leftKeywords) || (rightConcepts !== leftConcepts) || 
-      (rightStatus !== leftStatus) || (rightText !== leftText);
+    (rightStatus !== leftStatus) || (rightText !== leftText);
 
   const ReactDiffViewerWrapper = (props) => {
     return (<ReactDiffViewer oldValue={props.oldValue} newValue={props.newValue} compareMethod={props.compareMethod} {...diffViewerProps} />)
