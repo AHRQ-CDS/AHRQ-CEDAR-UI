@@ -2,6 +2,7 @@ import React, { useState }  from 'react';
 import { Button, Divider, Form, Icon, Loader, Modal, Popup  } from 'semantic-ui-react';
 import SearchResultHistory from './SearchResultHistory';
 import './SearchResultHistory.css'
+import _ from 'lodash';
 
 function SearchResultHistoryModal({ resource }) {
   const [open, setOpen] = useState(false);
@@ -13,20 +14,48 @@ function SearchResultHistoryModal({ resource }) {
   const [rightResource, setRightResource] = useState({ status: 'complete', data: resource });
   // On first load: left/previous version hasn't been retrieved yet
   const [leftResource, setLeftResource] = useState({status: 'none'});
-	
+
+  const [leftDropdownOptions, setLeftDropdownOptions] = useState([]);
+  const [rightDropdownOptions, setRightDropdownOptions] = useState([]);
+
+  const dropdownOptionsFromArray = (start, end) => {
+    // _.range creates an array of numbers progressing from start up to, but not including, end
+    const optionsVersions = _.range(start, end)
+
+    let options = []
+    for(const value of optionsVersions) {
+        options.push({
+          key: value,
+          text: `Version ${value}`,
+          value: value,
+        })
+    }
+    return options
+  }
+
+  // On open: retrieve the left resource, which is one version before the resource passed in
   const openModal = () => {
     setOpen(true);
+
     setLeftResource({ status: 'pending' });
     getResourceByVersion(leftVersion).then((data) => setLeftResource({ status: 'complete', data: data}));
+    
+    setRightDropdownOptions(dropdownOptionsFromArray(rightVersion, resource.meta.versionId + 1));
+    setLeftDropdownOptions(dropdownOptionsFromArray(1, rightVersion));
   }
 
   // On close: return the right and left resource and versions to their original states
   const closeModal = () => {
+    setOpen(false);
+
     setRightVersion(resource.meta.versionId);
     setLeftVersion(resource.meta.versionId - 1);
+
     setRightResource({ status: 'complete', data: resource });
     setLeftResource({status: 'none'});
-    setOpen(false);
+
+    setRightDropdownOptions(dropdownOptionsFromArray("right-version"));
+    setLeftDropdownOptions(dropdownOptionsFromArray("left-version"));
   }
 
   async function getResourceByVersion(versionId) {
@@ -35,29 +64,28 @@ function SearchResultHistoryModal({ resource }) {
   }
 
   const VersionControl = () => {
-    const dropdownOptionsFromArray = () => {
-      const optionsVersionId = Array.from({length: resource.meta.versionId}, (_, i) => i + 1);
-      let options = []
-      for(const value of optionsVersionId) {
-          options.push({
-            key: value,
-            text: `Version ${value}`,
-            value:value,
-          })
-      }
-      return options
-    }
-
     const handleResourceVersionChange = (event, data) => {
       if (data.name === "left-version") {
+        if (data.value < leftVersion) {
+          setLeftDropdownOptions(dropdownOptionsFromArray(1, data.value + 1));
+          setRightDropdownOptions(dropdownOptionsFromArray(data.value + 1, resource.meta.versionId + 1));
+        }
         setLeftVersion(data.value);
         setLeftResource({ status: 'pending' });
-        getResourceByVersion(data.value).then((resourceVersion) => setLeftResource({ status: 'complete', data: resourceVersion}));
+        getResourceByVersion(data.value).then((resourceVersion) =>
+            setLeftResource({ status: 'complete', data: resourceVersion})
+        );
       }
       else {
+        if (data.value > rightVersion) {
+          setLeftDropdownOptions(dropdownOptionsFromArray(1, data.value));
+          setRightDropdownOptions(dropdownOptionsFromArray(data.value, resource.meta.versionId + 1));
+        }
         setRightVersion(data.value);
         setRightResource({ status: 'pending' });
-        getResourceByVersion(data.value).then((resourceVersion) => setRightResource({ status: 'complete', data: resourceVersion}));
+        getResourceByVersion(data.value).then((resourceVersion) =>
+            setRightResource({ status: 'complete', data: resourceVersion})
+        );
       }
     }
 
@@ -75,10 +103,10 @@ function SearchResultHistoryModal({ resource }) {
     if(resource.meta.versionId < 3) {
       return (
         <>
-          <div className="version-control artifact-changes-left-control">
+          <div className="artifact-changes-version-control artifact-changes-left-control">
             Version {leftVersion}, <VersionImportDate resource={leftResource} />
           </div>
-          <div className="version-control artifact-changes-right-control">
+          <div className="artifact-changes-version-control artifact-changes-right-control">
             Version {rightVersion}, <VersionImportDate resource={rightResource} />
           </div>
         </>
@@ -88,22 +116,22 @@ function SearchResultHistoryModal({ resource }) {
     else {
       return (
         <>
-          <div className="version-control artifact-changes-left-control">
+          <div className="artifact-changes-version-control artifact-changes-left-control">
             <Form.Select selection 
                          name="left-version" 
-                         options={dropdownOptionsFromArray()} 
+                         options={leftDropdownOptions} 
                          onChange={handleResourceVersionChange} 
                          value={leftVersion}
-                         className="version-select" />
+                         className="artifact-changes-version-select" />
             <VersionImportDate resource={leftResource} />
           </div>
-          <div className="version-control artifact-changes-right-control">
+          <div className="artifact-changes-version-control artifact-changes-right-control">
             <Form.Select selection 
                          name="right-version" 
-                         options={dropdownOptionsFromArray()} 
+                         options={rightDropdownOptions} 
                          onChange={handleResourceVersionChange} 
                          value={rightVersion} 
-                         className="version-select" />
+                         className="artifact-changes-version-select" />
             <VersionImportDate resource={rightResource} />
           </div>
         </>
@@ -113,7 +141,7 @@ function SearchResultHistoryModal({ resource }) {
 
   const VersionBody = () => {
     if ((leftResource.status === 'complete' && leftResource.data) && (rightResource.status === 'complete' && rightResource.data)) {
-      return (<SearchResultHistory leftResource={leftResource} rightResource={rightResource} />)
+      return (<SearchResultHistory leftResource={leftResource.data} rightResource={rightResource.data} />)
     }
     else if (leftResource.status === 'pending' || rightResource.status === 'pending') {
       return (<div><Loader active content='Loading' /></div>)
