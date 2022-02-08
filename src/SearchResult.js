@@ -74,6 +74,6 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
       </Card.Content>
     </Card>
   );    
-};
+}
 
 export default SearchResult;
