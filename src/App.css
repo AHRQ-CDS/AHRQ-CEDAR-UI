@@ -31,9 +31,11 @@
 .pill-list-item {
     display: inline-block !important;
 }
+
 .pill-list-item label {
     cursor: pointer;
 }
+
 .pill-list-item input[type="checkbox"] {
     display: none;
 }
@@ -41,47 +43,9 @@
 .pill-list-label {
     text-decoration: none;
 }
+
 .pill-list-item input[type="checkbox"]:checked + .pill-list-label {
     background-color: #2185D0;
     border: 1px solid #2185D0;
     color: #FFF;
-}
-
-.latest-changes-button {
-    float: right;
-}
-
-.latest-artifact-legend {
-    padding-left: 15px;
-    padding-right:  10px;
-}
-
-.latest-artifact-tooltip {
-    padding-left: 8px;
-}
-
-.latest-artifact-additions {
-    color: lightgreen;
-}
-
-.latest-artifact-deletions {
-    color:  salmon;
-}
-
-.latest-version-header {
-    font-weight:  700;
-    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
-    line-height:  20px;
-    float: right;
-}
-
-.latest-version-date {
-    display:  inline-block;
-    font-size:  16px;
-}
-
-.latest-version-number {
-    display: flex;
-    justify-content: center;
-    font-size: 13px;
 }
