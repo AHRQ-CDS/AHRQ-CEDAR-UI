@@ -65,7 +65,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
         }
       }
 
-      // NOTE: We must wrap the ConceptButton inside of another set of tags or the Popup won't fire
+      // NOTE: We must wrap the ConceptButton inside another set of tags or the Popup won't fire
       // See: https://stackoverflow.com/questions/63611315/semantics-popup-does-not-show-up-when-passing-a-custom-component-as-trigger
       return (
         <Popup key={concept.text} 

@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import { Segment } from 'semantic-ui-react';
 
 function Patient(props) {
   const patient = props.patient;
@@ -13,10 +14,12 @@ function Patient(props) {
   }
 
   return (
-      <React.Fragment>
+    <Segment>
+      <>
         <h3>Patient</h3>
         {name}
-      </React.Fragment>
+      </>
+    </Segment>
   );
 }
 

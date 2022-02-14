@@ -1,13 +1,12 @@
 import React from 'react';
-import { Card, Icon, List } from 'semantic-ui-react';
+import { Card, Icon, List, Segment } from 'semantic-ui-react';
 import moment from 'moment';
-import Constants from './constants';
+import { CODE_SYSTEMS } from './constants';
 import { conceptIsSelected } from './utils'
 
 function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selectedConcepts, selectedKeywords }) {
-
   const getCodeSystemName = (codeSystemUrl) => {
-    let codeSystemName = Constants.CODE_SYSTEMS[codeSystemUrl];
+    let codeSystemName = CODE_SYSTEMS[codeSystemUrl];
     if (codeSystemName === null) {
       codeSystemName = 'Unknown';
     }
@@ -62,17 +61,20 @@ function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selec
   };
 
   return (
-      <React.Fragment>
-        {conditions.map(c => 
-          <Condition key={c.id} 
-                     condition={c} 
-                     handleConceptSelect={handleConceptSelect}
-                     handleKeywordClick={handleKeywordClick}
-                     selectedConcepts={selectedConcepts}
-                     selectedKeywords={selectedKeywords}
-          />
-        )}
-      </React.Fragment>
+      <>
+        <Segment>
+          <h3>Conditions</h3>
+          {conditions.map(c => 
+            <Condition key={c.id} 
+                       condition={c} 
+                       handleConceptSelect={handleConceptSelect}
+                       handleKeywordClick={handleKeywordClick}
+                       selectedConcepts={selectedConcepts}
+                       selectedKeywords={selectedKeywords}
+            />
+          )}
+        </Segment>
+      </>
   );
 }
 
