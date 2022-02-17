@@ -12,6 +12,7 @@
     "lz-string": "^1.4.4",
     "moment": "^2.29.1",
     "react": "^17.0.2",
+    "react-diff-viewer": "^3.1.1",
     "react-dom": "^17.0.2",
     "react-markdown": "^6.0.2",
     "react-scripts": "4.0.3",

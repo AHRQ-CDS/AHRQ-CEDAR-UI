@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Card, Button } from 'semantic-ui-react';
 import ReactMarkdown from 'react-markdown';
-import strip from 'strip-markdown';
-import remark from 'remark';
-import _ from 'lodash';
 import SearchResultTags from './SearchResultTags';
+import SearchResultHistoryModal from './SearchResultHistoryModal';
+import citationParser from './citationParser';
 
 function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts, activeTabIndex, setActiveTabIndex }) {
 
@@ -30,10 +29,10 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
 
   // Find the length nearest 300 characters to a space break
   const description = resource.citedArtifact?.abstract ? resource.citedArtifact.abstract[0].text : '';
-  let textDescription = '';
-  remark().use(strip).process(description, (err, file) => textDescription = String(file))
+  let textDescription = citationParser.getTextDescription(description);
   const descriptionWords = textDescription.split(/\s+/);
   let truncatedDescription = '';
+
   while (truncatedDescription.length < 300 && descriptionWords.length > 0) {
     truncatedDescription = `${truncatedDescription} ${descriptionWords.shift()}`;
   }
@@ -44,34 +43,8 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
   // Should we show the "more/less" buttons? See if there are words in the description we're not showing
   const showMoreButton = descriptionWords.length > 0
 
-  const url = resource?.citedArtifact?.webLocation?.[0]?.url;
-
-  // Grab all the keywords
-  // TODO: We may want to handle MeSH keywords separately at some point
-  let keywords = [];
-  let concepts = [];
-  for (const classification of resource.citedArtifact?.classification || []) {
-    if(classification.type.coding[0].code === "keyword") {
-      for (const classifier of classification.classifier || []) {
-        if (classifier.text) {
-          const text = classifier.text.toLowerCase();
-          if(classifier.coding !== undefined) {
-            concepts.push({text: text, coding: classifier.coding});
-          }
-          else {
-            keywords.push(text);
-          }
-        }
-      }
-    }
-  }
-
-  // Sort the lists
-  keywords = _.uniq(keywords).sort();
-  concepts = _.orderBy(concepts, ['text'], ['asc']);
-
-  // NOTE: When keying by classifier.text, there should not be duplicate concepts, unless UMLS uses the same name for multiple concepts.
-  // concepts = _.uniqBy(concepts, 'text');
+  const url = citationParser.getUrl(resource);
+  const keywordsAndConcepts = citationParser.getKeywordsAndConcepts(resource);
 
   return (
     <Card fluid id={resource.id}>
@@ -81,8 +54,9 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
         <Card.Description>
           {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
           {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
-          <SearchResultTags keywords={keywords} 
-                            concepts={concepts} 
+
+          <SearchResultTags keywords={keywordsAndConcepts.keywords} 
+                            concepts={keywordsAndConcepts.concepts} 
                             onKeywordClick={onKeywordClick} 
                             onConceptClick={onConceptClick}
                             selectedKeywords={selectedKeywords}
@@ -92,9 +66,14 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
           />
         </Card.Description>
       </Card.Content>
-      {url && <Card.Content extra><a href={url}>{url}</a></Card.Content>}
+      <Card.Content extra>
+        {url && <a href={url}>{url}</a> }
+        { resource.meta?.versionId > 1 && 
+          <SearchResultHistoryModal resource={resource} /> 
+        }
+      </Card.Content>
     </Card>
   );    
-};
+}
 
 export default SearchResult;

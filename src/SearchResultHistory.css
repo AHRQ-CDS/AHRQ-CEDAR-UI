@@ -1,0 +1,47 @@
+
+/* Semantic UI React modal style overrides */
+.ui.large.scrolling.modal.transition.visible.active {
+  font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif !important;
+}
+
+.scrolling.content { min-height: 350px; }
+
+/* react-diff-viewer style overrides */
+.css-o1u8iu-content-text, .css-o1u8iu-content-text {
+  font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif !important;
+}
+
+/* Other styles */
+.artifact-changes-button { float: right; }
+
+.artifact-changes-legend {
+  float: right;
+  font-size: 16px;
+}
+
+.artifact-changes-tooltip { padding-left: 8px; }
+
+.artifact-changes-additions { color: rgb(172, 242, 189); }
+
+.artifact-changes-deletions {
+  color: rgb(253, 184, 192);
+  padding-left: 15px;
+  padding-right: 10px;
+}
+
+.artifact-changes-right-control {
+  float: right;
+  padding-bottom: 46px;
+}
+
+.artifact-changes-left-control { display: inline-block; }
+
+.artifact-changes-version-control {
+  width: 50%;
+  margin-bottom: 14px;
+}
+
+.artifact-changes-version-select {
+  display: inline-block;
+  padding-right: 15px;
+}

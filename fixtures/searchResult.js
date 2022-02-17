@@ -1,6 +1,9 @@
 
 const searchResult = {
     "id": "NGC-ahrqngcprivate-org-summaries-summary-46179-symptom-management-in-patients-with-lung-cancer-diagnosis-and-management-of-lung-cancer-3rd-ed-american-college-of-chest-physicians-evidencebased-clinical-practice-guidelines",
+    "meta": {
+        "versionId": 2
+    },
     "text": {
         "status": "generated",
         "div": "<div></div>"
