@@ -3,8 +3,8 @@ import { Button, Form, Message } from 'semantic-ui-react';
 import { LAST_UPDATED_PRESETS } from './constants';
 import { dateStringFromPreset } from './utils';
 
-function ArtifactLastUpdated({setLastUpdatedSearchString, setLastUpdatedPreset, lastUpdatedPreset, customDateInput, setCustomDateInput, showLastUpdatedCustomDate,
-  customDatePrefix, setCustomDatePrefix, customDateError, setCustomDateError, setShowLastUpdatedCustomDate}) {
+function ArtifactLastUpdated({setLastUpdatedSearchString, lastUpdatedPreset, setLastUpdatedPreset, customDateInput, setCustomDateInput, showLastUpdatedCustomDate, setShowLastUpdatedCustomDate,
+  customDatePrefix, setCustomDatePrefix, customDateError, setCustomDateError}) {
 
   const YYYYMMDD_REGEX = /^\d{4}-\d{2}-\d{2}$/;
   const YYYYMM_REGEX = /^\d{4}-\d{2}$/;

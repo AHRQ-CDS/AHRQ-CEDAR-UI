@@ -311,16 +311,16 @@ function App(props) {
                 />
 
                 <ArtifactLastUpdated setLastUpdatedSearchString={setLastUpdatedSearchString}
-                                     setLastUpdatedPreset={setLastUpdatedPreset}
                                      lastUpdatedPreset={lastUpdatedPreset}
+                                     setLastUpdatedPreset={setLastUpdatedPreset}
                                      customDateInput={customDateInput}
                                      setCustomDateInput={setCustomDateInput}
                                      showLastUpdatedCustomDate={showLastUpdatedCustomDate}
+                                     setShowLastUpdatedCustomDate={setShowLastUpdatedCustomDate}
                                      customDatePrefix={customDatePrefix}
                                      setCustomDatePrefix={setCustomDatePrefix}
                                      customDateError={customDateError}
-                                     setCustomDateError={setCustomDateError}
-                                     setShowLastUpdatedCustomDate={setShowLastUpdatedCustomDate}
+                                     setCustomDateError={setCustomDateError}                
                 />
 
                 <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage} />
