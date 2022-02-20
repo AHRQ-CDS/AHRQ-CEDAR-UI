@@ -31,8 +31,6 @@ function SearchConcepts({selectedConcepts, setSelectedConcepts, setSearchPage}) 
       </>
     )
   }
-
-
 }
 
 export default SearchConcepts;
