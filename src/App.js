@@ -48,7 +48,7 @@ function App(props) {
   const SEARCH_COUNT = 10;
 
   const STATUS = [
-    "Active", "Retired", "Draft", "Unknown"
+    "Active", "Archived", "Draft", "Unknown"
   ];
 
   const SEARCH_TYPES = {
@@ -233,7 +233,7 @@ function App(props) {
 
       // Return all possible statuses by default if user hasn't filtered by any yet
       if(searchStatus.length === 0) {
-        query.append('artifact-current-state', ["active", "retired", "draft", "unknown"].join(','));
+        query.append('artifact-current-state', ["active", "archived", "draft", "unknown"].join(','));
       }
       else if(searchStatus.length > 0) { // Regular filtering
         query.append('artifact-current-state', searchStatus.map(name => name.toLowerCase()).join(','));
