@@ -10,7 +10,7 @@ function SearchResultHistory({ leftResource, rightResource }) {
         resource.citedArtifact?.abstract[0].text : '';
     return citationParser.getTextDescription(textDescription).trim();
   }
-  
+
   const leftKeywordsAndConcepts = citationParser.getKeywordsAndConcepts(leftResource);
   const rightKeywordsAndConcepts = citationParser.getKeywordsAndConcepts(rightResource);
 
@@ -23,6 +23,9 @@ function SearchResultHistory({ leftResource, rightResource }) {
   const leftStatus = citationParser.getStatus(leftResource);
   const rightStatus = citationParser.getStatus(rightResource);
 
+  const leftQualifiers = citationParser.getQualifiers(leftResource);
+  const rightQualifiers = citationParser.getQualifiers(rightResource);
+
   const leftText = getTextDescription(leftResource);
   const rightText = getTextDescription(rightResource);
 
@@ -31,8 +34,15 @@ function SearchResultHistory({ leftResource, rightResource }) {
 
   const diffViewerProps = { splitView: true, hideLineNumbers: true };
 
-  const anyDiffBetweenVersions = (rightTitle !== leftTitle) || (rightKeywords !== leftKeywords) || (rightConcepts !== leftConcepts) || 
-    (rightStatus !== leftStatus) || (rightText !== leftText);
+  const anyDiffBetweenVersions =
+    (rightTitle !== leftTitle) ||
+    (rightKeywords !== leftKeywords) ||
+    (rightConcepts !== leftConcepts) ||
+    (rightStatus !== leftStatus) || (rightText !== leftText) ||
+    (leftQualifiers.qualityOfEvidenceStatement !== rightQualifiers.qualityOfEvidenceStatement) ||
+    (leftQualifiers.qualityOfEvidenceCode !== rightQualifiers.qualityOfEvidenceCode) ||
+    (leftQualifiers.strengthOfRecommendationStatement !== rightQualifiers.strengthOfRecommendationStatement)||
+    (leftQualifiers.strengthOfRecommendationCode !== rightQualifiers.strengthOfRecommendationCode);
 
   const ReactDiffViewerWrapper = (props) => {
     return (<ReactDiffViewer oldValue={props.oldValue} newValue={props.newValue} compareMethod={props.compareMethod} {...diffViewerProps} />)
@@ -65,7 +75,35 @@ function SearchResultHistory({ leftResource, rightResource }) {
         {rightStatus !== leftStatus && (
             <>
               <h4>Status Changes</h4>
-              <ReactDiffViewerWrapper newValue={rightStatus} oldValue={leftStatus} compareMethod="diffWords" />  
+              <ReactDiffViewerWrapper newValue={rightStatus} oldValue={leftStatus} compareMethod="diffWords" />
+            </>
+          )
+        }
+        {(leftQualifiers.qualityOfEvidenceStatement !== rightQualifiers.qualityOfEvidenceStatement) && (
+            <>
+              <h4>Quality of Evidence Statement Changes</h4>
+              <ReactDiffViewerWrapper newValue={rightQualifiers.qualityOfEvidenceStatement} oldValue={leftQualifiers.qualityOfEvidenceStatement} compareMethod="diffSentences" />
+            </>
+          )
+        }
+        {(leftQualifiers.qualityOfEvidenceCode !== rightQualifiers.qualityOfEvidenceCode) && (
+            <>
+              <h4>Quality of Evidence Code Changes</h4>
+              <ReactDiffViewerWrapper newValue={rightQualifiers.qualityOfEvidenceCode} oldValue={leftQualifiers.qualityOfEvidenceCode} compareMethod="diffSentences" />
+            </>
+          )
+        }
+        {(leftQualifiers.strengthOfRecommendationStatement !== rightQualifiers.strengthOfRecommendationStatement) && (
+            <>
+              <h4>Strength of Recommendation Statement Changes</h4>
+              <ReactDiffViewerWrapper newValue={rightQualifiers.strengthOfRecommendationStatement} oldValue={leftQualifiers.strengthOfRecommendationStatement} compareMethod="diffSentences" />
+            </>
+          )
+        }
+        {(leftQualifiers.strengthOfRecommendationCode !== rightQualifiers.strengthOfRecommendationCode) && (
+            <>
+              <h4>Strength of Recommendation Code Changes</h4>
+              <ReactDiffViewerWrapper newValue={rightQualifiers.strengthOfRecommendationCode} oldValue={leftQualifiers.strengthOfRecommendationCode} compareMethod="diffSentences" />
             </>
           )
         }
