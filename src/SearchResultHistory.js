@@ -121,7 +121,8 @@ function SearchResultHistory({ leftResource, rightResource }) {
   else {
     return (
       <Segment>
-        <div className="no-version-difference-text">No difference between versions in title, keywords, concepts, status, or text.</div>
+        <div className="no-version-difference-text">No difference between versions in title, keywords, concepts, status, quality of evidence,
+          strength of recommendation, or text.</div>
       </Segment>
     )
   }
