@@ -35,10 +35,11 @@ function SearchResultHistory({ leftResource, rightResource }) {
   const diffViewerProps = { splitView: true, hideLineNumbers: true };
 
   const anyDiffBetweenVersions =
-    (rightTitle !== leftTitle) ||
-    (rightKeywords !== leftKeywords) ||
-    (rightConcepts !== leftConcepts) ||
-    (rightStatus !== leftStatus) || (rightText !== leftText) ||
+    (leftTitle !== rightTitle) ||
+    (leftKeywords !== rightKeywords) ||
+    (leftConcepts !== rightConcepts) ||
+    (leftStatus !== rightStatus) ||
+    (leftText !== rightText) ||
     (leftQualifiers.qualityOfEvidenceStatement !== rightQualifiers.qualityOfEvidenceStatement) ||
     (leftQualifiers.qualityOfEvidenceCode !== rightQualifiers.qualityOfEvidenceCode) ||
     (leftQualifiers.strengthOfRecommendationStatement !== rightQualifiers.strengthOfRecommendationStatement)||
@@ -51,28 +52,28 @@ function SearchResultHistory({ leftResource, rightResource }) {
   if (anyDiffBetweenVersions) {
     return (
       <div>
-        {rightTitle !== leftTitle && (
+        {leftTitle !== rightTitle && (
           <>
             <h4>Title Changes</h4>
             <ReactDiffViewerWrapper newValue={rightTitle} oldValue={leftTitle} compareMethod="diffSentences" />
           </>
           )
         }
-        {rightKeywords !== leftKeywords && (
+        {leftKeywords !== rightKeywords && (
             <>
               <h4>Keyword Changes</h4>
               <ReactDiffViewerWrapper newValue={rightKeywords} oldValue={leftKeywords} compareMethod="diffWords" />
             </>
           )
         }
-        {rightConcepts !== leftConcepts && (
+        {leftConcepts !== rightConcepts && (
             <>
               <h4>Concept Changes</h4>
               <ReactDiffViewerWrapper newValue={rightConcepts} oldValue={leftConcepts} compareMethod="diffWords" />
             </>
           )
         }
-        {rightStatus !== leftStatus && (
+        {leftStatus !== rightStatus && (
             <>
               <h4>Status Changes</h4>
               <ReactDiffViewerWrapper newValue={rightStatus} oldValue={leftStatus} compareMethod="diffWords" />
@@ -107,7 +108,7 @@ function SearchResultHistory({ leftResource, rightResource }) {
             </>
           )
         }
-        {rightText !== leftText && (
+        {leftText !== rightText && (
             <>
               <h4>Text Changes</h4>
               <ReactDiffViewerWrapper newValue={rightText} oldValue={leftText} compareMethod='diffSentences' />
