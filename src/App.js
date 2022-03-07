@@ -80,7 +80,7 @@ function App(props) {
             setShowLastUpdatedCustomDate(false);
             // Recompute the lastUpdated search string relative to today's date for "Within 1 month", "Within 3 months", "Within 6 months", "Within 1 year"
             // Set the lastUpdated search string to '' for "Anytime"
-            value === "Anytime" ? setLastUpdatedSearchString('') : setLastUpdatedSearchString(dateStringFromPreset(LAST_UPDATED_PRESETS[value]));
+            value === "Any time" ? setLastUpdatedSearchString('') : setLastUpdatedSearchString(dateStringFromPreset(LAST_UPDATED_PRESETS[value]));
           }
         }
         else if (key === 'searchParameter') {
