@@ -1,6 +1,6 @@
 import React from 'react';
 import { List } from 'semantic-ui-react';
-import { STATUS } from './constants';
+import { STATUS } from '../utils/constants';
 
 function Status({searchStatus, setSearchStatus, setSearchPage}) {
   const handleStatusChange = (event) => {

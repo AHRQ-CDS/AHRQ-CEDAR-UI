@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon, List } from 'semantic-ui-react';
-import { CODE_SYSTEMS } from './constants';
+import { CODE_SYSTEMS } from '../utils/constants';
 
 function ConceptCodingPopup({ concept }) {
   return (

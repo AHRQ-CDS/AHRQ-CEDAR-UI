@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchKeywords from './SearchKeywords';
+import SearchKeywords from '../components/SearchKeywords';
 import { mount } from 'enzyme';
 
 const keywords = ['acute disease', 'acute myocardial infarction', 'arrhythmia, sinus', 'arrhythmias, cardiac']

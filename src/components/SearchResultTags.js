@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Tab, Popup, Icon } from 'semantic-ui-react';
 import ConceptCodingPopup from './ConceptCodingPopup';
-import { conceptIsSelected } from './utils'
+import { conceptIsSelected } from '../utils/utils'
 
 function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts, activeTabIndex, setActiveTabIndex }) {
   const buttonProps = {

@@ -13,10 +13,10 @@ import SearchConcepts from './SearchConcepts';
 import SearchKeywords from './SearchKeywords';
 import SearchResults from './SearchResults';
 import Status from './Status';
-import { LAST_UPDATED_PRESETS, STATUS } from './constants';
-import { urlSearchObject, dateStringFromPreset } from './utils';
+import { LAST_UPDATED_PRESETS, STATUS } from '../utils/constants';
+import { urlSearchObject, dateStringFromPreset } from '../utils/utils';
 
-import './App.css';
+import '../assets/css/App.css';
 
 function App(props) {
   const [patient, setPatient] = useState();

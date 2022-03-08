@@ -1,5 +1,5 @@
 import React from 'react';
-import Status from './Status';
+import Status from '../components/Status';
 import { mount } from 'enzyme';
 
 const searchStatus = ['active']

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Form, Message } from 'semantic-ui-react';
-import { LAST_UPDATED_PRESETS } from './constants';
-import { dateStringFromPreset } from './utils';
+import { LAST_UPDATED_PRESETS } from '../utils/constants';
+import { dateStringFromPreset } from '../utils/utils';
 
 function ArtifactLastUpdated({setLastUpdatedSearchString, lastUpdatedPreset, setLastUpdatedPreset, customDateInput, setCustomDateInput, showLastUpdatedCustomDate, setShowLastUpdatedCustomDate,
   customDatePrefix, setCustomDatePrefix, customDateError, setCustomDateError}) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import FreeTextSearch from './FreeTextSearch';
+import FreeTextSearch from '../components/FreeTextSearch';
 import { mount } from 'enzyme';
 
 it('renders without crashing', () => {

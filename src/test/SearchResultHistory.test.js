@@ -1,7 +1,7 @@
 import React from 'react';
-import SearchResultHistory from './SearchResultHistory';
+import SearchResultHistory from '../components/SearchResultHistory';
 import { mount } from 'enzyme';
-import searchResult from '../fixtures/searchResult';
+import searchResult from '../../fixtures/searchResult';
 
 const leftResource = searchResult;
 const rightResource = searchResult;

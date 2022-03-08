@@ -1,5 +1,5 @@
 import React from 'react';
-import MeshTree from './MeshTree';
+import MeshTree from '../components/MeshTree';
 import { mount } from 'enzyme';
 
 const meshNodeExpanded = new Map();
