@@ -13,7 +13,7 @@ function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleConcep
         const json = await response.json();
 
         if ("parameter" in json) {
-          const data = (Object.entries(json.parameter))?.map(([k, value]) => ({ 
+          const data = (Object.entries(json.parameter))?.map(([, value]) => ({
             name: value.valueCoding.display, 
             treeNumber: value.valueCoding.extension[0].valueCode, 
             meshCode: value.valueCoding.code,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon, Popup } from 'semantic-ui-react';
-import Constants from './constants';
+import { CODE_SYSTEMS } from './constants';
 import { conceptIsSelected } from './utils'
 
 function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleConceptSelect, selectedConcepts }) {
@@ -29,7 +29,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleCo
     }
   }
 
-  const getCaretIcon = (treeNumber, indirectArtifacts) => {
+  const getCaretIcon = (treeNumber) => {
     if(element.indirectArtifacts > 0 ) {
       return meshNodeExpanded.get(treeNumber) !== undefined ? 'caret down' : 'caret right';
     }
@@ -42,14 +42,14 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleCo
     if(conceptIsSelected(getMeshConcept(), selectedConcepts)) {
       return (
         <Popup trigger={<Icon name="check" color="green" onClick={handleTreeNodeSelect} value={element.meshCode} />}>
-          <Icon name='code'></Icon>{Constants.CODE_SYSTEMS[element.system]}: {element.meshCode} ({element.name}) added to Additional Search Concepts.
+          <Icon name='code'></Icon>{CODE_SYSTEMS[element.system]}: {element.meshCode} ({element.name}) added to Additional Search Concepts.
         </Popup>
       )
     }
     else {
       return (
         <Popup trigger={<Icon link name="square outline" onClick={handleTreeNodeSelect} value={element.meshCode} />}>
-          Add <Icon name='code'></Icon>{Constants.CODE_SYSTEMS[element.system]}: {element.meshCode} ({element.name}) to Additional Search Concepts.
+          Add <Icon name='code'></Icon>{CODE_SYSTEMS[element.system]}: {element.meshCode} ({element.name}) to Additional Search Concepts.
         </Popup>
       )
     }
@@ -71,7 +71,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleCo
       <span className="ui checkbox-spacer">
           <label onClick={handleTreeNodeExpand}>
               {element.name}
-              {element.hasChildren && <Icon name={getCaretIcon(element.treeNumber, element.indirectArtifacts)}/>}
+              {element.hasChildren && <Icon name={getCaretIcon(element.treeNumber)}/>}
           </label>
       </span>
     );
@@ -82,7 +82,7 @@ function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleCo
           {getSelectionIcon()}
           <label onClick={handleTreeNodeExpand}>
             {element.name}
-            {element.hasChildren && <Icon name={getCaretIcon(element.treeNumber, element.indirectArtifacts)}/>}
+            {element.hasChildren && <Icon name={getCaretIcon(element.treeNumber)}/>}
           </label>
       </span>
     );
