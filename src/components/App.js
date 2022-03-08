@@ -13,7 +13,7 @@ import SearchConcepts from './SearchConcepts';
 import SearchKeywords from './SearchKeywords';
 import SearchResults from './SearchResults';
 import Status from './Status';
-import { LAST_UPDATED_PRESETS, STATUS } from '../utils/constants';
+import { LAST_UPDATED_PRESETS } from '../utils/constants';
 import { urlSearchObject, dateStringFromPreset } from '../utils/utils';
 
 import '../assets/css/App.css';
@@ -36,7 +36,7 @@ function App(props) {
   const [customDateInput, setCustomDateInput] = useState('');
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [selectedArtifactTypes, setSelectedArtifactTypes] = useState([]);
-  const [searchStatus, setSearchStatus] = useState([]);
+  const [searchStatus, setSearchStatus] = useState(['Active', 'Unknown']);
   const [searchPublisher, setSearchPublisher] = useState([]);
 
   // TODO: The cedar_ui app allows the user to change the count of results per page,
@@ -164,15 +164,21 @@ function App(props) {
       query.append('_count', SEARCH_COUNT);
       query.append('page', searchPage);
 
-      // Return all possible statuses by default if user hasn't filtered by any yet
+      // If no status is selected, do not perform a search
       if(searchStatus.length === 0) {
-        query.append('artifact-current-state', STATUS.map(name => name.toLowerCase()).join(','));
+        setSearchResults({ status: 'none' });
+        return
       }
-      else if(searchStatus.length > 0) { // Regular filtering
+      else if(searchStatus.length > 0) {
         query.append('artifact-current-state', searchStatus.map(name => name.toLowerCase()).join(','));
       }
 
-      if(searchPublisher.length > 0) {
+      // If no publisher is selected, do not perform a search
+      if(searchPublisher.length === 0) {
+        setSearchResults({ status: 'none' });
+        return
+      }
+      else if(searchPublisher.length > 0) {
         query.append('artifact-publisher', searchPublisher.join(','));
       }
 

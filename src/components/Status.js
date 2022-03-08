@@ -15,9 +15,16 @@ function Status({searchStatus, setSearchStatus, setSearchPage}) {
     }
   };
 
+  const handleStatusSelectAll = () => {
+    setSearchStatus(STATUS);
+  }
+
   return (
     <>
-      <h4>Status</h4>
+      <h4 className="filter-header">Status</h4>
+      <button type="button" className="btn-link" onClick={handleStatusSelectAll}>
+        Select All
+      </button>
       <List>
         {STATUS.map((name) => (
           <List.Item key={name} className="pill-list-item">

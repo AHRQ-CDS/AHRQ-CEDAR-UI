@@ -26,7 +26,7 @@ function SearchResults({ searchResults, page, onPageChange, onKeywordClick, onCo
   } else if (searchResults?.status === 'pending') {
     return <div><Loader active content='Loading' /></div>;
   } else {
-    return <div>No search results</div>;
+    return <h4>No search results</h4>;
   }
 }
 
