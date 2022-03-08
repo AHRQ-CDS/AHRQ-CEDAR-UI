@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDiffViewer from 'react-diff-viewer';
-import citationParser from './citationParser';
+import citationParser from '../utils/citationParser';
 import { Segment } from 'semantic-ui-react';
-import './SearchResultHistory.css'
+import '../assets/css/SearchResultHistory.css'
 
 function SearchResultHistory({ leftResource, rightResource }) {
   const getTextDescription = (resource) => {

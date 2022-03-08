@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, Icon, List, Segment } from 'semantic-ui-react';
 import moment from 'moment';
-import { CODE_SYSTEMS } from './constants';
-import { conceptIsSelected } from './utils'
+import { CODE_SYSTEMS } from '../utils/constants';
+import { conceptIsSelected } from '../utils/utils'
 
 function Conditions({ conditions, handleConceptSelect, handleKeywordClick, selectedConcepts, selectedKeywords }) {
   const getCodeSystemName = (codeSystemUrl) => {

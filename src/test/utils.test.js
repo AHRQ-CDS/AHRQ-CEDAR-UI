@@ -1,5 +1,5 @@
-import { conceptIsSelected } from './utils';
-import { hypertensiveDisease, hypertension, diabeticFoot } from '../fixtures/concepts';
+import { conceptIsSelected } from '../utils/utils';
+import { hypertensiveDisease, hypertension, diabeticFoot } from '../../fixtures/concepts';
 
 
 it('returns true if the newly-selected concept is the only selected concept', () => {

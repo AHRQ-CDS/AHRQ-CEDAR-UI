@@ -1,6 +1,6 @@
 import React,{ useState, useEffect } from 'react';
 import { List } from 'semantic-ui-react';
-import './MeshTree.css'
+import '../assets/css/MeshTree.css'
 import MeshTreeNode from './MeshTreeNode';
 
 function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleConceptSelect, selectedConcepts }) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, Popup } from 'semantic-ui-react';
-import { CODE_SYSTEMS } from './constants';
-import { conceptIsSelected } from './utils'
+import { CODE_SYSTEMS } from '../utils/constants';
+import { conceptIsSelected } from '../utils/utils'
 
 function MeshTreeNode({ element, meshNodeExpanded, setMeshNodeExpanded, handleConceptSelect, selectedConcepts }) {
 

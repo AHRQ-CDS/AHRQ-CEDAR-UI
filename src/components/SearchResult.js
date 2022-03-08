@@ -3,7 +3,7 @@ import { Card, Button } from 'semantic-ui-react';
 import ReactMarkdown from 'react-markdown';
 import SearchResultTags from './SearchResultTags';
 import SearchResultHistoryModal from './SearchResultHistoryModal';
-import citationParser from './citationParser';
+import citationParser from '../utils/citationParser';
 
 function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts, activeTabIndex, setActiveTabIndex }) {
 

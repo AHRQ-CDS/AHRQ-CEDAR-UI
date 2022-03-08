@@ -1,7 +1,7 @@
 import React, { useState }  from 'react';
 import { Button, Divider, Form, Icon, Loader, Modal, Popup  } from 'semantic-ui-react';
 import SearchResultHistory from './SearchResultHistory';
-import './SearchResultHistory.css'
+import '../assets/css/SearchResultHistory.css'
 import _ from 'lodash';
 
 function SearchResultHistoryModal({ resource }) {

@@ -1,7 +1,7 @@
 import React from 'react';
-import MeshTreeNode from './MeshTreeNode';
+import MeshTreeNode from '../components/MeshTreeNode';
 import { mount } from 'enzyme';
-import element from '../fixtures/element';
+import element from '../../fixtures/element';
 
 const meshNodeExpanded = new Map();
 meshNodeExpanded.set('123', '456');

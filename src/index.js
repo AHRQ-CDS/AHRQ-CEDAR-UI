@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css';
-import './index.css';
+import './assets/css/index.css';
 import _ from 'lodash';
-import Loading from './Loading';
-import App from './App';
-import { SMART } from './FHIRClientWrapper';
-import reportWebVitals from './reportWebVitals';
+import Loading from './components/Loading';
+import App from './components/App';
+import { SMART } from './components/FHIRClientWrapper';
+import reportWebVitals from './utils/reportWebVitals';
 
 // See if we're being launched from within a SMART on FHIR context
 switch (_.last(window.location.pathname.split('/'))) {
