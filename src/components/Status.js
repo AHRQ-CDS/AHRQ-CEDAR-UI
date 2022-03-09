@@ -15,14 +15,10 @@ function Status({searchStatus, setSearchStatus, setSearchPage}) {
     }
   };
 
-  const handleStatusSelectAll = () => {
-    setSearchStatus(STATUS);
-  }
-
   return (
     <>
       <h4 className="filter-header">Status</h4>
-      <button type="button" className="btn-link" onClick={handleStatusSelectAll}>
+      <button type="button" className="btn-link" onClick={() => setSearchStatus(STATUS) }>
         Select All
       </button>
       <List>

@@ -30,14 +30,10 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
     }
   }
 
-  const handlePublisherSelectAll = () => {
-    setSearchPublisher(allPublishers.map((publisher) => publisher.id));
-  }
-
   return (
     <>
       <h4 className="filter-header">Publishers</h4>
-      <button type="button" className="btn-link" onClick={handlePublisherSelectAll}>
+      <button type="button" className="btn-link" onClick={ () => setSearchPublisher(allPublishers.map((publisher) => publisher.id)) }>
         Select All
       </button>
       <List>
