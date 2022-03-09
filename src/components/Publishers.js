@@ -13,9 +13,10 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
       const data = (json.entry || []).map((entry) => ({ id: entry.resource.id, name: entry.resource.name, alias: entry.resource.alias[0] }))
       const sorted_data = _.orderBy(data, ['alias'])
       setAllPublishers(sorted_data);
+      setSearchPublisher(sorted_data.map((publisher) => publisher.id));
     };
     getAllPublishers();
-  }, []);
+  }, [setSearchPublisher]);
 
   const handlePublisherChange = (event) => {
     if (event.target.checked && !searchPublisher.includes(event.target.value)) {
@@ -31,7 +32,10 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
 
   return (
     <>
-      <h4>Publishers</h4>
+      <h4 className="filter-header">Publishers</h4>
+      <button type="button" className="btn-link" onClick={ () => setSearchPublisher(allPublishers.map((publisher) => publisher.id)) }>
+        Select All
+      </button>
       <List>
         {allPublishers.map((publisher) => (
           <List.Item key={publisher.id} className="pill-list-item">
