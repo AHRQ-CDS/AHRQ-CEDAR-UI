@@ -71,7 +71,7 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
         </Card.Description>
       </Card.Content>
       <Card.Content extra>
-        {url && artifactStatus !== "retracted" && <a href={url}>{url}</a> }
+        {url && <a href={url}>{url}</a> }
         { resource.meta?.versionId > 1 &&
           <SearchResultHistoryModal resource={resource} />
         }
