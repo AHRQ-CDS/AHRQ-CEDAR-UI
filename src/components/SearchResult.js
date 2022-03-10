@@ -24,7 +24,11 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
            subheaderFields.push(classifier.text);
         }
       }
-    }  
+    }
+  }
+  const artifactStatus = resource.citedArtifact?.currentState?.[0]?.coding?.[0]?.code
+  if (artifactStatus) {
+    subheaderFields.push(artifactStatus[0].toUpperCase() + artifactStatus.substring(1));
   }
 
   // Find the length nearest 300 characters to a space break
@@ -55,25 +59,25 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
           {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
           {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
 
-          <SearchResultTags keywords={keywordsAndConcepts.keywords} 
-                            concepts={keywordsAndConcepts.concepts} 
-                            onKeywordClick={onKeywordClick} 
+          <SearchResultTags keywords={keywordsAndConcepts.keywords}
+                            concepts={keywordsAndConcepts.concepts}
+                            onKeywordClick={onKeywordClick}
                             onConceptClick={onConceptClick}
                             selectedKeywords={selectedKeywords}
-                            selectedConcepts={selectedConcepts} 
-                            activeTabIndex={activeTabIndex} 
+                            selectedConcepts={selectedConcepts}
+                            activeTabIndex={activeTabIndex}
                             setActiveTabIndex={setActiveTabIndex}
           />
         </Card.Description>
       </Card.Content>
       <Card.Content extra>
-        {url && <a href={url}>{url}</a> }
-        { resource.meta?.versionId > 1 && 
-          <SearchResultHistoryModal resource={resource} /> 
+        {url && artifactStatus !== "retracted" && <a href={url}>{url}</a> }
+        { resource.meta?.versionId > 1 &&
+          <SearchResultHistoryModal resource={resource} />
         }
       </Card.Content>
     </Card>
-  );    
+  );
 }
 
 export default SearchResult;
