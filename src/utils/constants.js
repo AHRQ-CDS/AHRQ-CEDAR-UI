@@ -10,7 +10,7 @@ const CODE_SYSTEMS = {
 };
 
 const STATUS = [
-  "Active", "Archived", "Draft", "Unknown"
+  "Active", "Archived", "Draft", "Unknown", "Retracted"
 ];
 
 const LAST_UPDATED_PRESETS = {
