@@ -22,4 +22,10 @@ const LAST_UPDATED_PRESETS = {
   "Custom": "",
 }
 
-export { CODE_SYSTEMS, STATUS, LAST_UPDATED_PRESETS };
+// API Currently doesn't allow changing sort order
+const SORT_BY_OPTIONS = [
+  "Default"
+]
+
+
+export { CODE_SYSTEMS, STATUS, LAST_UPDATED_PRESETS, SORT_BY_OPTIONS };

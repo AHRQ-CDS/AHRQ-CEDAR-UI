@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Container, Grid, Menu, Segment } from 'semantic-ui-react';
 
+import SortBy from './SortBy';
 import ArtifactLastUpdated from './ArtifactLastUpdated';
 import ArtifactType from './ArtifactType';
 import Conditions from './Conditions';
@@ -28,7 +29,8 @@ function App(props) {
   const [searchResults, setSearchResults] = useState({ status: 'none' });
   const [searchPage, setSearchPage] = useState(1);
   const [searchParameter, setSearchParameter] = useState('_content');
-  const [lastUpdatedPreset, setLastUpdatedPreset] = useState('Any time') 
+  const [sortByPreset, setSortByPreset] = useState('Default');
+  const [lastUpdatedPreset, setLastUpdatedPreset] = useState('Any time');
   const [lastUpdatedSearchString, setLastUpdatedSearchString] = useState('');
   const [showLastUpdatedCustomDate, setShowLastUpdatedCustomDate] = useState(false);
   const [customDatePrefix, setCustomDatePrefix] = useState('ge');
@@ -47,7 +49,7 @@ function App(props) {
   // number of page results returned (e.g., 10, 20, etc.)
   const SEARCH_COUNT = 10;
   const HEADER_TEXT = props.smart === true ? 'CEDAR SMART Demonstration' : 'CEDAR Standalone Demonstration'
-  const SEARCH_BOX_TEXT = props.smart === true? 'Additional Filters' : 'Search and Filter'
+  const SEARCH_BOX_TEXT = props.smart === true? 'Additional Filters' : 'Search, Sort and Filter'
   const HEADER_COLOR = props.smart === true ? 'blue' : 'grey'
   const BACKGROUND_COLOR = props.smart === true ? '#FFFFFF' : '#F8F8F8'
 
@@ -82,6 +84,9 @@ function App(props) {
             // Set the lastUpdated search string to '' for "Anytime"
             value === "Any time" ? setLastUpdatedSearchString('') : setLastUpdatedSearchString(dateStringFromPreset(LAST_UPDATED_PRESETS[value]));
           }
+        }
+        else if (key === 'sortByPreset') {
+          setSortByPreset(value);
         }
         else if (key === 'searchParameter') {
           setSearchParameter(value);
@@ -227,7 +232,7 @@ function App(props) {
         setSearchResults({ status: 'complete', data: json });
 
         const urlSearchObj = urlSearchObject.getAsBase64(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, 
-                                                    searchParameter, lastUpdatedSearchString, lastUpdatedPreset, selectedArtifactTypes);
+                                                    searchParameter, lastUpdatedSearchString, sortByPreset, lastUpdatedPreset, selectedArtifactTypes);
 
         url.searchParams.set("user-search", urlSearchObj);
         window.history.replaceState({}, '', url);
@@ -239,7 +244,7 @@ function App(props) {
 
     cedarSearch();
 
-  }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, lastUpdatedPreset, selectedArtifactTypes]);
+  }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, sortByPreset, lastUpdatedPreset, selectedArtifactTypes]);
 
   /* 
     This method handles selection of a concept, including checking to see if the codes in that concept are a subset of the codes from an already-selected concept
@@ -315,6 +320,8 @@ function App(props) {
                                 setSearchString={setSearchString}
                                 setSearchPage={setSearchPage}
                 />
+
+                <SortBy sortByPreset={sortByPreset} setSortByPreset={setSortByPreset} />
 
                 <ArtifactLastUpdated setLastUpdatedSearchString={setLastUpdatedSearchString}
                                      lastUpdatedPreset={lastUpdatedPreset}
