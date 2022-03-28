@@ -20,6 +20,7 @@ import { LAST_UPDATED_PRESETS } from '../utils/constants';
 import { urlSearchObject, dateStringFromPreset } from '../utils/utils';
 
 import '../assets/css/App.css';
+import '../assets/css/Print.css';
 
 function App(props) {
   const [patient, setPatient] = useState();
@@ -115,7 +116,7 @@ function App(props) {
           setSelectedArtifactTypes(value);
         }
       }
-    } 
+    }
   }, [])
 
   useEffect(() => {
@@ -218,10 +219,10 @@ function App(props) {
         }
       }
 
-      /* 
+      /*
         Note: By default a fetch() request timeouts at the time indicated by the browser. In Chrome,
          a network request times out in 300 seconds, while Firefox will time out in 90 seconds.
-         Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window? 
+         Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window?
       */
       let baseUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
       let url = new URL(baseUrl);
@@ -247,9 +248,9 @@ function App(props) {
 
   }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, sortByPreset, lastUpdatedPreset, selectedArtifactTypes]);
 
-  /* 
+  /*
     This method handles selection of a concept, including checking to see if the codes in that concept are a subset of the codes from an already-selected concept
-    Example: hypertension, with codes = [SNOMED-CT: 38341003], is a subset of hypertensive disease, with codes = [MeSH: D006973, SNOMED-CT: 38341003, 
+    Example: hypertension, with codes = [SNOMED-CT: 38341003], is a subset of hypertensive disease, with codes = [MeSH: D006973, SNOMED-CT: 38341003,
     SNOMED-CT (ESP): 38341003, MeSH (ESP): D006973]
 
     This handler is also memoized so we don't re-render on every overall re-render
@@ -265,9 +266,9 @@ function App(props) {
           // This concept's codes are a subset of a previously selected concept, so we don't need to do anything
           return;
         } else if (concept.every(c => newlySelectedConceptCodes.includes(c))) {
-          /* 
+          /*
             This concept's codes are a superset of a previously selected concept, so we can replace that concept
-            Use functional updates as per https://reactjs.org/docs/hooks-reference.html#functional-updates 
+            Use functional updates as per https://reactjs.org/docs/hooks-reference.html#functional-updates
           */
           setSelectedConcepts(prevSelectedConcepts => [...prevSelectedConcepts.slice(0, index), ...prevSelectedConcepts.slice(index + 1)]);
         }
@@ -308,7 +309,7 @@ function App(props) {
       <Container fluid className='App' style={{'backgroundColor': BACKGROUND_COLOR}}>
         <Grid>
           <Grid.Row>
-            <Grid.Column width={5}>
+            <Grid.Column width={5} className='no-print'>
               {props.smart && (<Patient patient={patient} />)}
               <Segment>
                 <h3>{SEARCH_BOX_TEXT}</h3>
@@ -332,7 +333,7 @@ function App(props) {
                                      customDatePrefix={customDatePrefix}
                                      setCustomDatePrefix={setCustomDatePrefix}
                                      customDateError={customDateError}
-                                     setCustomDateError={setCustomDateError}                
+                                     setCustomDateError={setCustomDateError}
                 />
 
                 <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage} />
@@ -357,7 +358,19 @@ function App(props) {
                 )}
               </Segment>
             </Grid.Column>
-            <Grid.Column width={11}>
+            <Grid.Column width={11} className='no-print'>
+              <SearchResults searchResults={searchResults}
+                           page={searchPage}
+                           onPageChange={handlePageChange}
+                           onKeywordClick={handleKeywordClick}
+                           onConceptClick={handleConceptSelect}
+                           selectedConcepts={selectedConcepts}
+                           selectedKeywords={selectedKeywords}
+                           activeTabIndex={activeTabIndex}
+                           setActiveTabIndex={setActiveTabIndex}
+                           />
+            </Grid.Column>
+            <Grid.Column width={16} className='print-only'>
               <SearchResults searchResults={searchResults}
                            page={searchPage}
                            onPageChange={handlePageChange}

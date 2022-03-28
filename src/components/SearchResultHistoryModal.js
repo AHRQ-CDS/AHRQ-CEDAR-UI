@@ -9,7 +9,7 @@ function SearchResultHistoryModal({ resource }) {
   // On first load: right resource is "current" and is the resource passed in from the search results
   const [rightVersion, setRightVersion] = useState(resource.meta.versionId);
   // On first load: left version is "previous"
-  const [leftVersion, setLeftVersion] = useState(resource.meta.versionId - 1); 
+  const [leftVersion, setLeftVersion] = useState(resource.meta.versionId - 1);
   // On first load: right/current version has been passed in from the search results
   const [rightResource, setRightResource] = useState({ status: 'complete', data: resource });
   // On first load: left/previous version hasn't been retrieved yet
@@ -39,7 +39,7 @@ function SearchResultHistoryModal({ resource }) {
 
     setLeftResource({ status: 'pending' });
     getResourceByVersion(leftVersion).then((data) => setLeftResource({ status: 'complete', data: data}));
-    
+
     setRightDropdownOptions(dropdownOptionsFromArray(rightVersion, resource.meta.versionId + 1));
     setLeftDropdownOptions(dropdownOptionsFromArray(1, rightVersion));
   }
@@ -117,20 +117,20 @@ function SearchResultHistoryModal({ resource }) {
       return (
         <>
           <div className="artifact-changes-version-control artifact-changes-left-control">
-            <Form.Select selection 
-                         name="left-version" 
-                         options={leftDropdownOptions} 
-                         onChange={handleResourceVersionChange} 
+            <Form.Select selection
+                         name="left-version"
+                         options={leftDropdownOptions}
+                         onChange={handleResourceVersionChange}
                          value={leftVersion}
                          className="artifact-changes-version-select" />
             <VersionImportDate resource={leftResource} />
           </div>
           <div className="artifact-changes-version-control artifact-changes-right-control">
-            <Form.Select selection 
-                         name="right-version" 
-                         options={rightDropdownOptions} 
-                         onChange={handleResourceVersionChange} 
-                         value={rightVersion} 
+            <Form.Select selection
+                         name="right-version"
+                         options={rightDropdownOptions}
+                         onChange={handleResourceVersionChange}
+                         value={rightVersion}
                          className="artifact-changes-version-select" />
             <VersionImportDate resource={rightResource} />
           </div>
@@ -150,11 +150,11 @@ function SearchResultHistoryModal({ resource }) {
       return (<h4>Could not load versions for this artifact.</h4>)
     }
   }
-  
+
   return (
-    <Modal onClose={closeModal} onOpen={openModal} open={open} trigger={<Button size='small' className='artifact-changes-button'>Artifact Changes</Button>} size='large'>
+    <Modal onClose={closeModal} onOpen={openModal} open={open} trigger={<Button size='small' className='artifact-changes-button no-print'>Artifact Changes</Button>} size='large'>
       <Modal.Header>
-        Artifact Changes   
+        Artifact Changes
         <Popup trigger={<Icon name='question circle outline' className='artifact-changes-tooltip' />}
                content='Dates and version numbers refer to artifact import date and version from source repository into CEDAR'
                position='bottom center'
