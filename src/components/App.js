@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container, Grid, Menu, Segment } from 'semantic-ui-react';
+import { Container, Grid, Segment } from 'semantic-ui-react';
 
 import ArtifactLastUpdated from './ArtifactLastUpdated';
 import ArtifactType from './ArtifactType';
@@ -15,6 +15,7 @@ import SearchResults from './SearchResults';
 import Status from './Status';
 import { LAST_UPDATED_PRESETS } from '../utils/constants';
 import { urlSearchObject, dateStringFromPreset } from '../utils/utils';
+import AhrqHeader from './AhrqHeader';
 
 import '../assets/css/App.css';
 
@@ -48,7 +49,6 @@ function App(props) {
   const SEARCH_COUNT = 10;
   const HEADER_TEXT = props.smart === true ? 'CEDAR SMART Demonstration' : 'CEDAR Standalone Demonstration'
   const SEARCH_BOX_TEXT = props.smart === true? 'Additional Filters' : 'Search and Filter'
-  const HEADER_COLOR = props.smart === true ? 'blue' : 'grey'
   const BACKGROUND_COLOR = props.smart === true ? '#FFFFFF' : '#F8F8F8'
 
   // Sets the application states from base64-encoded user-search query parameters if they are in the URL
@@ -298,9 +298,7 @@ function App(props) {
 
   return (
     <>
-      <Menu color={HEADER_COLOR} inverted attached>
-        <Menu.Item header><h2>{HEADER_TEXT}</h2></Menu.Item>
-      </Menu>
+      <AhrqHeader headerText={HEADER_TEXT} />
       <Container fluid className='App' style={{'backgroundColor': BACKGROUND_COLOR}}>
         <Grid>
           <Grid.Row>
