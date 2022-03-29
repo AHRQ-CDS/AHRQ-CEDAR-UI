@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Container, Grid, Segment } from 'semantic-ui-react';
 
+import AhrqFooter from './AhrqFooter';
+import AhrqHeader from './AhrqHeader';
 import ArtifactLastUpdated from './ArtifactLastUpdated';
 import ArtifactType from './ArtifactType';
 import Conditions from './Conditions';
@@ -15,7 +17,6 @@ import SearchResults from './SearchResults';
 import Status from './Status';
 import { LAST_UPDATED_PRESETS } from '../utils/constants';
 import { urlSearchObject, dateStringFromPreset } from '../utils/utils';
-import AhrqHeader from './AhrqHeader';
 
 import '../assets/css/App.css';
 
@@ -364,6 +365,7 @@ function App(props) {
           </Grid.Row>
         </Grid>
       </Container>  
+      <AhrqFooter />
     </>
   );
 }

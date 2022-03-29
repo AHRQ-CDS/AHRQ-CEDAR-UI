@@ -1,16 +1,6 @@
 import React from 'react';
-import '../assets/css/_ahrq.css';
-import '../assets/css/_ahrq-uswds2.0.css';
-import '../assets/css/_ahrq-global.css';
-import '../assets/css/_region.css';
-import '../assets/css/_search.css';
-import '../assets/css/_buttons.css';
-import '../assets/css/_header.css';
-import '../assets/css/_normalize.css';
-import '../assets/css/_navbar.css';
-import '../assets/css/_navigation.css';
-import '../assets/css/_bootstrap_grid.css';
-import '../assets/css/_ahrq_style_overrides.css';
+
+import '../assets/css/Ahrq.css'
 
 import logo_ahrq from '../assets/img/logo-ahrq.png';
 import us_flag_small from '../assets/img/us_flag_small.png';

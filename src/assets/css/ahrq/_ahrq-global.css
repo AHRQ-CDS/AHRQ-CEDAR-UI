@@ -250,6 +250,10 @@
     src: url("/fonts/public-sans/PublicSans-BoldItalic.woff2") format("woff2"), url("/fonts/public-sans/PublicSans-BoldItalic.woff") format("woff"), url(/fonts/public-sans/PublicSans-BoldItalic.ttf) format("truetype");
   }
 }*/
+.ahrq .usa-sr-only {
+  position: absolute;
+  left: -999em;
+}
 .ahrq html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;

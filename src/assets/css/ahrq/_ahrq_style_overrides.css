@@ -29,3 +29,12 @@
     margin-left: 1vw;
   } 
 }
+
+.footer.cds-footer {
+  margin-top: 10px !important;
+  margin-bottom: -10px !important;
+}
+
+.utility-envelope {
+  margin-right: 5px;
+}
