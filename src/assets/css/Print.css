@@ -1,5 +1,7 @@
-.print-only, .print-only {
-  display: none !important;
+@media screen {
+  .print-only, .print-only * {
+    display: none !important;
+  }
 }
 
 @media print {
@@ -7,6 +9,6 @@
     display: none !important;
   }
   .print-only{
-    display: block;
+    display: block !important;
   }
 }

@@ -5,17 +5,13 @@ import SearchResult from './SearchResult';
 function SearchResults({ searchResults, page, onPageChange, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts, activeTabIndex, setActiveTabIndex }) {
   if (searchResults?.status === 'complete') {
     const searchURL = new URL(searchResults.data.link.find(e => e.relation === 'self')?.url);
-    let downloadAllQueryParams = new URLSearchParams();
-    searchURL.searchParams.forEach((value, key) => {
-      if (key !== '_count' && key !== 'page') {
-        downloadAllQueryParams.append(key, value);
-      }
-    });
-    const downloadHref = `/api/csv?${downloadAllQueryParams.toString()}`
+    let downloadAllQueryParams = new URLSearchParams(searchURL.search);
+    downloadAllQueryParams.delete('_count');
+    downloadAllQueryParams.delete('page');
     return (
         <React.Fragment>
-          <h4 class='no-print'>
-            <Button size='small' className='download-button no-print' as='a' href={downloadHref}>
+          <h4 className='no-print'>
+            <Button size='small' className='download-button no-print' as='a' href={'/api/csv?' + downloadAllQueryParams.toString()}>
               <Icon name='download'/>
               Download
             </Button>
