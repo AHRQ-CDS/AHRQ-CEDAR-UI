@@ -358,19 +358,7 @@ function App(props) {
                 )}
               </Segment>
             </Grid.Column>
-            <Grid.Column width={11} className='no-print'>
-              <SearchResults searchResults={searchResults}
-                           page={searchPage}
-                           onPageChange={handlePageChange}
-                           onKeywordClick={handleKeywordClick}
-                           onConceptClick={handleConceptSelect}
-                           selectedConcepts={selectedConcepts}
-                           selectedKeywords={selectedKeywords}
-                           activeTabIndex={activeTabIndex}
-                           setActiveTabIndex={setActiveTabIndex}
-                           />
-            </Grid.Column>
-            <Grid.Column width={16} className='print-only'>
+            <Grid.Column width={11} className='section-to-print'>
               <SearchResults searchResults={searchResults}
                            page={searchPage}
                            onPageChange={handlePageChange}

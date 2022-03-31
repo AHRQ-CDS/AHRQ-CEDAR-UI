@@ -1,14 +1,20 @@
-@media screen {
-  .print-only, .print-only * {
-    display: none !important;
-  }
-}
-
 @media print {
+  @page {
+    size: portrait;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .section-to-print, .section-to-print * {
+    visibility: visible;
+  }
   .no-print, .no-print * {
     display: none !important;
   }
-  .print-only{
-    display: block !important;
+  .section-to-print {
+    position: absolute !important;
+    left: 0;
+    top: 0;
+    min-width: 100% !important;
   }
 }
