@@ -81,8 +81,8 @@ export default function AhrqHeader({headerText}) {
 		  <div id="header" role="navigation" aria-label="Clinical Decision Support Header">
 		    <header className="header" aria-label="A H R Q Banner">
 		      <div className="header__banner row">
-		      	<a href="https://cedar.ahrqdev.org/" class="btn btn-link nav-button" title="CEDAR Home">
-        		<span class="glyphicon glyphicon-link"></span> CEDAR Home</a>
+		      	<a href="https://cedar.ahrqdev.org/" className="btn btn-link nav-button" title="CEDAR Home">
+        		<span className="glyphicon glyphicon-link"></span> CEDAR Home</a>
 		        <div className="header__banner-text">
 		          <a href="https://cds.ahrq.gov/">
 		            <div className="header__banner-text-top">

@@ -15,7 +15,7 @@ const conceptIsSelected = (conceptToTest, selectedConcepts) => {
 
 class urlSearchObject {
   static getAsBase64(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, 
-    lastUpdatedPreset, selectedArtifactTypes) {
+    sortByPreset, lastUpdatedPreset, selectedArtifactTypes) {
     const urlSearchObj = {
       selectedKeywords: selectedKeywords,
       selectedConcepts: selectedConcepts,
@@ -25,6 +25,7 @@ class urlSearchObject {
       searchStatus: searchStatus,
       searchParameter: searchParameter,
       lastUpdatedSearchString: lastUpdatedPreset === 'Custom' ? lastUpdatedSearchString : '',
+      sortByPreset: sortByPreset,
       lastUpdatedPreset: lastUpdatedPreset,
       selectedArtifactTypes: selectedArtifactTypes
     }
