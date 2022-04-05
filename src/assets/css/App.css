@@ -79,7 +79,7 @@ button.btn-link:hover {
 
 .ui.green.label, .ui.green.labels .label {
   background-color: #2FB690 !important;
-  border-color: ##2FB690 !important;
+  border-color: #2FB690 !important;
 }
 
 i.green.icon {
@@ -88,11 +88,4 @@ i.green.icon {
 
 i.blue.icon {
     color: #25394D !important;
-}
-
-.default-sort {
-    display: inline-block !important;
-}
-.default-sort > label {
-    margin-right: 0.15em !important;
 }
