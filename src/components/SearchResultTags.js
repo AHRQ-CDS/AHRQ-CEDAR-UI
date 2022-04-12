@@ -55,7 +55,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
       const ConceptButton = () => {
         if(selected) {
           return (
-            <Button {...buttonProps} key={concept.text} className='cursor-auto'>{concept.text} 
+            <Button {...buttonProps} key={concept.text} className='cursor-auto'>{concept.text}
               <Icon name='check' color='green' className='custom-icon-padding' />
             </Button>
           );
@@ -68,9 +68,9 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
       // NOTE: We must wrap the ConceptButton inside another set of tags or the Popup won't fire
       // See: https://stackoverflow.com/questions/63611315/semantics-popup-does-not-show-up-when-passing-a-custom-component-as-trigger
       return (
-        <Popup key={concept.text} 
+        <Popup key={concept.text}
                trigger={<span><ConceptButton /></span>}
-               flowing 
+               flowing
         >
           <h4>Concept: {concept.text}</h4>
           <ConceptCodingPopup concept={concept}/>
@@ -92,7 +92,7 @@ function SearchResultTags({ keywords, concepts, onKeywordClick, onConceptClick, 
   ]
 
   return (
-    <Tab panes={panes} menu={{ secondary: true, pointing: true }} activeIndex={activeTabIndex} onTabChange={handleTabChange} />
+    <Tab panes={panes} menu={{ secondary: true, pointing: true }} activeIndex={activeTabIndex} onTabChange={handleTabChange} className='no-print'/>
   )
 }
 

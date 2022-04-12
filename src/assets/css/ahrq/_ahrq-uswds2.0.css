@@ -14237,18 +14237,6 @@
     padding-right: 2em;
   }
 }
-@media print {
-  .ahrq .usa-radio__input:checked + .usa-radio__label:before {
-    -webkit-box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 1em #005ea2, 0 0 0 2px #005ea2;
-    box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 1em #005ea2, 0 0 0 2px #005ea2;
-  }
-  .ahrq .usa-checkbox__input:checked + .usa-checkbox__label:before, .ahrq .usa-checkbox__input:checked:disabled + .usa-checkbox__label:before {
-    background-image: none;
-    background-color: #fff;
-    content: url(https://www.ahrq.gov/themes/custom/ahrq_bootstrap_barrio/pattern-lab/public/uswds/img/correct8-alt.svg);
-    text-indent: 0;
-  }
-}
 @media (max-width: 39.99em) {
   .ahrq .usa-banner__button {
     width: 100%;
@@ -14690,57 +14678,7 @@
 }
 .ahrq .field--label-inline .field--label::after {
   content: ":";
-}
-@media print {
-  .ahrq {
-    background-color: #fff;
-    color: #000000;
-  }
-  .ahrq * {
-    display: block !important;
-    overflow: visible !important;
-    float: none !important;
-    position: static !important;
-  }
-  .ahrq .usa-banner-bg {
-    background-color: #fff;
-  }
-  .ahrq .usa-banner-bg .usa-accordion, .ahrq .usa-banner-bg .usa-banner__header {
-    display: none !important;
-  }
-  .ahrq #header #utility-nav, .ahrq #header .search {
-    display: none;
-  }
-  .ahrq #header .header .row-bottom-margin {
-    display: none;
-  }
-  .ahrq #header .mm-nav-bottom-border-mobile {
-    border-bottom: 0;
-    margin-top: 0;
-  }
-  .ahrq #breadcrumbs, .ahrq #topics-az {
-    display: none !important;
-  }
-  .ahrq #main-content-wrapper .addthis_toolbox {
-    display: none;
-  }
-  .ahrq #main-content-wrapper .main-content .subnav-2-cols {
-    padding-right: 0;
-  }
-  .ahrq #main-content-wrapper .sbf-btn {
-    display: none !important;
-  }
-  .ahrq #main-content-wrapper .col-md-9 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-  .ahrq .sbf-col, .ahrq .collapse.dont-collapse-sm {
-    display: none !important;
-  }
-  .ahrq footer {
-    display: none !important;
-  }
-}
+}   
 .ahrq .alert-wrapper {
   position: relative;
 }

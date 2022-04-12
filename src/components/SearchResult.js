@@ -53,11 +53,11 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
   return (
     <Card fluid id={resource.id}>
       <Card.Content>
-        <Card.Header>{resource.title}</Card.Header>
+        <Card.Header className="wrap-text">{resource.title}</Card.Header>
         <Card.Meta>{subheaderFields.join(' - ')}</Card.Meta>
         <Card.Description>
           {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
-          {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) }>{fullDescription ? 'less' : 'more'}</Button> }
+          {showMoreButton && <Button basic compact size='mini' onClick={() => setFullDescription(!fullDescription) } className='no-print'>{fullDescription ? 'less' : 'more'}</Button> }
 
           <SearchResultTags keywords={keywordsAndConcepts.keywords}
                             concepts={keywordsAndConcepts.concepts}
