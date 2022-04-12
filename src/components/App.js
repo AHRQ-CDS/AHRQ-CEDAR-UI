@@ -309,7 +309,7 @@ function App(props) {
       <Container fluid className='App' style={{'backgroundColor': BACKGROUND_COLOR}}>
         <Grid>
           <Grid.Row>
-            <Grid.Column width={5}>
+            <Grid.Column width={5} className='no-print'>
               {props.smart && (<Patient patient={patient} />)}
               <Segment>
                 <h3>{SEARCH_BOX_TEXT}</h3>

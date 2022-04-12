@@ -10,7 +10,7 @@ import envelope_regular from '../assets/img/envelope-regular.png';
 export default function AhrqHeader({headerText}) {
 	return (
 		<>
-		<div id="top-bar" role="navigation" aria-label="Agency for Healthcare Research and Quality Header">
+		<div id="top-bar" role="navigation" aria-label="Agency for Healthcare Research and Quality Header" className='no-print'>
       <div className="topbar">
         <div className="ahrq">
           <div className="usa-banner usa-banner-bg">
@@ -77,7 +77,7 @@ export default function AhrqHeader({headerText}) {
         </div>
       </div>
     </div>
-		<section>
+		<section className='no-print'>
 		  <div id="header" role="navigation" aria-label="Clinical Decision Support Header">
 		    <header className="header" aria-label="A H R Q Banner">
 		      <div className="header__banner row">

@@ -11,7 +11,7 @@ function SearchResults({ searchResults, page, onPageChange, onKeywordClick, onCo
     return (
         <React.Fragment>
           <h4 className='no-print'>
-            <Button size='small' className='download-button no-print' as='a' href={'/api/csv?' + downloadAllQueryParams.toString()}>
+            <Button size='small' className='download-button' as='a' href={'/api/csv?' + downloadAllQueryParams.toString()}>
               <Icon name='download'/>
               Download
             </Button>
