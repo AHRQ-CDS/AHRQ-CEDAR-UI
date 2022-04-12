@@ -17,4 +17,11 @@
     top: 0;
     min-width: 100% !important;
   }
+
+  .ui.fluid.card {
+    border-top: 1px solid #d4d4d5;
+    border-bottom: 1px solid #d4d4d5;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
 }
