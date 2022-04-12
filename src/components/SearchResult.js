@@ -53,7 +53,7 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
   return (
     <Card fluid id={resource.id}>
       <Card.Content>
-        <Card.Header>{resource.title}</Card.Header>
+        <Card.Header className="wrap-text">{resource.title}</Card.Header>
         <Card.Meta>{subheaderFields.join(' - ')}</Card.Meta>
         <Card.Description>
           {showFullDescription ? <ReactMarkdown>{description}</ReactMarkdown> : truncatedDescription + '... ' }
