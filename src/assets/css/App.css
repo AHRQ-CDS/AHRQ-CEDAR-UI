@@ -89,3 +89,7 @@ i.green.icon {
 i.blue.icon {
     color: #25394D !important;
 }
+
+.wrap-text {
+  white-space: normal !important;
+}
