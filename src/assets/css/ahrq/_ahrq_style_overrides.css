@@ -1,6 +1,7 @@
-@media (min-width: 1200px)
-.topbar__mobile-hhs hidden-md hidden-lg clearfix {
-  display: none !important;
+@media (min-width: 1200px) {
+  .topbar__mobile-hhs hidden-md hidden-lg clearfix {
+    display: none !important;
+  }
 }
 
 .header__banner-text-top {
