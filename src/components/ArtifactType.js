@@ -34,6 +34,7 @@ function ArtifactType({selectedArtifactTypes, setSelectedArtifactTypes}) {
         onChange={handleArtifactTypeChange}
         options={allArtifactTypes}
         value={selectedArtifactTypes}
+        className="artifact-type-select"
       />
     </>
   );

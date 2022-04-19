@@ -8,7 +8,7 @@ function SearchKeywords({ handleKeywordClick, selectedKeywords }) {
   else {
     return (
       <>
-        <h5>Additional Search Keywords</h5>
+        <h3>Keywords</h3>
         {selectedKeywords.map(k => <div className='search-tags' key={k}><Label color='blue'><Icon name='delete' onClick={() => handleKeywordClick(k)}/> {k}</Label></div>)}
       </>
     )

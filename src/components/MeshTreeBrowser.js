@@ -37,7 +37,7 @@ function MeshTreeBrowser({handleConceptSelect, selectedConcepts}) {
   else {
     return (
       <>
-        <h4>Browse By</h4>
+        <h3>MeSH Browser</h3>
         {meshRoots.map((element, i) => (
           <List key={element.treeNumber + i}>
             {(element.indirectArtifacts > 0) &&

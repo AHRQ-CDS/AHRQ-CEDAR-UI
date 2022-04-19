@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container, Grid, Segment } from 'semantic-ui-react';
+import { Container, Grid, Pagination, Segment } from 'semantic-ui-react';
 
 import AhrqHeader from './AhrqHeader';
 import SortBy from './SortBy';
 import ArtifactLastUpdated from './ArtifactLastUpdated';
 import ArtifactType from './ArtifactType';
 import Conditions from './Conditions';
+import ContentSearchStrings from './ContentSearchStrings';
 import FreeTextSearch from './FreeTextSearch';
 import MeshTreeBrowser from './MeshTreeBrowser';
 import Patient from './Patient';
@@ -15,6 +16,7 @@ import SearchConcepts from './SearchConcepts';
 import SearchKeywords from './SearchKeywords';
 import SearchResults from './SearchResults';
 import Status from './Status';
+import TitleSearchStrings from './TitleSearchStrings';
 import AhrqFooter from './AhrqFooter';
 import { LAST_UPDATED_PRESETS } from '../utils/constants';
 import { urlSearchObject, dateStringFromPreset } from '../utils/utils';
@@ -26,12 +28,12 @@ function App(props) {
   const [patient, setPatient] = useState();
   const [conditions, setConditions] = useState([]);
   const [searchInput, setSearchInput] = useState('');
-  const [searchString, setSearchString] = useState('');
+  const [contentSearchStrings, setContentSearchStrings] = useState([]);
+  const [titleSearchStrings, setTitleSearchStrings] = useState([]);
   const [selectedKeywords, setSelectedKeywords] = useState([]);
   const [selectedConcepts, setSelectedConcepts] = useState([]);
   const [searchResults, setSearchResults] = useState({ status: 'none' });
   const [searchPage, setSearchPage] = useState(1);
-  const [searchParameter, setSearchParameter] = useState('_content');
   const [sortByPreset, setSortByPreset] = useState('Default');
   const [lastUpdatedPreset, setLastUpdatedPreset] = useState('Any time');
   const [lastUpdatedSearchString, setLastUpdatedSearchString] = useState('');
@@ -51,9 +53,8 @@ function App(props) {
   // TODO: Related to above. Currently, have a constant here in lieu of supporting a user-selected
   // number of page results returned (e.g., 10, 20, etc.)
   const SEARCH_COUNT = 10;
-  const HEADER_TEXT = props.smart === true ? 'CEDAR SMART Demonstration' : 'CEDAR Standalone Demonstration'
-  const SEARCH_BOX_TEXT = props.smart === true ? 'Additional Filters' : 'Search, Sort and Filter'
-  const BACKGROUND_COLOR = props.smart === true ? '#FFFFFF' : '#F8F8F8'
+  const HEADER_TEXT = props.smart === true ? 'CEDAR SMART Demonstration' : 'CEDAR Standalone Demonstration';
+  const BACKGROUND_COLOR = props.smart === true ? '#FFFFFF' : '#F8F8F8';
 
   // Sets the application states from base64-encoded user-search query parameters if they are in the URL
   useEffect(() => {
@@ -90,9 +91,6 @@ function App(props) {
         else if (key === 'sortByPreset') {
           setSortByPreset(value);
         }
-        else if (key === 'searchParameter') {
-          setSearchParameter(value);
-        }
         else if (key === 'searchPage') {
           setSearchPage(value);
         }
@@ -102,15 +100,17 @@ function App(props) {
         else if (key === 'searchStatus') {
           setSearchStatus(value);
         }
-        else if (key === 'searchString') {
-          setSearchString(value);
-          setSearchInput(value);
-        }
         else if (key === 'selectedConcepts') {
           setSelectedConcepts(value);
         }
         else if (key === 'selectedKeywords') {
           setSelectedKeywords(value);
+        }
+        else if (key === 'contentSearchStrings') {
+          setContentSearchStrings(value);
+        }
+        else if (key === 'titleSearchStrings') {
+          setTitleSearchStrings(value);
         }
         else if (key === 'selectedArtifactTypes') {
           setSelectedArtifactTypes(value);
@@ -133,120 +133,94 @@ function App(props) {
 
   useEffect(() => {
     const cedarSearch = async () => {
+      const baseUrl= `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
       setSearchResults({ status: 'pending' });
       let searchParams = {}
       let query = new URLSearchParams();
-      let anySearchTerms = false;
-
-      let textSearchString = '';
-      let keywordSearchString = '';
-      let titleSearchString = '';
-      let selectedConceptCodes = [];
-
-      if (selectedKeywords.length > 0) {
-        keywordSearchString = `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`;
-      }
-
-      if (searchString.length > 0) {
-        switch(searchParameter) {
-          case 'classification:text':
-            keywordSearchString += keywordSearchString.length > 0 ? ` AND (${searchString})` : searchString;
-            break;
-          case 'title:contains':
-            titleSearchString = searchString;
-            break;
-          default:
-            // default is '_content'
-            textSearchString = searchString;
-        }
-      }
-
-      if(selectedConcepts.length > 0) {
-        selectedConceptCodes = selectedConcepts.map(concept => (
-          concept.coding.map(code => code.system ? `${code.system}|${code.code}` : code.code)
-        ))
-      }
-
-      // TODO: allow the user to change the count of results per page?
-      query.append('_count', SEARCH_COUNT);
-      query.append('page', searchPage);
 
       // If no status is selected, do not perform a search
       if(searchStatus.length === 0) {
         setSearchResults({ status: 'none' });
-        return
+        return;
       }
-      else if(searchStatus.length > 0) {
+      else {
         query.append('artifact-current-state', searchStatus.map(name => name.toLowerCase()).join(','));
       }
 
       // If no publisher is selected, do not perform a search
       if(searchPublisher.length === 0) {
         setSearchResults({ status: 'none' });
-        return
+        return;
       }
-      else if(searchPublisher.length > 0) {
+      else {
         query.append('artifact-publisher', searchPublisher.join(','));
+      }
+
+      // If no search terms, do not perform a search
+      if(selectedKeywords.length + titleSearchStrings.length + contentSearchStrings.length + selectedConcepts.length === 0) {
+        setSearchResults({ status: 'none' });
+        window.history.replaceState({}, '', baseUrl);
+        return;
+      }
+
+      if (selectedKeywords.length > 0) {
+        query.append('classification:text', `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`);
+      }
+
+      if (titleSearchStrings.length > 0) {
+        for(const value of titleSearchStrings) {
+          query.append('title:contains', value);
+        }
+      }
+
+      if (contentSearchStrings.length > 0) {
+        query.append('_content', `(${contentSearchStrings.map(k => `"${k}"`).join(' AND ')})`);
       }
 
       if(lastUpdatedSearchString.length > 0) {
         query.append('_lastUpdated', lastUpdatedSearchString);
       }
-
-      searchParams['classification:text'] = keywordSearchString;
-      searchParams['_content'] = textSearchString;
-      searchParams['title:contains'] = titleSearchString;
-      searchParams['classification'] = selectedConceptCodes;
+      
       if(selectedArtifactTypes.length > 0) {
-        searchParams['artifact-type'] = selectedArtifactTypes.join(',');
+       query.append('artifact-type', selectedArtifactTypes.join(','));
       }
 
-      // TODO: Setting a flag here, anySearchTerms, and checking for it below before making a request to the API seems less than ideal.
-      // Essentially, we only want to make a request if the user has interacted with any of the search filters in the UI (searchParams object), i.e.,
-      // artifact keywords, artifact concepts, free-text search, condition search (SMART on FHIR app), MeSH search via MeSH browser, and
-      // at least one artifact status has been selected.
-      for (const [queryParamKey, queryParamValue] of Object.entries(searchParams)) {
-        if(queryParamValue.length > 0) {
-          anySearchTerms = true;
-          if(Array.isArray(queryParamValue)) {
-            for(const value of queryParamValue) {
-              query.append(queryParamKey, value);
-            }
-          }
-          else {
-            query.append(queryParamKey, queryParamValue);
-          }
+      if(selectedConcepts.length > 0) {
+        searchParams['classification'] = selectedConcepts.map(concept => (
+          concept.coding.map(code => code.system ? `${code.system}|${code.code}` : code.code)
+        ))
+
+        for(const value of searchParams['classification']) {
+          query.append('classification', value);
         }
       }
 
-      /*
+      // TODO: allow the user to change the count of results per page?
+      query.append('_count', SEARCH_COUNT);
+      query.append('page', searchPage);
+
+      /* 
         Note: By default a fetch() request timeouts at the time indicated by the browser. In Chrome,
          a network request times out in 300 seconds, while Firefox will time out in 90 seconds.
          Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window?
       */
-      let baseUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+      const response = await fetch(`/api/fhir/Citation?${query.toString()}`);
+      const json = await response.json();
+      // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
+      // idea: for each search, increment a "most recent search" counter and don't set search results if the counter has moved on from this search
+      setSearchResults({ status: 'complete', data: json });
+      
       let url = new URL(baseUrl);
-      if (anySearchTerms) {
-        const response = await fetch(`/api/fhir/Citation?${query.toString()}`);
-        const json = await response.json();
-        // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
-        // idea: for each search, increment a "most recent search" counter and don't set search results if the counter has moved on from this search
-        setSearchResults({ status: 'complete', data: json });
-
-        const urlSearchObj = urlSearchObject.getAsBase64(selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, 
-                                                    searchParameter, lastUpdatedSearchString, sortByPreset, lastUpdatedPreset, selectedArtifactTypes);
-
-        url.searchParams.set("user-search", urlSearchObj);
-        window.history.replaceState({}, '', url);
-      } else {
-        setSearchResults({ status: 'none' });
-        window.history.replaceState({}, '', baseUrl);
-      }
+      url.searchParams.set("user-search", urlSearchObject.getAsBase64(
+          selectedKeywords, selectedConcepts, contentSearchStrings, titleSearchStrings, searchPage, searchPublisher, searchStatus, lastUpdatedSearchString, 
+          sortByPreset, lastUpdatedPreset, selectedArtifactTypes));
+      window.history.replaceState({}, '', url);
     };
 
     cedarSearch();
 
-  }, [selectedKeywords, selectedConcepts, searchString, searchPage, searchPublisher, searchStatus, searchParameter, lastUpdatedSearchString, sortByPreset, lastUpdatedPreset, selectedArtifactTypes]);
+  }, [selectedKeywords, selectedConcepts, searchPage, searchPublisher, searchStatus, lastUpdatedSearchString, sortByPreset, lastUpdatedPreset, 
+    selectedArtifactTypes, contentSearchStrings, titleSearchStrings]);
 
   /*
     This method handles selection of a concept, including checking to see if the codes in that concept are a subset of the codes from an already-selected concept
@@ -306,21 +280,46 @@ function App(props) {
   return (
     <>
       <AhrqHeader headerText={HEADER_TEXT} />
+      <div className="search-bar">
+        <FreeTextSearch contentSearchStrings={contentSearchStrings}
+                        searchInput={searchInput}
+                        selectedKeywords={selectedKeywords}
+                        titleSearchStrings={titleSearchStrings}
+                        setContentSearchStrings={setContentSearchStrings}
+                        setSearchInput={setSearchInput}
+                        setSearchPage={setSearchPage}
+                        setSelectedKeywords={setSelectedKeywords}
+                        setTitleSearchStrings={setTitleSearchStrings}
+        />
+      </div>
+      <Grid style={{'backgroundColor': BACKGROUND_COLOR}}>
+        <Grid.Column width={5}></Grid.Column>
+        <Grid.Column width={6} className="search-result-count no-print">
+          {searchResults?.status === 'complete' && (
+            <span>{searchResults.data.total} Search Results</span>
+          )}
+          {searchResults?.status === 'none' && (
+            <span>No Search Results</span>
+          )}
+        </Grid.Column>
+        <Grid.Column width={5} className="search-result-count">
+          {searchResults?.status === 'complete' && searchResults.data.total > 10 && (
+            <Pagination totalPages={Math.ceil(searchResults.data.total / 10)} activePage={searchPage} onPageChange={handlePageChange} pointing secondary />
+          )}
+        </Grid.Column>
+      </Grid>
       <Container fluid className='App' style={{'backgroundColor': BACKGROUND_COLOR}}>
         <Grid>
           <Grid.Row>
             <Grid.Column width={5} className='no-print'>
               {props.smart && (<Patient patient={patient} />)}
               <Segment>
-                <h3>{SEARCH_BOX_TEXT}</h3>
-                <FreeTextSearch searchParameter={searchParameter}
-                                searchInput={searchInput}
-                                setSearchParameter={setSearchParameter}
-                                setSearchInput={setSearchInput}
-                                setSearchString={setSearchString}
-                                setSearchPage={setSearchPage}
-                />
+                <ContentSearchStrings contentSearchStrings={contentSearchStrings} setContentSearchStrings={setContentSearchStrings} />
+                <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage} />
+                <SearchConcepts selectedConcepts={selectedConcepts} setSelectedConcepts={setSelectedConcepts} setSearchPage={setSearchPage} />
+                <TitleSearchStrings titleSearchStrings={titleSearchStrings} setTitleSearchStrings={setTitleSearchStrings} />
 
+                <h3>Search Filters</h3>
                 <SortBy sortByPreset={sortByPreset} setSortByPreset={setSortByPreset} />
 
                 <ArtifactLastUpdated setLastUpdatedSearchString={setLastUpdatedSearchString}
@@ -336,17 +335,13 @@ function App(props) {
                                      setCustomDateError={setCustomDateError}
                 />
 
-                <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage} />
-
-                <SearchConcepts selectedConcepts={selectedConcepts} setSelectedConcepts={setSelectedConcepts} setSearchPage={setSearchPage} />
-
                 <ArtifactType selectedArtifactTypes={selectedArtifactTypes} setSelectedArtifactTypes={setSelectedArtifactTypes} />
-
-                {!props.smart && (<MeshTreeBrowser handleConceptSelect={handleConceptSelect} selectedConcepts={selectedConcepts} /> )}
-
+                
                 <Status searchStatus={searchStatus} setSearchStatus={setSearchStatus} setSearchPage={setSearchPage} />
 
                 <Publishers searchPublisher={searchPublisher} setSearchPublisher={setSearchPublisher} setSearchPage={setSearchPage} />
+
+                {!props.smart && (<MeshTreeBrowser handleConceptSelect={handleConceptSelect} selectedConcepts={selectedConcepts} /> )}
 
                 {props.smart && (
                 <Conditions conditions={conditions}

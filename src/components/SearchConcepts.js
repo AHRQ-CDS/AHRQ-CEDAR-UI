@@ -19,14 +19,14 @@ function SearchConcepts({selectedConcepts, setSelectedConcepts, setSearchPage}) 
   else {
     return (
       <>
-        <h5>Additional Search Concepts</h5>
+        <h3>Concepts</h3>
         {selectedConcepts.map(concept => 
-        <div className='search-tags' key={concept.text}>
+        <span className='search-tags' key={concept.text}>
           <Popup trigger={<Label color='green'><Icon name='delete' onClick={() => handleConceptRemove(concept)}/> {concept.text}</Label>} flowing hoverable>
             <h4>Concept: {concept.text}</h4>
             <ConceptCodingPopup concept={concept}/>
           </Popup>
-        </div>
+        </span>
         )}
       </>
     )

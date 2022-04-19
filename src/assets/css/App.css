@@ -10,7 +10,7 @@
   cursor:  auto !important;
 }
 
-.ui.form .field>label {
+.ui.form .field >label {
   font-weight: 450;
 }
 
@@ -24,8 +24,9 @@
 }
 
 .search-tags {
-  padding-top: 4px;
-  padding-bottom: 4px;
+  margin-right: 4px;
+  margin-top: 4px;
+  display: inline-block;
 }
 
 .pill-list-item {
@@ -78,18 +79,69 @@ button.btn-link:hover {
 }
 
 .ui.green.label, .ui.green.labels .label {
-  background-color: #2FB690 !important;
-  border-color: #2FB690 !important;
+  background-color: #258C6D !important;
+  border-color: #258C6D !important;
 }
 
 i.green.icon {
-  color: #2FB690 !important;
+  color: #258C6D !important;
 }
 
 i.blue.icon {
-    color: #25394D !important;
+  color: #25394D !important;
 }
 
 .wrap-text {
   white-space: normal !important;
+}
+.search-bar {
+  background-color: #224DBA;
+  width: 100%;
+  height: 75px;
+  padding-top: 12px;
+  margin-bottom: 12px;
+}
+
+.search-wrapper {
+  position: absolute;
+  width: 100%;
+}
+
+.search-form {
+  margin: 0 auto;
+  width: 75%;
+}
+
+.search-result-count {
+  min-height: 68px;
+}
+
+i.search.icon {
+  color: black;
+}
+
+.ui.primary.button.search {
+  color: #2FB690 !important;
+}
+
+.search-result-count > span {
+  font-size: large;
+  font-weight: 450;
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  display: flex;
+  align-items: center;
+  height: 40px
+}
+
+.artifact-type-select {
+  margin-bottom: 25px;
+}
+
+.ui.card .meta {
+  color: #692A74 !important;
+  padding-top: 3px;
+}
+
+.ui.card>.extra a:not(.ui), .ui.cards>.card>.extra a:not(.ui) {
+  color: #25394D !important
 }
