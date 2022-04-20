@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Form } from 'semantic-ui-react';
+import { Form, Icon, Popup } from 'semantic-ui-react';
+import FreeTextSearchPopup from './FreeTextSearchPopup';
 
 function FreeTextSearch({contentSearchStrings, searchInput, selectedKeywords, titleSearchStrings, setContentSearchStrings, 
   setSearchInput, setSearchPage, setSelectedKeywords, setTitleSearchStrings}) {
@@ -56,15 +57,18 @@ function FreeTextSearch({contentSearchStrings, searchInput, selectedKeywords, ti
       <div className="search-wrapper">
         <Form onSubmit={updateSearchString} size='big' className="search-form">
           <Form.Group>
+            <Popup trigger={<Icon name='question circle' size='large' className='advanced-search-options cursor-pointer'/>} flowing hoverable>
+              <FreeTextSearchPopup searchType={searchType}/>
+            </Popup>
             <Form.Select
               selection
               name="type"
               options={SEARCH_TYPES}
               value={searchType}
-              width={3}
+              width={5}
               onChange={(e, data) => setSearchType(data.value)}
             />
-            <Form.Input placeholder='Search terms...' action={{ icon: 'search' }} value={searchInput} onChange={(e) => setSearchInput(e.target.value)} width={13}/>
+            <Form.Input placeholder='Search terms...' action={{ icon: 'search' }} value={searchInput} onChange={(e) => setSearchInput(e.target.value)} width={11}/>
           </Form.Group>
         </Form>
       </div>

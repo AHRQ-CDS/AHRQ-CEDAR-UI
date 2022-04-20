@@ -38,7 +38,7 @@ function ArtifactLastUpdated({setLastUpdatedSearchString, lastUpdatedPreset, set
 
   const handleLastUpdatedChange = (event, data) => {
     setLastUpdatedPreset(event.target.textContent);
-    // If we change the Last Updated Radio, clear away any Custom Date that was inputted as well as associated errors.
+    // If we change the Last Updated Select, clear away any Custom Date that was inputted as well as associated errors.
     setCustomDateInput('');
     setCustomDateError(false);
 

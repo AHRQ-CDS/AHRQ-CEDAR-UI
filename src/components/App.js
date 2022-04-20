@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container, Grid, Pagination, Segment } from 'semantic-ui-react';
+import { Container, Grid, Segment } from 'semantic-ui-react';
 
 import AhrqHeader from './AhrqHeader';
 import SortBy from './SortBy';
@@ -15,6 +15,7 @@ import { SMART } from './FHIRClientWrapper';
 import SearchConcepts from './SearchConcepts';
 import SearchKeywords from './SearchKeywords';
 import SearchResults from './SearchResults';
+import SearchResultsNavigation from './SearchResultsNavigation';
 import Status from './Status';
 import TitleSearchStrings from './TitleSearchStrings';
 import AhrqFooter from './AhrqFooter';
@@ -174,7 +175,8 @@ function App(props) {
       }
 
       if (contentSearchStrings.length > 0) {
-        query.append('_content', `(${contentSearchStrings.map(k => `"${k}"`).join(' AND ')})`);
+        const contentString = contentSearchStrings.length > 1 ? `(${contentSearchStrings.map(k => `${k}`).join(' AND ')})` : contentSearchStrings;
+        query.append('_content', contentString);
       }
 
       if(lastUpdatedSearchString.length > 0) {
@@ -269,18 +271,10 @@ function App(props) {
     []
   );
 
-  // Memoize this handler so we don't re-render the search results on every overall re-render
-  const handlePageChange = useCallback(
-    (event, data) => {
-      setSearchPage(data.activePage);
-    },
-    []
-  );
-
   return (
     <>
       <AhrqHeader headerText={HEADER_TEXT} />
-      <div className="search-bar">
+      <div className="search-bar no-print">
         <FreeTextSearch contentSearchStrings={contentSearchStrings}
                         searchInput={searchInput}
                         selectedKeywords={selectedKeywords}
@@ -292,22 +286,7 @@ function App(props) {
                         setTitleSearchStrings={setTitleSearchStrings}
         />
       </div>
-      <Grid style={{'backgroundColor': BACKGROUND_COLOR}}>
-        <Grid.Column width={5}></Grid.Column>
-        <Grid.Column width={6} className="search-result-count no-print">
-          {searchResults?.status === 'complete' && (
-            <span>{searchResults.data.total} Search Results</span>
-          )}
-          {searchResults?.status === 'none' && (
-            <span>No Search Results</span>
-          )}
-        </Grid.Column>
-        <Grid.Column width={5} className="search-result-count">
-          {searchResults?.status === 'complete' && searchResults.data.total > 10 && (
-            <Pagination totalPages={Math.ceil(searchResults.data.total / 10)} activePage={searchPage} onPageChange={handlePageChange} pointing secondary />
-          )}
-        </Grid.Column>
-      </Grid>
+      <SearchResultsNavigation searchResults={searchResults} bgColor={BACKGROUND_COLOR} searchPage={searchPage} setSearchPage={setSearchPage} />
       <Container fluid className='App' style={{'backgroundColor': BACKGROUND_COLOR}}>
         <Grid>
           <Grid.Row>
@@ -356,7 +335,6 @@ function App(props) {
             <Grid.Column width={11} className='section-to-print'>
               <SearchResults searchResults={searchResults}
                            page={searchPage}
-                           onPageChange={handlePageChange}
                            onKeywordClick={handleKeywordClick}
                            onConceptClick={handleConceptSelect}
                            selectedConcepts={selectedConcepts}

@@ -112,7 +112,7 @@ i.blue.icon {
   width: 75%;
 }
 
-.search-result-count {
+.search-results-navigation {
   min-height: 68px;
 }
 
@@ -124,7 +124,7 @@ i.search.icon {
   color: #2FB690 !important;
 }
 
-.search-result-count > span {
+.search-results-count > span {
   font-size: large;
   font-weight: 450;
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -144,4 +144,18 @@ i.search.icon {
 
 .ui.card>.extra a:not(.ui), .ui.cards>.card>.extra a:not(.ui) {
   color: #25394D !important
+}
+
+.advanced-search-options {
+  color: #E0E1E2;
+  padding-top: 10px;
+}
+
+.artifact-meta {
+  padding-bottom: 15px;
+  font-weight: 600;
+}
+
+.download-button {
+  margin-left: 10px !important;
 }
