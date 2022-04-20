@@ -165,7 +165,8 @@ function App(props) {
       }
 
       if (selectedKeywords.length > 0) {
-        query.append('classification:text', `(${selectedKeywords.map(k => `"${k}"`).join(' AND ')})`);
+        const keywordString = selectedKeywords.length > 1 ? `(${selectedKeywords.map(k => `(${k})`).join(' AND ')})` : selectedKeywords;
+        query.append('classification:text', keywordString);
       }
 
       if (titleSearchStrings.length > 0) {
@@ -175,7 +176,7 @@ function App(props) {
       }
 
       if (contentSearchStrings.length > 0) {
-        const contentString = contentSearchStrings.length > 1 ? `(${contentSearchStrings.map(k => `${k}`).join(' AND ')})` : contentSearchStrings;
+        const contentString = contentSearchStrings.length > 1 ? `(${contentSearchStrings.map(k => `(${k})`).join(' AND ')})` : contentSearchStrings;
         query.append('_content', contentString);
       }
 
