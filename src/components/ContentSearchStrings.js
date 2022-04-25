@@ -12,7 +12,7 @@ function ContentSearchStrings({ contentSearchStrings, setContentSearchStrings })
   else {
     return (
       <>
-        <h3>Text Search</h3>
+        <h3>Text Terms</h3>
         {contentSearchStrings.map(k => <span className='search-tags' key={k}><Label color='blue'><Icon name='delete' onClick={() => handleContentSearchStringRemove(k)}/> {k}</Label></span>)}
       </>
     )

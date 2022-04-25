@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Form, Icon, Popup } from 'semantic-ui-react';
 import FreeTextSearchPopup from './FreeTextSearchPopup';
 
-function FreeTextSearch({contentSearchStrings, searchInput, selectedKeywords, titleSearchStrings, setContentSearchStrings, 
-  setSearchInput, setSearchPage, setSelectedKeywords, setTitleSearchStrings}) {
+function FreeTextSearch({searchInput, setContentSearchStrings, setSearchInput, setSearchPage, setSelectedKeywords, setTitleSearchStrings}) {
   
   const SEARCH_TYPES = [
     { key: 'text', value: 'Text', text: 'Text' },
