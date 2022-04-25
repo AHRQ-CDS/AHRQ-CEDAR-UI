@@ -276,10 +276,7 @@ function App(props) {
     <>
       <AhrqHeader headerText={HEADER_TEXT} />
       <div className="search-bar no-print">
-        <FreeTextSearch contentSearchStrings={contentSearchStrings}
-                        searchInput={searchInput}
-                        selectedKeywords={selectedKeywords}
-                        titleSearchStrings={titleSearchStrings}
+        <FreeTextSearch searchInput={searchInput}
                         setContentSearchStrings={setContentSearchStrings}
                         setSearchInput={setSearchInput}
                         setSearchPage={setSearchPage}
@@ -299,7 +296,7 @@ function App(props) {
                 <SearchConcepts selectedConcepts={selectedConcepts} setSelectedConcepts={setSelectedConcepts} setSearchPage={setSearchPage} />
                 <TitleSearchStrings titleSearchStrings={titleSearchStrings} setTitleSearchStrings={setTitleSearchStrings} />
 
-                <h3>Search Filters</h3>
+                <h3>Sort and Filter</h3>
                 <SortBy sortByPreset={sortByPreset} setSortByPreset={setSortByPreset} />
 
                 <ArtifactLastUpdated setLastUpdatedSearchString={setLastUpdatedSearchString}
