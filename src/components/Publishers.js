@@ -11,8 +11,7 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
       const json = await response.json();
 
       const data = (json.entry || []).map((entry) => ({ id: entry.resource.id, name: entry.resource.name, alias: entry.resource.alias[0] }))
-      const sorted_data = _.orderBy(data, ['alias'])
-      setAllPublishers(sorted_data);
+      setAllPublishers(_.orderBy(data, ['alias']));
       // Only select all publishers by default if there are no query parameters
       if(document.location.search === '') {
         setSearchPublisher(data.map((publisher) => publisher.id));
