@@ -3,7 +3,6 @@ import App from '../components/App';
 
 const PATIENT_HEADER = 'Patient';
 const CONDITIONS_HEADER = 'Conditions';
-const SEARCH_HEADER = 'Search By';
 const STATUS_HEADER = 'Status';
 const PUBLISHERS_HEADER = 'Publishers';
 
@@ -28,9 +27,6 @@ test('it shows the correct SMART UI when in the SMART context', () => {
   const conditionsText = screen.getByText(CONDITIONS_HEADER);
   expect(conditionsText).toBeInTheDocument();
 
-  const searchText = screen.getByText(SEARCH_HEADER);
-  expect(searchText).toBeInTheDocument();
-
   const statusText = screen.getByText(STATUS_HEADER);
   expect(statusText).toBeInTheDocument();
 
@@ -48,9 +44,6 @@ test('it shows the correct standalone UI when in the standalone context', () => 
 
   const conditionsText = screen.queryByText(CONDITIONS_HEADER);
   expect(conditionsText).not.toBeInTheDocument();
-
-  const searchText = screen.getByText(SEARCH_HEADER);
-  expect(searchText).toBeInTheDocument();
 
   const statusText = screen.getByText(STATUS_HEADER);
   expect(statusText).toBeInTheDocument();

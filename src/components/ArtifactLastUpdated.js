@@ -10,6 +10,14 @@ function ArtifactLastUpdated({setLastUpdatedSearchString, lastUpdatedPreset, set
   const YYYYMM_REGEX = /^\d{4}-\d{2}$/;
   const YYYY_REGEX = /^\d{4}$/;
 
+  const LAST_UPDATED_SELECT_OPTIONS = [
+    { key: 'Any time', value:  'Any time', text: 'Any time' },
+    { key: 'Within 1 month', value: 'Within 1 month', text: 'Within 1 month' },
+    { key: 'Within 3 months', value: 'Within 3 months', text: 'Within 3 months' },
+    { key: 'Within 1 year', value: 'Within 1 year', text: 'Within 1 year'},
+    { key: 'Custom', value: 'Custom', text: 'Custom'}
+  ]
+
   const LAST_UPDATED_CUSTOM_PREFIXES = [
     {
       key: "eq",
@@ -28,21 +36,18 @@ function ArtifactLastUpdated({setLastUpdatedSearchString, lastUpdatedPreset, set
     },
   ]
 
-  const handleLastUpdatedChange = (event) => {
-    const {target} = event;
-    const lastUpdatedPreset = target.value;
-
-    setLastUpdatedPreset(lastUpdatedPreset);
-    // If we change the Last Updated Radio, clear away any Custom Date that was inputted as well as associated errors.
+  const handleLastUpdatedChange = (event, data) => {
+    setLastUpdatedPreset(event.target.textContent);
+    // If we change the Last Updated Select, clear away any Custom Date that was inputted as well as associated errors.
     setCustomDateInput('');
     setCustomDateError(false);
 
-    switch (lastUpdatedPreset) {
+    switch (event.target.textContent) {
       case "Within 1 month":
       case "Within 3 months":
       case "Within 6 months":
       case "Within 1 year":
-        setLastUpdatedSearchString(dateStringFromPreset(LAST_UPDATED_PRESETS[lastUpdatedPreset]));
+        setLastUpdatedSearchString(dateStringFromPreset(LAST_UPDATED_PRESETS[data.value]));
         setShowLastUpdatedCustomDate(false);
         break;
       case "Custom":
@@ -80,21 +85,13 @@ function ArtifactLastUpdated({setLastUpdatedSearchString, lastUpdatedPreset, set
     <> 
       <h4>Artifact Last Updated</h4>
       <Form error onSubmit={updateCustomDate}>
-        <Form.Group grouped>
-          {Object.keys(LAST_UPDATED_PRESETS).map((key) => (
-            <Form.Field
-              control='input'
-              type='radio'
-              name='lastUpdatedRadio'
-              className='normal-weight'
-              label={key}
-              key={key}
-              value={key}
-              onChange={handleLastUpdatedChange}
-              checked={lastUpdatedPreset === key }
-            />
-          ))}
-          </Form.Group>
+        <Form.Select
+          selection
+          name="type"
+          options={LAST_UPDATED_SELECT_OPTIONS}
+          value={lastUpdatedPreset}
+          onChange={(e, data) => handleLastUpdatedChange(e, data)}
+        />
           { showLastUpdatedCustomDate &&
             <>
             <Form.Group>
