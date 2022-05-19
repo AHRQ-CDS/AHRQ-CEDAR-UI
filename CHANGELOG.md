@@ -16,14 +16,14 @@
 * Prevents the active tab on an artifact card from being reset to keyword when a concept is clicked
 * Makes searches sharable via URL
 * Adds UMLS MTH as a supported code system
-* Consolidates handlign of concepts across MeSH tree, Conditions and Artifacts
+* Consolidates handling of concepts across MeSH tree, Conditions and Artifacts
 
 ## v0.2.0
 
 * Fixes code system used for MeSH searches
 * Distinguishes concepts assigned by CEDAR from keywords assigned by the source repository
 * Improves searches when searching based on FHIR Conditions
-* Expands the information shown for repositories and arifacts
+* Expands the information shown for repositories and artifacts
 * Fixes bug with certain keywords returning no artifacts
 
 ## v0.1.0
