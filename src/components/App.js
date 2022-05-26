@@ -3,7 +3,7 @@ import { Container, Grid, Segment } from 'semantic-ui-react';
 
 import AhrqHeader from './AhrqHeader';
 import SortBy from './SortBy';
-import ArtifactLastUpdated from './ArtifactLastUpdated';
+import DateFilters from './DateFilters';
 import ArtifactType from './ArtifactType';
 import Conditions from './Conditions';
 import ContentSearchStrings from './ContentSearchStrings';
@@ -19,7 +19,7 @@ import SearchResultsNavigation from './SearchResultsNavigation';
 import Status from './Status';
 import TitleSearchStrings from './TitleSearchStrings';
 import AhrqFooter from './AhrqFooter';
-import { LAST_UPDATED_PRESETS } from '../utils/constants';
+import { DATE_PRESETS } from '../utils/constants';
 import { urlSearchObject, dateStringFromPreset } from '../utils/utils';
 
 import '../assets/css/App.css';
@@ -36,9 +36,10 @@ function App(props) {
   const [searchResults, setSearchResults] = useState({ status: 'none' });
   const [searchPage, setSearchPage] = useState(1);
   const [sortByPreset, setSortByPreset] = useState('Default');
-  const [lastUpdatedPreset, setLastUpdatedPreset] = useState('Any time');
-  const [lastUpdatedSearchString, setLastUpdatedSearchString] = useState('');
-  const [showLastUpdatedCustomDate, setShowLastUpdatedCustomDate] = useState(false);
+  const [dateFilterType, setDateFilterType] = useState('article-date');
+  const [dateFilterPreset, setDateFilterPreset] = useState('Any time');
+  const [dateFilterSearchString, setDateFilterSearchString] = useState('');
+  const [showDateFilterCustomDate, setShowDateFilterCustomDate] = useState(false);
   const [customDatePrefix, setCustomDatePrefix] = useState('ge');
   const [customDateError, setCustomDateError] = useState(false);
   const [customDateInput, setCustomDateInput] = useState('');
@@ -66,27 +67,30 @@ function App(props) {
       const userSearchObject = urlSearchObject.convertFromBase64(userSearch);
 
       for (const [key, value] of Object.entries(userSearchObject)) {
-        if(key === 'lastUpdatedSearchString') {
-          // Only "Custom" dates set the lastUpdated search string to a specific date (e.g., 20211011)
-          // All other date presets (e.g., "Within 3 months") are relative to today's date; thus in these cases the lastUpdated search string must be recomputed
+        if (key === 'dateFilterSearchString') {
+          // Only "Custom" dates set the dateFilterSearchString to a specific date (e.g., 20211011)
+          // All other date presets (e.g., "Within 3 months") are relative to today's date; thus in these cases the dateFilterSearchString must be recomputed
           if(value !== '') {
-            // _lastUpdated has the format prefixDateString, as in ge2021-11-14. Possible date string formats are YYYY-MM-DD, YYYY-MM, YYYY
+            // _lastUpdated and article-date have the format {prefix}{dateString}, as in ge2021-11-14. Valid formats are YYYY-MM-DD, YYYY-MM, YYYY
             setCustomDatePrefix(value.substring(0,2));
             setCustomDateInput(value.substring(2, value.length));
-            setLastUpdatedSearchString(value);
+            setDateFilterSearchString(value);
           }
         }
-        else if (key === 'lastUpdatedPreset') {
-          setLastUpdatedPreset(value);
+        else if (key === 'dateFilterType') {
+          setDateFilterType(value);
+        }
+        else if (key === 'dateFilterPreset') {
+          setDateFilterPreset(value);
 
           if (value === 'Custom') {
-            setShowLastUpdatedCustomDate(true);
+            setShowDateFilterCustomDate(true);
           }
           else {
-            setShowLastUpdatedCustomDate(false);
-            // Recompute the lastUpdated search string relative to today's date for "Within 1 month", "Within 3 months", "Within 6 months", "Within 1 year"
-            // Set the lastUpdated search string to '' for "Anytime"
-            value === "Any time" ? setLastUpdatedSearchString('') : setLastUpdatedSearchString(dateStringFromPreset(LAST_UPDATED_PRESETS[value]));
+            setShowDateFilterCustomDate(false);
+            // Recompute the dateFilterSearchString relative to today's date for "Within 1 month", "Within 3 months", "Within 6 months", "Within 1 year"
+            // Set dateFilterSearchString to '' for "Anytime"
+            value === "Any time" ? setDateFilterSearchString('') : setDateFilterSearchString(dateStringFromPreset(DATE_PRESETS[value]));
           }
         }
         else if (key === 'sortByPreset') {
@@ -140,7 +144,7 @@ function App(props) {
       let query = new URLSearchParams();
 
       // If no status is selected, do not perform a search
-      if(searchStatus.length === 0) {
+      if (searchStatus.length === 0) {
         setSearchResults({ status: 'none' });
         return;
       }
@@ -180,15 +184,15 @@ function App(props) {
         query.append('_content', contentString);
       }
 
-      if(lastUpdatedSearchString.length > 0) {
-        query.append('_lastUpdated', lastUpdatedSearchString);
+      if (dateFilterSearchString.length > 0) {
+        query.append(dateFilterType, dateFilterSearchString);
       }
       
-      if(selectedArtifactTypes.length > 0) {
+      if (selectedArtifactTypes.length > 0) {
        query.append('artifact-type', selectedArtifactTypes.join(','));
       }
 
-      if(selectedConcepts.length > 0) {
+      if (selectedConcepts.length > 0) {
         searchParams['classification'] = selectedConcepts.map(concept => (
           concept.coding.map(code => code.system ? `${code.system}|${code.code}` : code.code)
         ))
@@ -215,14 +219,14 @@ function App(props) {
       
       let url = new URL(baseUrl);
       url.searchParams.set("user-search", urlSearchObject.getAsBase64(
-          selectedKeywords, selectedConcepts, contentSearchStrings, titleSearchStrings, searchPage, searchPublisher, searchStatus, lastUpdatedSearchString, 
-          sortByPreset, lastUpdatedPreset, selectedArtifactTypes));
+          selectedKeywords, selectedConcepts, contentSearchStrings, titleSearchStrings, searchPage, searchPublisher, searchStatus, dateFilterSearchString, 
+          dateFilterType, sortByPreset, dateFilterPreset, selectedArtifactTypes));
       window.history.replaceState({}, '', url);
     };
 
     cedarSearch();
 
-  }, [selectedKeywords, selectedConcepts, searchPage, searchPublisher, searchStatus, lastUpdatedSearchString, sortByPreset, lastUpdatedPreset, 
+  }, [selectedKeywords, selectedConcepts, searchPage, searchPublisher, searchStatus, dateFilterSearchString, dateFilterType, sortByPreset, dateFilterPreset, 
     selectedArtifactTypes, contentSearchStrings, titleSearchStrings]);
 
   /*
@@ -299,13 +303,15 @@ function App(props) {
                 <h3>Sort and Filter</h3>
                 <SortBy sortByPreset={sortByPreset} setSortByPreset={setSortByPreset} />
 
-                <ArtifactLastUpdated setLastUpdatedSearchString={setLastUpdatedSearchString}
-                                     lastUpdatedPreset={lastUpdatedPreset}
-                                     setLastUpdatedPreset={setLastUpdatedPreset}
+                <DateFilters setDateFilterSearchString={setDateFilterSearchString}
+                                     dateFilterPreset={dateFilterPreset}
+                                     setDateFilterType={setDateFilterType}
+                                     dateFilterType={dateFilterType} 
+                                     setDateFilterPreset={setDateFilterPreset}
                                      customDateInput={customDateInput}
                                      setCustomDateInput={setCustomDateInput}
-                                     showLastUpdatedCustomDate={showLastUpdatedCustomDate}
-                                     setShowLastUpdatedCustomDate={setShowLastUpdatedCustomDate}
+                                     showDateFilterCustomDate={showDateFilterCustomDate}
+                                     setShowDateFilterCustomDate={setShowDateFilterCustomDate}
                                      customDatePrefix={customDatePrefix}
                                      setCustomDatePrefix={setCustomDatePrefix}
                                      customDateError={customDateError}

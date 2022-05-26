@@ -1,7 +1,7 @@
 import React from 'react';
-import ArtifactLastUpdated from '../components/ArtifactLastUpdated';
+import DateFilters from '../components/DateFilters';
 import { mount } from 'enzyme';
 
 it('renders without crashing', () => {
-  mount(<ArtifactLastUpdated />);
+  mount(<DateFilters />);
 });

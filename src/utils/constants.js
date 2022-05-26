@@ -13,7 +13,7 @@ const STATUS = [
   "Active", "Archived", "Draft", "Unknown", "Retracted"
 ];
 
-const LAST_UPDATED_PRESETS = {
+const DATE_PRESETS = {
   "Any time": "",
   "Within 1 month": 1,
   "Within 3 months": 3,
@@ -27,4 +27,4 @@ const SORT_BY_OPTIONS = {
   "Default": "",
 };
 
-export { CODE_SYSTEMS, STATUS, LAST_UPDATED_PRESETS, SORT_BY_OPTIONS };
+export { CODE_SYSTEMS, STATUS, DATE_PRESETS, SORT_BY_OPTIONS };
