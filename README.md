@@ -5,6 +5,12 @@ CEDAR UI is a client application that enables users to interact with the CEDAR S
 
 In this vein, the CEDAR UI demonstration offers two different user experiences: (1) a SMART on FHIR application using the SMART on FHIR Sandbox environment and synthetic patient data; (2) a Standalone application, which offers a notional search interface.
 
+See also:
+
+- [Contribution Guide](CONTRIBUTING.md)
+- [Code of Conduct](CODE-OF-CONDUCT.md)
+- [Terms and Conditions](TERMS-AND-CONDITIONS.md)
+
 ## Prerequisites
 
 * Node.js
@@ -32,7 +38,7 @@ Run the CEDAR API application
 ruby cedar_api.rb
 ```
 
-In the development environment, the CEDAR UI application may be run in two different contexts. The first context is as a SMART on FHIR application using the SMART on FHIR Sandbox environment and synthetic patient data. This simulates the experience of a clinician running the app from within an EHR. The second context is as a Standalone application, which offers a notional search interface. 
+In the development environment, the CEDAR UI application may be run in two different contexts. The first context is as a SMART on FHIR application using the SMART on FHIR Sandbox environment and synthetic patient data. This simulates the experience of a clinician running the app from within an EHR. The second context is as a Standalone application, which offers a notional search interface.
 
 To run CEDAR UI:
 
@@ -42,7 +48,7 @@ yarn start
 
 For the Standalone application, simply visit [http://localhost:3000/](http://localhost:3000/)
 
-For the SMART on FHIR development application, click [here](http://launch.smarthealthit.org/ehr.html?app=http%3A%2F%2Flocalhost%3A3000%2Flaunch%3Flaunch%3DeyJhIjoiMSIsImYiOiIxIn0%26iss%3Dhttp%253A%252F%252Flaunch.smarthealthit.org%252Fv%252Fr4%252Ffhir&user=). 
+For the SMART on FHIR development application, click [here](http://launch.smarthealthit.org/ehr.html?app=http%3A%2F%2Flocalhost%3A3000%2Flaunch%3Flaunch%3DeyJhIjoiMSIsImYiOiIxIn0%26iss%3Dhttp%253A%252F%252Flaunch.smarthealthit.org%252Fv%252Fr4%252Ffhir&user=).
 
 
 ## Run the Test Suit
