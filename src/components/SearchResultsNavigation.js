@@ -26,8 +26,12 @@ function SearchResultsNavigation({ searchResults, bgColor, searchPage, setSearch
         {searchResults?.status === 'complete' && (
           <>
             <span>{searchResults.data.total} Search Results
-              <Button size='small' className='download-button' as='a' href={getDownloadUrl()}>
-              <Icon name='download'/>Download</Button>
+              {searchResults.data.total > 0 ? (
+                <span>
+                  <Button size='small' className='download-button' as='a' href={getDownloadUrl()}>
+                  <Icon name='download'/>Download</Button>
+                </span>
+              ) : "" }
             </span>
           </>
         )}
