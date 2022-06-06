@@ -24,7 +24,11 @@ const DATE_PRESETS = {
 
 // API Currently doesn't allow changing sort order
 const SORT_BY_OPTIONS = {
-  "Default": "",
+  "Relevance": "_score",
+  "Status": "artifact-current-state",
+  "Publish Date": "article-date",
+  "Strength of Recommendation": "strength-of-recommendation",
+  "Quality of Evidence": "quality-of-evidence",
 };
 
 export { CODE_SYSTEMS, STATUS, DATE_PRESETS, SORT_BY_OPTIONS };

@@ -35,7 +35,7 @@ function App(props) {
   const [selectedConcepts, setSelectedConcepts] = useState([]);
   const [searchResults, setSearchResults] = useState({ status: 'none' });
   const [searchPage, setSearchPage] = useState(1);
-  const [sortByPreset, setSortByPreset] = useState('Default');
+  const [sortOptions, setSortOptions] = useState([]);
   const [dateFilterType, setDateFilterType] = useState('article-date');
   const [dateFilterPreset, setDateFilterPreset] = useState('Any time');
   const [dateFilterSearchString, setDateFilterSearchString] = useState('');
@@ -93,8 +93,8 @@ function App(props) {
             value === "Any time" ? setDateFilterSearchString('') : setDateFilterSearchString(dateStringFromPreset(DATE_PRESETS[value]));
           }
         }
-        else if (key === 'sortByPreset') {
-          setSortByPreset(value);
+        else if (key === 'sortOptions') {
+          setSortOptions(value);
         }
         else if (key === 'searchPage') {
           setSearchPage(value);
@@ -187,6 +187,11 @@ function App(props) {
       if (dateFilterSearchString.length > 0) {
         query.append(dateFilterType, dateFilterSearchString);
       }
+
+      if (sortOptions.length > 0) {
+        const sortOptionString = sortOptions.join(',')
+        query.append('_sort', sortOptionString);
+      }
       
       if (selectedArtifactTypes.length > 0) {
        query.append('artifact-type', selectedArtifactTypes.join(','));
@@ -220,13 +225,13 @@ function App(props) {
       let url = new URL(baseUrl);
       url.searchParams.set("user-search", urlSearchObject.getAsBase64(
           selectedKeywords, selectedConcepts, contentSearchStrings, titleSearchStrings, searchPage, searchPublisher, searchStatus, dateFilterSearchString, 
-          dateFilterType, sortByPreset, dateFilterPreset, selectedArtifactTypes));
+          dateFilterType, sortOptions, dateFilterPreset, selectedArtifactTypes));
       window.history.replaceState({}, '', url);
     };
 
     cedarSearch();
 
-  }, [selectedKeywords, selectedConcepts, searchPage, searchPublisher, searchStatus, dateFilterSearchString, dateFilterType, sortByPreset, dateFilterPreset, 
+  }, [selectedKeywords, selectedConcepts, searchPage, searchPublisher, searchStatus, dateFilterSearchString, dateFilterType, sortOptions, dateFilterPreset, 
     selectedArtifactTypes, contentSearchStrings, titleSearchStrings]);
 
   /*
@@ -301,7 +306,7 @@ function App(props) {
                 <TitleSearchStrings titleSearchStrings={titleSearchStrings} setTitleSearchStrings={setTitleSearchStrings} />
 
                 <h3>Sort and Filter</h3>
-                <SortBy sortByPreset={sortByPreset} setSortByPreset={setSortByPreset} />
+                <SortBy sortOptions={sortOptions} setSortOptions={setSortOptions} />
 
                 <DateFilters setDateFilterSearchString={setDateFilterSearchString}
                                      dateFilterPreset={dateFilterPreset}
