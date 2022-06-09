@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import { SORT_BY_OPTIONS } from '../utils/constants';
 
@@ -9,7 +9,7 @@ function SortBy({sortOptions, setSortOptions}) {
     return humanReadableOptions.map(option => {
       return { key: option, text: option, value: SORT_BY_OPTIONS[option] }
     })
-  }, humanReadableOptions)
+  }, [humanReadableOptions])
 
   const handleSortByChange = (event, {value}) => {
     setSortOptions(value)
