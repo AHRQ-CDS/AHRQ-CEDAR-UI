@@ -31,6 +31,7 @@ function ArtifactType({selectedArtifactTypes, setSelectedArtifactTypes}) {
         multiple
         search
         selection
+        clearable
         onChange={handleArtifactTypeChange}
         options={allArtifactTypes}
         value={selectedArtifactTypes}

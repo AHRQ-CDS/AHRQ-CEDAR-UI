@@ -3,7 +3,7 @@ import App from '../components/App';
 
 const PATIENT_HEADER = 'Patient';
 const CONDITIONS_HEADER = 'Conditions';
-const STATUS_HEADER = 'Status';
+const STATUS_TEST_ID = 'status-header'; // distinguish between element we care about and other text instances
 const PUBLISHERS_HEADER = 'Publishers';
 
 jest.mock('fhirclient', () => ({
@@ -27,7 +27,7 @@ test('it shows the correct SMART UI when in the SMART context', () => {
   const conditionsText = screen.getByText(CONDITIONS_HEADER);
   expect(conditionsText).toBeInTheDocument();
 
-  const statusText = screen.getByText(STATUS_HEADER);
+  const statusText = screen.getByTestId(STATUS_TEST_ID);
   expect(statusText).toBeInTheDocument();
 
   const publishersText = screen.getByText(PUBLISHERS_HEADER);
@@ -45,7 +45,7 @@ test('it shows the correct standalone UI when in the standalone context', () => 
   const conditionsText = screen.queryByText(CONDITIONS_HEADER);
   expect(conditionsText).not.toBeInTheDocument();
 
-  const statusText = screen.getByText(STATUS_HEADER);
+  const statusText = screen.getByTestId(STATUS_TEST_ID);
   expect(statusText).toBeInTheDocument();
 
   const publishersText = screen.getByText(PUBLISHERS_HEADER);
