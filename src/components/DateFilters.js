@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import moment from 'moment';
 import { Button, Form, Message } from 'semantic-ui-react';
 import { DATE_PRESETS } from '../utils/constants';
 import { dateStringFromPreset } from '../utils/utils';
@@ -6,6 +7,8 @@ import { dateStringFromPreset } from '../utils/utils';
 function ArtifactLastUpdated({setDateFilterSearchString, dateFilterPreset, setDateFilterPreset, dateFilterType, setDateFilterType, customDateInput, 
   setCustomDateInput, showDateFilterCustomDate, setShowDateFilterCustomDate, customDatePrefix, setCustomDatePrefix, 
   customDateError, setCustomDateError}) {
+
+  const [errorMessage, setErrorMessage] = useState('');
 
   const YYYYMMDD_REGEX = /^\d{4}-\d{2}-\d{2}$/;
   const YYYYMM_REGEX = /^\d{4}-\d{2}$/;
@@ -76,9 +79,17 @@ function ArtifactLastUpdated({setDateFilterSearchString, dateFilterPreset, setDa
 
     if (date !== '') {
       if(dateMatchesValidRegex(date) !== null) {
-        setDateFilterSearchString(`${customDatePrefix}${date}`);
+        if (dateIsValid(date)) {
+          setCustomDateError(false);
+          setDateFilterSearchString(`${customDatePrefix}${date}`);
+        }
+        else {
+          setErrorMessage('Date does not exist. Double check that the date is valid.');
+          setCustomDateError(true);
+        }
       }
       else {
+        setErrorMessage('Date format is invalid. Format as YYYY-MM-DD, YYYY-MM, or YYYY.');
         setCustomDateError(true);
       }
     }
@@ -86,6 +97,19 @@ function ArtifactLastUpdated({setDateFilterSearchString, dateFilterPreset, setDa
 
   const dateMatchesValidRegex = (dateString) => {
     return dateString.match(YYYYMMDD_REGEX) || dateString.match(YYYYMM_REGEX) || dateString.match(YYYY_REGEX);
+  }
+
+  const dateIsValid = (dateString) => {
+    if (dateString.match(YYYYMMDD_REGEX)) {
+      return moment(dateString, 'YYYY-MM-DD', true).isValid();
+    }
+    if (dateString.match(YYYYMM_REGEX)) {
+      return moment(dateString, 'YYYY-MM', true).isValid();
+    }
+    if (dateString.match(YYYY_REGEX)) {
+      return moment(dateString, 'YYYY', true).isValid();
+    }
+    return false;
   }
 
   return (
@@ -128,7 +152,7 @@ function ArtifactLastUpdated({setDateFilterSearchString, dateFilterPreset, setDa
               />
               <Button primary type="submit">Apply Date</Button>
             </Form.Group>
-              {customDateError ? <Message error content='Date format is invalid. Format as YYYY-MM-DD, YYYY-MM, or YYYY.'/>
+              {customDateError ? <Message error content={errorMessage}/>
                                : <small className="helper">*Format custom date as YYYY-MM-DD, YYYY-MM, or YYYY.</small>
               }
             </>
