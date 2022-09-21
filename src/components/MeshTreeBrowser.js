@@ -9,7 +9,7 @@ function MeshTreeBrowser({handleConceptSelect, selectedConcepts}) {
 
   useEffect(() => {
     const getMeshRoots = async () => {
-      const response = await fetch('/api/fhir/CodeSystem/$get-mesh-children');
+      const response = await fetch('../api/fhir/CodeSystem/$get-mesh-children');
       const json = await response.json();
       const data = (Object.entries(json.parameter) || []).map(([, value]) =>
       (

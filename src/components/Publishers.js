@@ -7,7 +7,7 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
 
   useEffect(() => {
     const getAllPublishers = async () => {
-      const response = await fetch('/api/fhir/Organization');
+      const response = await fetch('../api/fhir/Organization');
       const json = await response.json();
 
       const data = (json.entry || []).map((entry) => ({ id: entry.resource.id, name: entry.resource.name, alias: entry.resource.alias[0] }))

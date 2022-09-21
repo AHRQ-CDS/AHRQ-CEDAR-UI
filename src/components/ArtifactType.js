@@ -7,7 +7,7 @@ function ArtifactType({selectedArtifactTypes, setSelectedArtifactTypes}) {
   
   useEffect(() => {
     const getAllArtifactTypes = async () => {
-      const response = await fetch('/api/fhir/Citation/$get-artifact-types');
+      const response = await fetch('../api/fhir/Citation/$get-artifact-types');
       const json = await response.json();
 
       const data = (json.parameter|| []).map((parameter) => ({ key: parameter.valueCoding.display, text: parameter.valueCoding.display, value: parameter.valueCoding.display }))

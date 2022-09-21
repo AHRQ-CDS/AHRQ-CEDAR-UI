@@ -9,7 +9,7 @@ function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleConcep
   useEffect(() => {
     if (meshNodeExpanded.get(treeNum) !== undefined && (!meshChildren || meshChildren.length === 0)) {
       async function getMeshChildren() {
-        const response = await fetch(`/api/fhir/CodeSystem/$get-mesh-children?code=${treeNum}`);
+        const response = await fetch(`../api/fhir/CodeSystem/$get-mesh-children?code=${treeNum}`);
         const json = await response.json();
 
         if ("parameter" in json) {

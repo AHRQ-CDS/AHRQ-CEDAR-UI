@@ -59,7 +59,7 @@ function SearchResultHistoryModal({ resource }) {
   }
 
   async function getResourceByVersion(versionId) {
-    const response = await fetch(`/api/fhir/Citation/${resource.id}/_history/${versionId}`);
+    const response = await fetch(`../api/fhir/Citation/${resource.id}/_history/${versionId}`);
     return await response.json();
   }
 

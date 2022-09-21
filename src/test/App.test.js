@@ -36,7 +36,7 @@ test('it shows the correct SMART UI when in the SMART context', () => {
 
 test('it shows the correct standalone UI when in the standalone context', () => {
   render(<App standalone/>);
-  const headerText = screen.getByText(/CEDAR Standalone Demonstration/i);
+  const headerText = screen.getByText(/CEDAR Demonstration User Interface/i);
   expect(headerText).toBeInTheDocument();
 
   const patientText = screen.queryByText(PATIENT_HEADER);

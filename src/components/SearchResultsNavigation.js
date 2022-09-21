@@ -7,7 +7,7 @@ function SearchResultsNavigation({ searchResults, bgColor, searchPage, setSearch
     let downloadAllQueryParams = new URLSearchParams(searchURL.search);
     downloadAllQueryParams.delete('_count');
     downloadAllQueryParams.delete('page');
-    return '/api/csv?' + downloadAllQueryParams.toString();
+    return '../api/csv?' + downloadAllQueryParams.toString();
   }
 
 

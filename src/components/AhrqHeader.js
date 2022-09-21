@@ -84,7 +84,7 @@ export default function AhrqHeader({headerText}) {
 		      	<a href="../" className="btn btn-link nav-button" title="CEDAR Home">
         		<span className="glyphicon glyphicon-link"></span> CEDAR Home</a>
 		        <div className="header__banner-text">
-		          <a href="https://cds.ahrq.gov/">
+		          <a href="../">
 		            <div className="header__banner-text-top">
 		              Patient-Centered Outcomes Research
 		            </div>

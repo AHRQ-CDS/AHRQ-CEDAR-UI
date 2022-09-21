@@ -55,7 +55,7 @@ function App(props) {
   // TODO: Related to above. Currently, have a constant here in lieu of supporting a user-selected
   // number of page results returned (e.g., 10, 20, etc.)
   const SEARCH_COUNT = 10;
-  const HEADER_TEXT = props.smart === true ? 'CEDAR SMART Demonstration' : 'CEDAR Standalone Demonstration';
+  const HEADER_TEXT = props.smart === true ? 'CEDAR SMART Demonstration User Interface' : 'CEDAR Demonstration User Interface';
   const BACKGROUND_COLOR = props.smart === true ? '#FFFFFF' : '#F8F8F8';
 
   // Sets the application states from base64-encoded user-search query parameters if they are in the URL
@@ -216,7 +216,7 @@ function App(props) {
          a network request times out in 300 seconds, while Firefox will time out in 90 seconds.
          Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window?
       */
-      const response = await fetch(`/api/fhir/Citation?${query.toString()}`);
+      const response = await fetch(`../api/fhir/Citation?${query.toString()}`);
       const json = await response.json();
       // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
       // idea: for each search, increment a "most recent search" counter and don't set search results if the counter has moved on from this search
@@ -285,6 +285,9 @@ function App(props) {
     <>
       <AhrqHeader headerText={HEADER_TEXT} />
       <div className="search-bar no-print">
+        <p className="description">
+          This demonstration UI uses the CEDAR API and lets you to explore its capabilities. Enter a search term to get started.
+        </p>
         <FreeTextSearch searchInput={searchInput}
                         setContentSearchStrings={setContentSearchStrings}
                         setSearchInput={setSearchInput}

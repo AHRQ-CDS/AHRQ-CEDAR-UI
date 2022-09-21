@@ -97,9 +97,14 @@ i.blue.icon {
 .search-bar {
   background-color: #224DBA;
   width: 100%;
-  height: 75px;
+  height: 110px;
   padding-top: 12px;
   margin-bottom: 12px;
+}
+
+.search-bar .description {
+  margin-left: 15px;
+  color: white;
 }
 
 .search-wrapper {
