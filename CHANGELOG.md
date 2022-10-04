@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.0 - 2022-10-03
+
+* Adds validation for user-supplied dates
+* Updates URLs to use relative references
+* Updates title and adds a brief description
+
 ## v0.5.0 - 2022-07-05
 
 * Supports showing differences in quality of evidence and strength of recommendations when showing artifact changes
