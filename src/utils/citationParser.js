@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import strip from 'strip-markdown';
-import { remark } from 'remark';
+import remark from 'remark';
 
 export default class citationParser {
   static getUrl(resource) {
