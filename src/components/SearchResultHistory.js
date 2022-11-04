@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDiffViewer from 'react-diff-viewer';
+import ReactDiffViewer from 'react-diff-viewer-continued';
 import citationParser from '../utils/citationParser';
 import { Segment } from 'semantic-ui-react';
 import '../assets/css/SearchResultHistory.css'
