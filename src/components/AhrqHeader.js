@@ -83,7 +83,7 @@ export default function AhrqHeader({headerText}) {
 		  <div id="header" role="navigation" aria-label="Clinical Decision Support Header">
 		    <header className="header" aria-label="A H R Q Banner">
 		      <div className="header__banner row">
-		        <LinkWrapper href="../" className="btn btn-link nav-button" title="CEDAR Home">
+		        <LinkWrapper href="../" id="home-nav" className="btn btn-link nav-button" title="CEDAR Home">
               <span className="glyphicon glyphicon-link"></span> CEDAR Home
 		        </LinkWrapper>
 		        <div className="header__banner-text">

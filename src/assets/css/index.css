@@ -11,3 +11,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@media (min-width: 320px) and (max-width: 765px) {
+  /* Fix header spacing & content */
+  .ahrq .usa-banner__header {
+    min-height: 0 !important;
+  }
+  #home-nav {
+    display: none; 
+  }
+  .header .header__banner-text {
+    white-space: normal;
+    line-height: normal;
+  }
+  .header .header__banner-text-middle {
+    padding-top: 0.5em;
+    white-space: normal;
+    line-height: normal;
+  }
+  .header .header__banner-text-bottom {
+    padding-top: 0.5em;
+  }
+
+}

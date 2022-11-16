@@ -4,7 +4,6 @@ import '../assets/css/Ahrq.css'
 
 import LinkWrapper from './LinkWrapper';
 import cds_connect_logo from '../assets/img/cdsconnect-circle-logo.png';
-import chevron_circle_up from '../assets/img/chevron-circle-up-solid.png';
 import facebook_icon from '../assets/img/facebook-f-brands.png';
 import linkedin_icon from '../assets/img/linkedin-in-brands.png';
 import twitter_icon from '../assets/img/twitter-brands.png';
@@ -69,13 +68,7 @@ export default function AhrqFooter() {
         </footer>
       </section>
       <div className="ahrq">
-        <footer className="site-footer" role="contentinfo">       
-          <div className="row row-side-margins hide-on-desktop">
-            <div className="col-sm-12" id="top-button-container">
-              <button id="top-button">Back to Top</button>
-                <img alt="Go back to top" height="25" src={chevron_circle_up} width="25" />
-            </div>
-          </div>
+        <footer className="site-footer" role="contentinfo">
           <div id="footer1">
             <div className="row">
               <div className="col-md-12 side-row-margins">
