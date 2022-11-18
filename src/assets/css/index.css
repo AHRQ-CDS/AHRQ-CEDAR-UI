@@ -33,4 +33,17 @@ code {
     padding-top: 0.5em;
   }
 
+  /* Fix search bar arrangement */
+  .ui.form .fields {
+    gap: 0.25em;
+  }
+  .search-wrapper {
+    padding-top: 1em !important;
+    padding-bottom: 1em !important;
+  }
+  .advanced-search-options {
+    position: absolute;
+    left: -1.25em;
+  }
+
 }

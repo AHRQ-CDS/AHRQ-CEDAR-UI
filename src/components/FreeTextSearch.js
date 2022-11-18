@@ -64,10 +64,15 @@ function FreeTextSearch({searchInput, setContentSearchStrings, setSearchInput, s
               name="type"
               options={SEARCH_TYPES}
               value={searchType}
-              width={5}
+              width={7}
               onChange={(e, data) => setSearchType(data.value)}
             />
-            <Form.Input placeholder='Search terms...' action={{ icon: 'search' }} value={searchInput} onChange={(e) => setSearchInput(e.target.value)} width={11}/>
+            <Form.Input
+              placeholder='Search terms...'
+              action={{ icon: 'search' }}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)} width={11}
+            />
           </Form.Group>
         </Form>
       </div>
