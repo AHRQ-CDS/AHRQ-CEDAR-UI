@@ -12,6 +12,11 @@ code {
     monospace;
 }
 
+#mobile-drawer-toggle {
+  display: none !important;
+}
+
+/* Mobile Styling */
 @media (min-width: 320px) and (max-width: 765px) {
   /* Fix header spacing & content */
   .ahrq .usa-banner__header {
@@ -44,6 +49,47 @@ code {
   .advanced-search-options {
     position: absolute;
     left: -1.25em;
+  }
+
+  /* Hide all search controls in a drawer */
+  .mobile-drawer {
+    height: 100%;
+    background: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 60%;
+    z-index: 200;
+    box-shadow: 1px 0px 7px rgba(0,0,0,0.5); 
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+    overflow-y: scroll;
+  }
+  .mobile-drawer.open {
+    transform: translateX(0);
+  }
+  .drawer-toggle-wrapper {
+    width: 100%;
+  }
+  #mobile-drawer-toggle {
+    display: initial !important;
+    font-size: 1.25rem;
+  }
+  #mobile-drawer-close {
+    display: initial;
+    width: 100%;
+    height: 3em;
+    margin-bottom: 1em;
+    border-radius: 0;
+  }
+  .mobile-drawer.open .segment {
+    margin-top: 3em !important;
+    padding-top: 0;
+    border-radius: 0;
+  }
+
+  #search-results {
+    width: 100% !important;
   }
 
 }

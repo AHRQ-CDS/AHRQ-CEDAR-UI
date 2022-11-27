@@ -25,7 +25,7 @@ function ArtifactType({selectedArtifactTypes, setSelectedArtifactTypes}) {
     <>
       <h4>Artifact Type</h4>
       <Dropdown
-        placeholder='Search for an artifact type...'
+        placeholder='All Artifact Types'
         name="artifactTypes"
         fluid
         multiple
