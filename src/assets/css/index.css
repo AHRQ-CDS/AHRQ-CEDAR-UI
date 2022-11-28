@@ -17,6 +17,18 @@ code {
 }
 
 /* Mobile Styling */
+@media (min-width: 766px) and (max-width: 900px) {
+  /* Correct for nav spacing in mid-size pages */
+  #navigation-spacer {
+    display: none;
+  }
+  .search-results-count {
+    margin-left: 3em;
+  }
+  #mobile-drawer-close {
+    display: none;
+  }
+}
 @media (min-width: 320px) and (max-width: 765px) {
   /* Fix header spacing & content */
   .ahrq .usa-banner__header {
@@ -88,8 +100,27 @@ code {
     border-radius: 0;
   }
 
+  /* Fix spacing & arrangement of results + navigation */
   #search-results {
     width: 100% !important;
   }
-
+  #navigation-spacer {
+    display: none;
+  }
+  .search-results-navigation {
+    font-size: 10pt !important;
+  }
+  .ui.grid.no-print.search-results-navigation {
+    margin: 0;
+  }
+  .ui.grid.no-print.search-results-navigation div,
+  .ui.grid.no-print.search-results-navigation span {
+    font-size: 10pt;
+  }
+  .ui.grid.no-print.search-results-navigation a {
+    font-size: 8pt;
+  }
+  .ui.secondary.pointing.menu .item {
+    min-width: 2em;
+  }
 }
