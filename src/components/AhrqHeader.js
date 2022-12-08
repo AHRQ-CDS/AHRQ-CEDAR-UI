@@ -2,6 +2,7 @@ import React from 'react';
 
 import '../assets/css/Ahrq.css'
 
+import LinkWrapper from './LinkWrapper';
 import logo_ahrq from '../assets/img/logo-ahrq.png';
 import us_flag_small from '../assets/img/us_flag_small.png';
 import logo_HHSmini from '../assets/img/logo-HHSmini.png';
@@ -25,7 +26,7 @@ export default function AhrqHeader({headerText}) {
 					        </div>
 					        <div className="col-xs-8 col-md-8 txt-gov-banner div-col-tweak">
 					          <p className="usa-banner__header-text">
-					            <a href="https://www.hhs.gov/">An official website of the Department of Health &amp; Human Services</a>
+					            <LinkWrapper href="https://www.hhs.gov/">An official website of the Department of Health &amp; Human Services</LinkWrapper>
 					          </p>
 					        </div>
 					      </div>
@@ -40,30 +41,31 @@ export default function AhrqHeader({headerText}) {
 							      <div className="row row-tweak">
 							        <div className="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 div-col-tweak">
 							          <div className="logo-ahrq">
-							            <a href="https://www.ahrq.gov"><img src={logo_ahrq} alt="AHRQ: Agency for Healthcare Research and Quality" /></a>
+							            <LinkWrapper href="https://www.ahrq.gov"><img src={logo_ahrq} alt="AHRQ: Agency for Healthcare Research and Quality" /></LinkWrapper>
 							          </div>
 							        </div>
 							        <div className="d-xs-none d-sm-none d-md-none d-lg-block col-lg-9 d-xl-block col-xl-9">
 							          <div id="utility-nav">
 							            <ul className="clearfix">
 							              <li className="first">
-							                <a href="https://search.ahrq.gov/" target="_blank" rel="noreferrer">Search All AHRQ Sites</a>
+							                <LinkWrapper href="https://search.ahrq.gov/" target="_blank" rel="noreferrer">Search All AHRQ Sites</LinkWrapper>
 							              </li>
 							              <li>
-							                <a href="https://www.ahrq.gov/cpi/about/careers/index.html" target="_blank" rel="noreferrer">Careers</a>
+							                <LinkWrapper href="https://www.ahrq.gov/cpi/about/careers/index.html" target="_blank" rel="noreferrer">Careers</LinkWrapper>
 							              </li>
 							              <li>
-							                <a href="https://www.ahrq.gov/contact/index.html" target="_blank" rel="noreferrer">Contact Us</a>
+							                <LinkWrapper href="https://www.ahrq.gov/contact/index.html" target="_blank" rel="noreferrer">Contact Us</LinkWrapper>
 							              </li>
 							              <li>
-							                <a href="https://www.ahrq.gov/topics/informacion-en-espanol/index.html" target="_blank" rel="noreferrer">Español</a>
+							                <LinkWrapper href="https://www.ahrq.gov/topics/informacion-en-espanol/index.html" target="_blank" rel="noreferrer">Español</LinkWrapper>
 							              </li>
 							              <li className="last">
-							                <a href="https://info.ahrq.gov/" target="_blank" rel="noreferrer">FAQs</a>
+							                <LinkWrapper href="https://info.ahrq.gov/" target="_blank" rel="noreferrer">FAQs</LinkWrapper>
 							              </li>
 							              <li>
-							                <a href="https://subscriptions.ahrq.gov/accounts/USAHRQ/subscriber/new" target="_blank" rel="noreferrer"><img src={envelope_regular} width="18" height="18" className="utility-envelope" alt="" />
-							                  Email Updates</a>
+							                <LinkWrapper href="https://subscriptions.ahrq.gov/accounts/USAHRQ/subscriber/new" target="_blank" rel="noreferrer"><img src={envelope_regular} width="18" height="18" className="utility-envelope" alt="" />
+							                  Email Updates
+							                </LinkWrapper>
 							              </li>
 							            </ul>
 							          </div>
@@ -81,10 +83,11 @@ export default function AhrqHeader({headerText}) {
 		  <div id="header" role="navigation" aria-label="Clinical Decision Support Header">
 		    <header className="header" aria-label="A H R Q Banner">
 		      <div className="header__banner row">
-		      	<a href="../" className="btn btn-link nav-button" title="CEDAR Home">
-        		<span className="glyphicon glyphicon-link"></span> CEDAR Home</a>
+		        <LinkWrapper href="../" className="btn btn-link nav-button" title="CEDAR Home">
+              <span className="glyphicon glyphicon-link"></span> CEDAR Home
+		        </LinkWrapper>
 		        <div className="header__banner-text">
-		          <a href="../">
+		          <LinkWrapper href="../">
 		            <div className="header__banner-text-top">
 		              Patient-Centered Outcomes Research
 		            </div>
@@ -94,7 +97,7 @@ export default function AhrqHeader({headerText}) {
 		            <div className="header__banner-text-bottom">
 		              Accelerating Evidence into Practice through CDS
 		            </div>
-		          </a>
+		          </LinkWrapper>
 		        </div>
 		      </div>
 		    </header>
