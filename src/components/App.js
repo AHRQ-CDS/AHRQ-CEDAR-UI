@@ -16,6 +16,7 @@ import SearchConcepts from './SearchConcepts';
 import SearchKeywords from './SearchKeywords';
 import SearchResults from './SearchResults';
 import SearchResultsNavigation from './SearchResultsNavigation';
+import RelatedSearches from './RelatedSearches';
 import Status from './Status';
 import TitleSearchStrings from './TitleSearchStrings';
 import AhrqFooter from './AhrqFooter';
@@ -354,6 +355,7 @@ function App(props) {
                            activeTabIndex={activeTabIndex}
                            setActiveTabIndex={setActiveTabIndex}
                            />
+              <RelatedSearches contentSearchStrings={contentSearchStrings} searchResults={searchResults}/>
             </Grid.Column>
           </Grid.Row>
         </Grid>
