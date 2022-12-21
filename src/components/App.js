@@ -354,8 +354,14 @@ function App(props) {
                            selectedKeywords={selectedKeywords}
                            activeTabIndex={activeTabIndex}
                            setActiveTabIndex={setActiveTabIndex}
-                           />
-              <RelatedSearches contentSearchStrings={contentSearchStrings} searchResults={searchResults}/>
+              />
+              <RelatedSearches searchResults={searchResults}
+                               contentSearchStrings={contentSearchStrings}
+                               setContentSearchStrings={setContentSearchStrings}
+                               selectedKeywords={selectedKeywords}
+                               setSelectedKeywords={setSelectedKeywords}
+                               handleConceptSelect={handleConceptSelect}
+              />
             </Grid.Column>
           </Grid.Row>
         </Grid>
