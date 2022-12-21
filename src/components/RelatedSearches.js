@@ -5,13 +5,14 @@ import { distance } from 'fastest-levenshtein'
 
 function RelatedSearches({searchResults, contentSearchStrings, setContentSearchStrings, selectedKeywords, setSelectedKeywords, handleConceptSelect}) {
 
+  // useMemo because we want *related* to only update if any of the inputs change
   const related = useMemo(() => {
     let related = []
     if (contentSearchStrings && searchResults.data) {
       const links = searchResults.data.link
       related = links.filter(link => link.relation === 'related')
         .map((link) => {
-          const query = contentSearchStrings.join("")
+          const query = contentSearchStrings.join("").concat(selectedKeywords.join(""))
           const concept = link.extension[0].valueCodeableConcept
           const info = link.extension[0].valueCodeableConcept.coding[0]
           return {
@@ -21,20 +22,26 @@ function RelatedSearches({searchResults, contentSearchStrings, setContentSearchS
             self: concept
           }
         })
-    }
+      }
 
-    return _.orderBy(related, 'distance', 'asc')
-  }, [contentSearchStrings, searchResults])
+      return _.orderBy(related, 'distance', 'asc')
+  }, [searchResults, contentSearchStrings, selectedKeywords])
 
-  // Resets search terms and initiates a concept search
+  // Resets search terms and initiates a concept search. useCallback to not re-render on each removal of search terms
   // Currently, related searches only return with Text & Keyword searches, so don't bother with Title searches
-  const followRelatedSearch = useCallback((coding) => {
+  const followRelatedSearch = useCallback((concept) => {
     contentSearchStrings.forEach((contentString) => {
-      setContentSearchStrings((previousContentSearchStrings) => {return previousContentSearchStrings.filter(c => c !== contentString)});
+      setContentSearchStrings((previousContentSearchStrings) => { return previousContentSearchStrings.filter(c => c !== contentString)});
     })
-    handleConceptSelect(coding)
+    selectedKeywords.forEach((keyword) => {
+      setSelectedKeywords((previousSelectedKeywords) => { return previousSelectedKeywords.filter(k => k !== keyword) });
+    })
+
+    // blend in with concepts selected from mesh tree instead of here
+    concept.coding[0].display = concept.coding[0].display.toLowerCase()
+    handleConceptSelect(concept)
     window.scrollTo({top: 0, left: 0})
-  })
+  }, [contentSearchStrings, setContentSearchStrings, selectedKeywords, setSelectedKeywords, handleConceptSelect])
 
   return (
     <>
@@ -43,7 +50,7 @@ function RelatedSearches({searchResults, contentSearchStrings, setContentSearchS
         <Grid.Column width={2}/>
         <Grid.Column width={6}>
           {related && related.slice(0,4).map(concept =>
-            <Button key={concept.code} 
+            <Button key={concept.code}
                     basic
                     fluid
                     id="related-link"
