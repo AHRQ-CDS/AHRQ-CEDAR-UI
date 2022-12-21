@@ -13,13 +13,20 @@ function RelatedSearches({searchResults, contentSearchStrings, setContentSearchS
       related = links.filter(link => link.relation === 'related')
         .map((link) => {
           const query = contentSearchStrings.join("").concat(selectedKeywords.join(""))
-          const concept = link.extension[0].valueCodeableConcept
           const info = link.extension[0].valueCodeableConcept.coding[0]
           return {
+            // extract some info that's locally useful
             distance: distance(query, info.display),
             name: info.display,
             code: info.code,
-            self: concept
+            self: {
+              // use a UI-friendly copy of the related concept.text sentence -> lowercase term;
+              text: info.display.toLowerCase(),
+              coding: [{
+                code: info.code,
+                system: info.system
+              }]
+            }
           }
         })
       }
@@ -38,7 +45,6 @@ function RelatedSearches({searchResults, contentSearchStrings, setContentSearchS
     })
 
     // blend in with concepts selected from mesh tree instead of here
-    concept.coding[0].display = concept.coding[0].display.toLowerCase()
     handleConceptSelect(concept)
     window.scrollTo({top: 0, left: 0})
   }, [contentSearchStrings, setContentSearchStrings, selectedKeywords, setSelectedKeywords, handleConceptSelect])

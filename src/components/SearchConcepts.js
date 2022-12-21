@@ -20,17 +20,14 @@ function SearchConcepts({selectedConcepts, setSelectedConcepts, setSearchPage}) 
     return (
       <>
         <h3>Concepts</h3>
-        {selectedConcepts.map(concept => {
-          const text = concept.coding[0].display
-          return (
-            <span className='search-tags' key={concept.text}>
-              <Popup trigger={<Label color='green'><Icon name='delete' onClick={() => handleConceptRemove(concept)}/> {text}</Label>} flowing hoverable>
-                <h4>Concept: {text}</h4>
-                <ConceptCodingPopup concept={concept}/>
-              </Popup>
-            </span>
-          )
-        })}
+        {selectedConcepts.map(concept => 
+        <span className='search-tags' key={concept.text}>
+          <Popup trigger={<Label color='green'><Icon name='delete' onClick={() => handleConceptRemove(concept)}/> {concept.text}</Label>} flowing hoverable>
+            <h4>Concept: {concept.text}</h4>
+            <ConceptCodingPopup concept={concept}/>
+          </Popup>
+        </span>
+        )}
       </>
     )
   }
