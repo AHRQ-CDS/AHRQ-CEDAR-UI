@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.7.0 - 2023-01-05
+
+* Adds support for displaying related searches that a user can click on
+* Styles interface to display nicely on mobile devices
+* Displays descriptions of source repositories
+* Flags external links with icon and adds a popup
+* Updates dependencies
+
 ## v0.6.0 - 2022-10-03
 
 * Adds validation for user-supplied dates
