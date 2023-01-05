@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import SearchResultTags from './SearchResultTags';
 import SearchResultHistoryModal from './SearchResultHistoryModal';
 import citationParser from '../utils/citationParser';
+import LinkWrapper from './LinkWrapper';
 
 function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywords, selectedConcepts, activeTabIndex, setActiveTabIndex }) {
 
@@ -71,7 +72,7 @@ function SearchResult({ resource, onKeywordClick, onConceptClick, selectedKeywor
         </Card.Description>
       </Card.Content>
       <Card.Content extra>
-        {url && <a href={url}>{url}</a> }
+        {url && <LinkWrapper href={url}>{url}</LinkWrapper> }
         { resource.meta?.versionId > 1 &&
           <SearchResultHistoryModal resource={resource} />
         }

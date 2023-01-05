@@ -2,6 +2,7 @@ import React from 'react';
 
 import '../assets/css/Ahrq.css'
 
+import LinkWrapper from './LinkWrapper';
 import cds_connect_logo from '../assets/img/cdsconnect-circle-logo.png';
 import chevron_circle_up from '../assets/img/chevron-circle-up-solid.png';
 import facebook_icon from '../assets/img/facebook-f-brands.png';
@@ -24,40 +25,40 @@ export default function AhrqFooter() {
                     </div>
                     <div className="footer-wide">
                       <div>
-                        <a href="https://cds.ahrq.gov">CDS Home</a>
-                        <a href="https://cds.ahrq.gov/cdsconnect">CDS Connect</a>
+                        <LinkWrapper href="https://cds.ahrq.gov">CDS Home</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/cdsconnect">CDS Connect</LinkWrapper>
                       </div>
                       <div>
-                        <a href="https://cds.ahrq.gov/evaluation">Evaluation</a>
-                        <a href="https://cds.ahrq.gov/resources">Resources</a>
+                        <LinkWrapper href="https://cds.ahrq.gov/evaluation">Evaluation</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/resources">Resources</LinkWrapper>
                       </div>
                       <div>
-                        <a href="https://cds.ahrq.gov/disclaimer">Disclaimer for CDS Connect</a>
-                        <a href="https://cds.ahrq.gov/overview">Overview</a>
+                        <LinkWrapper href="https://cds.ahrq.gov/disclaimer">Disclaimer for CDS Connect</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/overview">Overview</LinkWrapper>
                       </div>
                       <div>
-                        <a href="https://cds.ahrq.gov">Learning Network</a>
-                        <a href="https://cds.ahrq.gov/funding-opportunities">Funding Opportunities</a>
+                        <LinkWrapper href="https://cds.ahrq.gov">Learning Network</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/funding-opportunities">Funding Opportunities</LinkWrapper>
                       </div>
                       <div>
-                        <a href="https://cds.ahrq.gov/contact-us">Contact Us</a>
-                        <a href="https://cds.ahrq.gov/privacy">Privacy Statement</a>
+                        <LinkWrapper href="https://cds.ahrq.gov/contact-us">Contact Us</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/privacy">Privacy Statement</LinkWrapper>
                       </div>
                     </div>
                     <div className="footer-mobile">
                       <div>
-                        <a href="https://cds.ahrq.gov">CDS Home</a>
-                        <a href="https://cds.ahrq.gov/cdsconnect">CDS Connect</a>
-                        <a href="https://cds.ahrq.gov/evaluation">Evaluation</a>
-                        <a href="https://cds.ahrq.gov/resources">Resources</a>
-                        <a href="https://cds.ahrq.gov/disclaimer">Disclaimer for CDS Connect</a>
+                        <LinkWrapper href="https://cds.ahrq.gov">CDS Home</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/cdsconnect">CDS Connect</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/evaluation">Evaluation</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/resources">Resources</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/disclaimer">Disclaimer for CDS Connect</LinkWrapper>
                       </div>
                       <div>
-                        <a href="https://cds.ahrq.gov/overview">Overview</a>
-                        <a href="https://cds.ahrq.gov">Learning Network</a>
-                        <a href="https://cds.ahrq.gov/funding-opportunities">Funding Opportunities</a>
-                        <a href="https://cds.ahrq.gov/contact-us">Contact Us</a>
-                        <a href="https://cds.ahrq.gov/privacy">Privacy Statement</a>
+                        <LinkWrapper href="https://cds.ahrq.gov/overview">Overview</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov">Learning Network</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/funding-opportunities">Funding Opportunities</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/contact-us">Contact Us</LinkWrapper>
+                        <LinkWrapper href="https://cds.ahrq.gov/privacy">Privacy Statement</LinkWrapper>
                       </div>
                     </div>
                   </div>
@@ -80,10 +81,10 @@ export default function AhrqFooter() {
               <div className="col-md-12 side-row-margins">
                 <div className="f1-div-width div-float init-pad">
                   <h3>Connect With Us</h3>
-                  <a href="http://www.facebook.com/ahrq.gov" target="_blank" rel="noreferrer"><img src={facebook_icon} height="35" alt="Facebook" /></a>
-                  <a href="https://twitter.com/ahrqnews" target="_blank" rel="noreferrer"><img src={twitter_icon} className="img-spacing" height="35" alt="Twitter" /></a>
-                  <a href="http://www.youtube.com/user/AHRQHealthTV" target="_blank" rel="noreferrer"><img src={youtube_icon} className="img-spacing" height="35" alt="You Tube" /></a>
-                  <a href="http://www.linkedin.com/company/agency-for-healthcare-research-and-quality" target="_blank" rel="noreferrer"><img src={linkedin_icon} className="img-spacing" height="35" alt="LinkedIn" /></a>
+                  <LinkWrapper href="http://www.facebook.com/ahrq.gov" target="_blank" rel="noreferrer"><img src={facebook_icon} height="35" alt="Facebook" /></LinkWrapper>
+                  <LinkWrapper href="https://twitter.com/ahrqnews" target="_blank" rel="noreferrer"><img src={twitter_icon} className="img-spacing" height="35" alt="Twitter" /></LinkWrapper>
+                  <LinkWrapper href="http://www.youtube.com/user/AHRQHealthTV" target="_blank" rel="noreferrer"><img src={youtube_icon} className="img-spacing" height="35" alt="You Tube" /></LinkWrapper>
+                  <LinkWrapper href="http://www.linkedin.com/company/agency-for-healthcare-research-and-quality" target="_blank" rel="noreferrer"><img src={linkedin_icon} className="img-spacing" height="35" alt="LinkedIn" /></LinkWrapper>
                 </div>
                 <div className="f1-div-width div-float">
                   <h3 className="header-mobile-top-spacing">Sign up for Email Updates</h3>
@@ -117,61 +118,61 @@ export default function AhrqFooter() {
                 <div className="left-div div-width-partial left-margin">
                   <ul className="clearfix">
                     <li className="first">
-                      <a href="https://www.ahrq.gov/cpi/about/careers/index.html" target="_blank" rel="noreferrer">Careers</a>
+                      <LinkWrapper href="https://www.ahrq.gov/cpi/about/careers/index.html" target="_blank" rel="noreferrer">Careers</LinkWrapper>
                     </li>
                     <li>
-                      <a href="https://www.ahrq.gov/contact/index.html" target="_blank" rel="noreferrer">Contact Us</a>
+                      <LinkWrapper href="https://www.ahrq.gov/contact/index.html" target="_blank" rel="noreferrer">Contact Us</LinkWrapper>
                     </li>
                     <li>
-                      <a href="https://www.ahrq.gov/topics/informacion-en-espanol/index.html" target="_blank" rel="noreferrer">Español</a>
+                      <LinkWrapper href="https://www.ahrq.gov/topics/informacion-en-espanol/index.html" target="_blank" rel="noreferrer">Español</LinkWrapper>
                     </li>
                     <li className="last">
-                      <a href="https://info.ahrq.gov/" target="_blank" rel="noreferrer">FAQs</a>
+                      <LinkWrapper href="https://info.ahrq.gov/" target="_blank" rel="noreferrer">FAQs</LinkWrapper>
                     </li>
                   </ul>
                 </div>
                 <div className="left-div div-width-partial">
                   <ul className="clearfix">
                     <li className="first">
-                      <a href="https://www.ahrq.gov/policy/electronic/accessibility/index.html" target="_blank" rel="noreferrer">Accessibility</a>
+                      <LinkWrapper href="https://www.ahrq.gov/policy/electronic/accessibility/index.html" target="_blank" rel="noreferrer">Accessibility</LinkWrapper>
                     </li>
                     <li>
-                      <a href="https://www.ahrq.gov/policy/electronic/disclaimers/index.html" target="_blank" rel="noreferrer">Disclaimers</a>
+                      <LinkWrapper href="https://www.ahrq.gov/policy/electronic/disclaimers/index.html" target="_blank" rel="noreferrer">Disclaimers</LinkWrapper>
                     </li>
                     <li>
-                      <a href="https://www.ahrq.gov/policy/eeo/index.html" target="_blank" rel="noreferrer">EEO</a>
+                      <LinkWrapper href="https://www.ahrq.gov/policy/eeo/index.html" target="_blank" rel="noreferrer">EEO</LinkWrapper>
                     </li>
                     <li>
-                      <a href="https://www.ahrq.gov/policy/electronic/about/policyix.html" target="_blank" rel="noreferrer">Electronic Policies</a>
+                      <LinkWrapper href="https://www.ahrq.gov/policy/electronic/about/policyix.html" target="_blank" rel="noreferrer">Electronic Policies</LinkWrapper>
                     </li>
                   </ul>
                 </div>
                 <div className="left-div div-width-partial">
                   <ul>
-                    <li><a href="https://www.ahrq.gov/policy/foia/index.html" target="_blank" rel="noreferrer">FOIA</a></li>
-                    <li><a href="http://www.hhs.gov/web/governance/strategy.html" target="_blank" rel="noreferrer">HHS Digital Strategy</a></li>
-                    <li><a href="https://www.hhs.gov/civil-rights/for-individuals/nondiscrimination/index.html" target="_blank" rel="noreferrer">HHS Nondiscrimination Notice</a></li>
-                    <li><a href="https://oig.hhs.gov/" target="_blank" rel="noreferrer">Inspector General</a></li>
+                    <li><LinkWrapper href="https://www.ahrq.gov/policy/foia/index.html" target="_blank" rel="noreferrer">FOIA</LinkWrapper></li>
+                    <li><LinkWrapper href="http://www.hhs.gov/web/governance/strategy.html" target="_blank" rel="noreferrer">HHS Digital Strategy</LinkWrapper></li>
+                    <li><LinkWrapper href="https://www.hhs.gov/civil-rights/for-individuals/nondiscrimination/index.html" target="_blank" rel="noreferrer">HHS Nondiscrimination Notice</LinkWrapper></li>
+                    <li><LinkWrapper href="https://oig.hhs.gov/" target="_blank" rel="noreferrer">Inspector General</LinkWrapper></li>
                   </ul>
                 </div>
                 <div className="left-div div-width-partial">
                   <ul>
                     <li>
-                      <a href="https://www.ahrq.gov/policy/electronic/plain-writing/index.html" target="_blank" rel="noreferrer">Plain Writing Act</a>
+                      <LinkWrapper href="https://www.ahrq.gov/policy/electronic/plain-writing/index.html" target="_blank" rel="noreferrer">Plain Writing Act</LinkWrapper>
                     </li>
                     <li>
-                      <a href="https://www.ahrq.gov/policy/electronic/privacy/index.html" target="_blank" rel="noreferrer">Privacy Policy</a>
+                      <LinkWrapper href="https://www.ahrq.gov/policy/electronic/privacy/index.html" target="_blank" rel="noreferrer">Privacy Policy</LinkWrapper>
                     </li>
                     <li className="last">
-                      <a href="http://www.hhs.gov/plugins.html" target="_blank" rel="noreferrer">Viewers &amp; Players</a>
+                      <LinkWrapper href="http://www.hhs.gov/plugins.html" target="_blank" rel="noreferrer">Viewers &amp; Players</LinkWrapper>
                     </li>
                   </ul>
                 </div>
                 <div className="left-div div-width-full footer-border">
                   <ul>
-                    <li><a href="http://www.hhs.gov/" target="_blank" rel="noreferrer">U.S. Department of Health &amp; Human Services</a></li>
-                    <li><a href="http://www.whitehouse.gov/" target="_blank" rel="noreferrer">The White House</a></li>
-                    <li><a href="http://www.usa.gov/" target="_blank" rel="noreferrer">USA.gov</a></li>
+                    <li><LinkWrapper href="http://www.hhs.gov/" target="_blank" rel="noreferrer">U.S. Department of Health &amp; Human Services</LinkWrapper></li>
+                    <li><LinkWrapper href="http://www.whitehouse.gov/" target="_blank" rel="noreferrer">The White House</LinkWrapper></li>
+                    <li><LinkWrapper href="http://www.usa.gov/" target="_blank" rel="noreferrer">USA.gov</LinkWrapper></li>
                   </ul>
                 </div>
               </div>
