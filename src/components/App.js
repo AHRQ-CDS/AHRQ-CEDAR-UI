@@ -372,6 +372,7 @@ function App(props) {
                                selectedKeywords={selectedKeywords}
                                setSelectedKeywords={setSelectedKeywords}
                                handleConceptSelect={handleConceptSelect}
+                               setSearchStatus={setSearchStatus} 
               />
             </Grid.Column>
           </Grid.Row>
