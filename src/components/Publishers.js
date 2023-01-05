@@ -1,5 +1,5 @@
 import React, { useEffect, useState }  from 'react';
-import { List } from 'semantic-ui-react';
+import { List, Popup } from 'semantic-ui-react';
 import _ from 'lodash';
 
 function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
@@ -10,7 +10,12 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
       const response = await fetch('../api/fhir/Organization');
       const json = await response.json();
 
-      const data = (json.entry || []).map((entry) => ({ id: entry.resource.id, name: entry.resource.name, alias: entry.resource.alias[0] }))
+      const data = (json.entry || []).map((entry) => ({
+        id: entry.resource.id,
+        name: entry.resource.name,
+        alias: entry.resource.alias[0],
+        description: entry.resource.extension[0].valueString
+      }))
       setAllPublishers(_.orderBy(data, ['alias']));
       // Only select all publishers by default if there are no query parameters
       if(document.location.search === '') {
@@ -41,19 +46,24 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
       <List>
         {allPublishers.map((publisher) => (
           <List.Item key={publisher.id} className="pill-list-item">
-            <label>
-              <input type="checkbox"
+            <Popup
+              key={publisher.name}
+              header={publisher.name}
+              content={publisher.description}
+              position="right center"
+              trigger={
+                <label>
+                  <input
+                    type="checkbox"
                     checked={searchPublisher.includes(publisher.id)}
                     onChange={handlePublisherChange}
                     name={publisher.alias}
                     value={publisher.id}
-                  
-              />
-              <span data-tooltip={publisher.name} data-position="right center" 
-                className="pill-list-label ui label">
-                {publisher.alias}
-              </span>
-            </label>
+                  />
+                  <span className="pill-list-label ui label">{publisher.alias}</span>
+                </label>
+              }
+            />
           </List.Item>
         ))}
       </List>
