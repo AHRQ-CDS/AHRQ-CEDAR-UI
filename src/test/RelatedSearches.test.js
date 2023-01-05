@@ -8,6 +8,7 @@ const keywords = ['mental health']
 const setContentSearchStrings = () => void 0;
 const setSelectedKeywords = () => void 0;
 const handleConceptSelect = () => void 0;
+const setSearchStatus = () => void 0;
 
 
 it('renders without crashing', () => {
@@ -19,6 +20,7 @@ it('renders without crashing', () => {
       selectedKeywords={keywords}
       setSelectedKeywords={setSelectedKeywords}
       handleConceptSelect={handleConceptSelect}
+      setSearchStatus={setSearchStatus}
     />
   );
 });
