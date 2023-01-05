@@ -4,9 +4,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/react": "^18.0.25",
     "@types/hapi": "18.0.7",
     "@types/node": "^18.11.9",
+    "@types/react": "^18.0.25",
+    "fastest-levenshtein": "^1.0.16",
     "fhirclient": "^2.5.2",
     "http-proxy-middleware": "^2.0.6",
     "lz-string": "^1.4.4",

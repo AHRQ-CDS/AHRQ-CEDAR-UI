@@ -165,3 +165,21 @@ i.search.icon {
 .download-button {
   margin-left: 10px !important;
 }
+
+.related-link {
+  border-radius: 100px !important;
+  margin: 10px !important;
+  font-weight: bold !important;
+}
+.related-link:hover {
+  text-decoration: underline;
+}
+#related-link:hover {
+  background-color: transparent !important;
+}
+.related-link i {
+  float: left;
+}
+.related-link:hover i {
+  text-decoration: none;
+}

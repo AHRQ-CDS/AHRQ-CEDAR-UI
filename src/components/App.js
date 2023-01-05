@@ -16,6 +16,7 @@ import SearchConcepts from './SearchConcepts';
 import SearchKeywords from './SearchKeywords';
 import SearchResults from './SearchResults';
 import SearchResultsNavigation from './SearchResultsNavigation';
+import RelatedSearches from './RelatedSearches';
 import Status from './Status';
 import TitleSearchStrings from './TitleSearchStrings';
 import AhrqFooter from './AhrqFooter';
@@ -356,15 +357,22 @@ function App(props) {
               </div>
             </Grid.Column>
             <Grid.Column width={11} className='section-to-print' id='search-results'>
-              <SearchResults 
-                searchResults={searchResults}
-                page={searchPage}
-                onKeywordClick={handleKeywordClick}
-                onConceptClick={handleConceptSelect}
-                selectedConcepts={selectedConcepts}
-                selectedKeywords={selectedKeywords}
-                activeTabIndex={activeTabIndex}
-                setActiveTabIndex={setActiveTabIndex}
+              <SearchResults searchResults={searchResults}
+                             page={searchPage}
+                             onKeywordClick={handleKeywordClick}
+                             onConceptClick={handleConceptSelect}
+                             selectedConcepts={selectedConcepts}
+                             selectedKeywords={selectedKeywords}
+                             activeTabIndex={activeTabIndex}
+                             setActiveTabIndex={setActiveTabIndex}
+              />
+              <RelatedSearches searchResults={searchResults}
+                               contentSearchStrings={contentSearchStrings}
+                               setContentSearchStrings={setContentSearchStrings}
+                               selectedKeywords={selectedKeywords}
+                               setSelectedKeywords={setSelectedKeywords}
+                               handleConceptSelect={handleConceptSelect}
+                               setSearchStatus={setSearchStatus} 
               />
             </Grid.Column>
           </Grid.Row>
