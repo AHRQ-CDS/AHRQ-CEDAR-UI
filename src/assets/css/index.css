@@ -11,3 +11,116 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#mobile-drawer-toggle {
+  display: none !important;
+}
+
+/* Mobile Styling */
+@media (min-width: 766px) and (max-width: 900px) {
+  /* Correct for nav spacing in mid-size pages */
+  #navigation-spacer {
+    display: none;
+  }
+  .search-results-count {
+    margin-left: 3em;
+  }
+  #mobile-drawer-close {
+    display: none;
+  }
+}
+@media (min-width: 320px) and (max-width: 765px) {
+  /* Fix header spacing & content */
+  .ahrq .usa-banner__header {
+    min-height: 0 !important;
+  }
+  #home-nav {
+    display: none; 
+  }
+  .header .header__banner-text {
+    white-space: normal;
+    line-height: normal;
+  }
+  .header .header__banner-text-middle {
+    padding-top: 0.5em;
+    white-space: normal;
+    line-height: normal;
+  }
+  .header .header__banner-text-bottom {
+    padding-top: 0.5em;
+  }
+
+  /* Fix search bar arrangement */
+  .ui.form .fields {
+    gap: 0.25em;
+  }
+  .search-wrapper {
+    padding-top: 1em !important;
+    padding-bottom: 1em !important;
+  }
+  .advanced-search-options {
+    position: absolute;
+    left: -1.25em;
+  }
+
+  /* Hide all search controls in a drawer */
+  .mobile-drawer {
+    height: 100%;
+    background: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 60%;
+    z-index: 200;
+    box-shadow: 1px 0px 7px rgba(0,0,0,0.5); 
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+    overflow-y: scroll;
+  }
+  .mobile-drawer.open {
+    transform: translateX(0);
+  }
+  .drawer-toggle-wrapper {
+    width: 100%;
+  }
+  #mobile-drawer-toggle {
+    display: initial !important;
+    font-size: 1.25rem;
+  }
+  #mobile-drawer-close {
+    display: initial;
+    width: 100%;
+    height: 3em;
+    margin-bottom: 1em;
+    border-radius: 0;
+  }
+  .mobile-drawer.open .segment {
+    margin-top: 3em !important;
+    padding-top: 0;
+    border-radius: 0;
+  }
+
+  /* Fix spacing & arrangement of results + navigation */
+  #search-results {
+    width: 100% !important;
+  }
+  #navigation-spacer {
+    display: none;
+  }
+  .search-results-navigation {
+    font-size: 10pt !important;
+  }
+  .ui.grid.no-print.search-results-navigation {
+    margin: 0;
+  }
+  .ui.grid.no-print.search-results-navigation div,
+  .ui.grid.no-print.search-results-navigation span {
+    font-size: 10pt;
+  }
+  .ui.grid.no-print.search-results-navigation a {
+    font-size: 8pt;
+  }
+  .ui.secondary.pointing.menu .item {
+    min-width: 2em;
+  }
+}

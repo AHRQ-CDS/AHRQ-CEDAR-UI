@@ -14685,6 +14685,9 @@
 .ahrq .row {
   margin-right: 0;
   margin-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
 }
 .ahrq .sg-main {
   background-color: #f1f1f1;

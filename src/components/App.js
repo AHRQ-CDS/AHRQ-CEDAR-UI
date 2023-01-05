@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container, Grid, Segment } from 'semantic-ui-react';
+import { Button, Icon, Container, Grid, Segment } from 'semantic-ui-react';
 
 import AhrqHeader from './AhrqHeader';
 import SortBy from './SortBy';
@@ -48,6 +48,7 @@ function App(props) {
   const [selectedArtifactTypes, setSelectedArtifactTypes] = useState([]);
   const [searchStatus, setSearchStatus] = useState(['Active', 'Unknown']);
   const [searchPublisher, setSearchPublisher] = useState([]);
+  const [isMobileDrawer, setIsMobileDrawer] = useState(true)
 
   // TODO: The cedar_ui app allows the user to change the count of results per page,
   // but cedar_smart does not. Is this something that we want to support?
@@ -296,64 +297,74 @@ function App(props) {
                         setSelectedKeywords={setSelectedKeywords}
                         setTitleSearchStrings={setTitleSearchStrings}
         />
+        <div className='drawer-toggle-wrapper'>
+          <Button onClick={() => setIsMobileDrawer(!isMobileDrawer)} id='mobile-drawer-toggle'>
+            <Icon name='sidebar'/>
+            Search Controls
+          </Button>
+        </div>
       </div>
       <SearchResultsNavigation searchResults={searchResults} bgColor={BACKGROUND_COLOR} searchPage={searchPage} setSearchPage={setSearchPage} />
       <Container fluid className='App' style={{'backgroundColor': BACKGROUND_COLOR}}>
         <Grid>
           <Grid.Row>
-            <Grid.Column width={5} className='no-print'>
-              {props.smart && (<Patient patient={patient} />)}
-              <Segment>
-                <ContentSearchStrings contentSearchStrings={contentSearchStrings} setContentSearchStrings={setContentSearchStrings} />
-                <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage} />
-                <SearchConcepts selectedConcepts={selectedConcepts} setSelectedConcepts={setSelectedConcepts} setSearchPage={setSearchPage} />
-                <TitleSearchStrings titleSearchStrings={titleSearchStrings} setTitleSearchStrings={setTitleSearchStrings} />
+            <Grid.Column width={5} className='no-print' id='search-controls'>
+              <div className={isMobileDrawer ? 'mobile-drawer' : 'mobile-drawer open'}>
+                {props.smart && (<Patient patient={patient} />)}
+                <Button icon='x' size='large' color='red' onClick={() => setIsMobileDrawer(!isMobileDrawer)} floated='right' id='mobile-drawer-close'/>
+                <Segment>
+                  <ContentSearchStrings contentSearchStrings={contentSearchStrings} setContentSearchStrings={setContentSearchStrings} />
+                  <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage} />
+                  <SearchConcepts selectedConcepts={selectedConcepts} setSelectedConcepts={setSelectedConcepts} setSearchPage={setSearchPage} />
+                  <TitleSearchStrings titleSearchStrings={titleSearchStrings} setTitleSearchStrings={setTitleSearchStrings} />
 
-                <h3>Sort and Filter</h3>
-                <SortBy sortOptions={sortOptions} setSortOptions={setSortOptions} />
+                  <h3>Sort and Filter</h3>
+                  <SortBy sortOptions={sortOptions} setSortOptions={setSortOptions} />
 
-                <DateFilters setDateFilterSearchString={setDateFilterSearchString}
-                                     dateFilterPreset={dateFilterPreset}
-                                     setDateFilterType={setDateFilterType}
-                                     dateFilterType={dateFilterType} 
-                                     setDateFilterPreset={setDateFilterPreset}
-                                     customDateInput={customDateInput}
-                                     setCustomDateInput={setCustomDateInput}
-                                     showDateFilterCustomDate={showDateFilterCustomDate}
-                                     setShowDateFilterCustomDate={setShowDateFilterCustomDate}
-                                     customDatePrefix={customDatePrefix}
-                                     setCustomDatePrefix={setCustomDatePrefix}
-                                     customDateError={customDateError}
-                                     setCustomDateError={setCustomDateError}
-                />
+                  <DateFilters
+                    setDateFilterSearchString={setDateFilterSearchString}
+                    dateFilterPreset={dateFilterPreset}
+                    setDateFilterType={setDateFilterType}
+                    dateFilterType={dateFilterType}
+                    setDateFilterPreset={setDateFilterPreset}
+                    customDateInput={customDateInput}
+                    setCustomDateInput={setCustomDateInput}
+                    showDateFilterCustomDate={showDateFilterCustomDate}
+                    setShowDateFilterCustomDate={setShowDateFilterCustomDate}
+                    customDatePrefix={customDatePrefix}
+                    setCustomDatePrefix={setCustomDatePrefix}
+                    customDateError={customDateError}
+                    setCustomDateError={setCustomDateError}
+                  />
 
-                <ArtifactType selectedArtifactTypes={selectedArtifactTypes} setSelectedArtifactTypes={setSelectedArtifactTypes} />
-                
-                <Status searchStatus={searchStatus} setSearchStatus={setSearchStatus} setSearchPage={setSearchPage} />
+                  <ArtifactType selectedArtifactTypes={selectedArtifactTypes} setSelectedArtifactTypes={setSelectedArtifactTypes} />
 
-                <Publishers searchPublisher={searchPublisher} setSearchPublisher={setSearchPublisher} setSearchPage={setSearchPage} />
+                  <Status searchStatus={searchStatus} setSearchStatus={setSearchStatus} setSearchPage={setSearchPage} />
 
-                {!props.smart && (<MeshTreeBrowser handleConceptSelect={handleConceptSelect} selectedConcepts={selectedConcepts} /> )}
+                  <Publishers searchPublisher={searchPublisher} setSearchPublisher={setSearchPublisher} setSearchPage={setSearchPage} />
 
-                {props.smart && (
-                <Conditions conditions={conditions}
-                            handleConceptSelect={handleConceptSelect}
-                            handleKeywordClick={handleKeywordClick}
-                            selectedConcepts={selectedConcepts}
-                            selectedKeywords={selectedKeywords}
-                />
-                )}
-              </Segment>
+                  {!props.smart && (<MeshTreeBrowser handleConceptSelect={handleConceptSelect} selectedConcepts={selectedConcepts} /> )}
+
+                  {props.smart && (
+                  <Conditions conditions={conditions}
+                              handleConceptSelect={handleConceptSelect}
+                              handleKeywordClick={handleKeywordClick}
+                              selectedConcepts={selectedConcepts}
+                              selectedKeywords={selectedKeywords}
+                  />
+                  )}
+                </Segment>
+              </div>
             </Grid.Column>
-            <Grid.Column width={11} className='section-to-print'>
+            <Grid.Column width={11} className='section-to-print' id='search-results'>
               <SearchResults searchResults={searchResults}
-                           page={searchPage}
-                           onKeywordClick={handleKeywordClick}
-                           onConceptClick={handleConceptSelect}
-                           selectedConcepts={selectedConcepts}
-                           selectedKeywords={selectedKeywords}
-                           activeTabIndex={activeTabIndex}
-                           setActiveTabIndex={setActiveTabIndex}
+                             page={searchPage}
+                             onKeywordClick={handleKeywordClick}
+                             onConceptClick={handleConceptSelect}
+                             selectedConcepts={selectedConcepts}
+                             selectedKeywords={selectedKeywords}
+                             activeTabIndex={activeTabIndex}
+                             setActiveTabIndex={setActiveTabIndex}
               />
               <RelatedSearches searchResults={searchResults}
                                contentSearchStrings={contentSearchStrings}
@@ -365,7 +376,7 @@ function App(props) {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </Container>  
+      </Container>
       <AhrqFooter />
     </>
   );

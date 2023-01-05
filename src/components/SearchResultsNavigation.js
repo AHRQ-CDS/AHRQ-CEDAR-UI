@@ -21,7 +21,7 @@ function SearchResultsNavigation({ searchResults, bgColor, searchPage, setSearch
 
   return (
     <Grid style={{'backgroundColor': bgColor}} className='no-print search-results-navigation'>
-      <Grid.Column width={5}></Grid.Column>
+      <Grid.Column id='navigation-spacer' width={5}></Grid.Column>
       <Grid.Column width={6} className='search-results-count'>
         {searchResults?.status === 'complete' && (
           <>
@@ -40,9 +40,17 @@ function SearchResultsNavigation({ searchResults, bgColor, searchPage, setSearch
           <span>No Search Results</span>
         )}
       </Grid.Column>
-      <Grid.Column width={5}>
+      <Grid.Column width={3}>
         {searchResults?.status === 'complete' && searchResults.data.total > 10 && (
-          <Pagination totalPages={Math.ceil(searchResults.data.total / 10)} activePage={searchPage} onPageChange={handlePageChange} pointing secondary />
+          <Pagination
+            totalPages={Math.ceil(searchResults.data.total / 10)}
+            activePage={searchPage}
+            onPageChange={handlePageChange}
+            firstItem={false}
+            lastItem={false}
+            siblingRange={0}
+            pointing
+            secondary />
         )}
       </Grid.Column>
   </Grid>
