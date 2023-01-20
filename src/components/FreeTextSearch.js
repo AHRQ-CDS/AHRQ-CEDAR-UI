@@ -14,7 +14,6 @@ function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOption
 
   const [searchType, setSearchType] = useState(SEARCH_TYPES[0].value);
 
-  
   const [currentValues, setCurrentValues] = useState([])
   // Ensure component is inits or is in sync with searchOptions
   useEffect(() => {

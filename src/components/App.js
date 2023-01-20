@@ -298,10 +298,9 @@ function App(props) {
           return previousSelectedKeywords.concat(keyword);
         }
       });
+      setSearchOptions((previousOptions) => previousOptions.filter(option => option.value !== keyword))
       setSearchPage(1);
-    },
-    []
-  );
+    }, []);
 
   return (
     <>
@@ -334,10 +333,10 @@ function App(props) {
                 {props.smart && (<Patient patient={patient} />)}
                 <Button icon='x' size='large' color='red' onClick={() => setIsMobileDrawer(!isMobileDrawer)} floated='right' id='mobile-drawer-close'/>
                 <Segment>
-                  <ContentSearchStrings contentSearchStrings={contentSearchStrings} setContentSearchStrings={setContentSearchStrings} />
-                  <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage} />
-                  <SearchConcepts selectedConcepts={selectedConcepts} setSelectedConcepts={setSelectedConcepts} setSearchPage={setSearchPage} />
-                  <TitleSearchStrings titleSearchStrings={titleSearchStrings} setTitleSearchStrings={setTitleSearchStrings} />
+                  <ContentSearchStrings contentSearchStrings={contentSearchStrings} setContentSearchStrings={setContentSearchStrings} setSearchOptions={setSearchOptions}/>
+                  <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage}/>
+                  <SearchConcepts selectedConcepts={selectedConcepts} setSelectedConcepts={setSelectedConcepts} setSearchPage={setSearchPage}/>
+                  <TitleSearchStrings titleSearchStrings={titleSearchStrings} setTitleSearchStrings={setTitleSearchStrings} setSearchOptions={setSearchOptions}/>
 
                   <h3>Sort and Filter</h3>
                   <SortBy sortOptions={sortOptions} setSortOptions={setSortOptions} />
