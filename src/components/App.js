@@ -29,7 +29,7 @@ import '../assets/css/Print.css';
 function App(props) {
   const [patient, setPatient] = useState();
   const [conditions, setConditions] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchOptions, setSearchOptions] = useState([]);
   const [contentSearchStrings, setContentSearchStrings] = useState([]);
   const [titleSearchStrings, setTitleSearchStrings] = useState([]);
   const [selectedKeywords, setSelectedKeywords] = useState([]);
@@ -112,12 +112,24 @@ function App(props) {
         }
         else if (key === 'selectedKeywords') {
           setSelectedKeywords(value);
+          if (value.length > 0) {
+            const terms = value.map((term) => ({ key: `Keyword: ${term}`, text: `Keyword: ${term}`, value: term }))
+            setSearchOptions((previousOptions) => previousOptions.concat(terms))
+          }
         }
         else if (key === 'contentSearchStrings') {
           setContentSearchStrings(value);
+          if (value.length > 0) {
+            const terms = value.map((term) => ({ key: `Text: ${term}`, text: `Text: ${term}`, value: term }))
+            setSearchOptions((previousOptions) => previousOptions.concat(terms))
+          }
         }
         else if (key === 'titleSearchStrings') {
           setTitleSearchStrings(value);
+          if (value.length > 0) {
+            const terms = value.map((term) => ({ key: `Title: ${term}`, text: `Title: ${term}`, value: term }))
+            setSearchOptions((previousOptions) => previousOptions.concat(terms))
+          }
         }
         else if (key === 'selectedArtifactTypes') {
           setSelectedArtifactTypes(value);
@@ -298,12 +310,13 @@ function App(props) {
         <p className="description">
           This demonstration UI uses the CEDAR API and lets you to explore its capabilities. Enter a search term to get started.
         </p>
-        <FreeTextSearch searchInput={searchInput}
-                        setContentSearchStrings={setContentSearchStrings}
-                        setSearchInput={setSearchInput}
-                        setSearchPage={setSearchPage}
-                        setSelectedKeywords={setSelectedKeywords}
-                        setTitleSearchStrings={setTitleSearchStrings}
+        <FreeTextSearch
+          searchOptions={searchOptions}
+          setContentSearchStrings={setContentSearchStrings}
+          setSearchOptions={setSearchOptions}
+          setSearchPage={setSearchPage}
+          setSelectedKeywords={setSelectedKeywords}
+          setTitleSearchStrings={setTitleSearchStrings}
         />
         <div className='drawer-toggle-wrapper'>
           <Button onClick={() => setIsMobileDrawer(!isMobileDrawer)} id='mobile-drawer-toggle'>
@@ -381,6 +394,8 @@ function App(props) {
                                setSelectedKeywords={setSelectedKeywords}
                                setSelectedConcepts={setSelectedConcepts}
                                setSearchStatus={setSearchStatus}
+                               setSearchOptions={setSearchOptions}
+                               setTitleSearchStrings={setTitleSearchStrings}
               />
             </Grid.Column>
           </Grid.Row>

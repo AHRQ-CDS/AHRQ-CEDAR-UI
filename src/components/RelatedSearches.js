@@ -4,7 +4,7 @@ import { Grid, Icon, Button } from 'semantic-ui-react';
 import { distance } from 'fastest-levenshtein'
 import { STATUS } from '../utils/constants';
 
-function RelatedSearches({searchResults, contentSearchStrings, setContentSearchStrings, selectedKeywords, setSelectedKeywords, setSelectedConcepts, setSearchStatus}) {
+function RelatedSearches({searchResults, contentSearchStrings, setContentSearchStrings, selectedKeywords, setSelectedKeywords, setSelectedConcepts, setSearchStatus, setSearchOptions, setTitleSearchStrings}) {
 
   // useMemo because we want *related* to only update if any of the inputs change
   const related = useMemo(() => {
@@ -36,20 +36,17 @@ function RelatedSearches({searchResults, contentSearchStrings, setContentSearchS
       return _.orderBy(related, 'distance', 'asc')
   }, [searchResults, contentSearchStrings, selectedKeywords])
 
-  // Resets search terms and initiates a concept search. useCallback to not re-render on each removal of search terms
-  // Currently, related searches only return with Text & Keyword searches, so don't bother with Title searches
+  // Resets all search terms and initiates a concept search. useCallback to not re-render on each removal of search terms
   const followRelatedSearch = useCallback((concept) => {
-    contentSearchStrings.forEach((contentString) => {
-      setContentSearchStrings((previousContentSearchStrings) => { return previousContentSearchStrings.filter(c => c !== contentString)});
-    })
-    selectedKeywords.forEach((keyword) => {
-      setSelectedKeywords((previousSelectedKeywords) => { return previousSelectedKeywords.filter(k => k !== keyword) });
-    })
+    setContentSearchStrings([]);
+    setSelectedKeywords([]);
+    setTitleSearchStrings([]);
+    setSearchOptions([])
 
     setSelectedConcepts([concept])  // reset concept searches to *just* the related search
     setSearchStatus(STATUS)   // make it so new search is broad, to all Statuses
     window.scrollTo({top: 0, left: 0})
-  }, [contentSearchStrings, setContentSearchStrings, selectedKeywords, setSelectedKeywords, setSelectedConcepts, setSearchStatus])
+  }, [setContentSearchStrings, setSelectedKeywords, setTitleSearchStrings, setSearchOptions, setSelectedConcepts, setSearchStatus])
 
   return (
     <>
