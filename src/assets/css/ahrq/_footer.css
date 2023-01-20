@@ -1,26 +1,6 @@
 footer.cds-footer {
   color: white;
-  margin: 0 -9999rem;
-  padding: 0.25rem 9999rem;
   background: linear-gradient(to bottom, #006aaa 0%, #0079c1 3%, #1986c7 100%);
-}
-@media (min-width: 768px) {
-  footer.cds-footer {
-    padding: 0 calc((100vw - 768px + 30px * 2) / 2);
-    margin: 0 calc(-1 * ((100vw - 768px) / 2 + 30px));
-  }
-}
-@media (min-width: 992px) {
-  footer.cds-footer {
-    padding: 0 calc((100vw - 992px + 30px * 2) / 2);
-    margin: 0 calc(-1 * ((100vw - 992px) / 2 + 30px));
-  }
-}
-@media (min-width: 1200px) {
-  footer.cds-footer {
-    padding: 0 calc((100vw - 1200px + 30px * 2) / 2);
-    margin: 0 calc(-1 * ((100vw - 1200px) / 2 + 30px));
-  }
 }
 footer.cds-footer div.cds-footer__container {
   display: flex;
