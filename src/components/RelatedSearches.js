@@ -4,7 +4,7 @@ import { Grid, Icon, Button } from 'semantic-ui-react';
 import { distance } from 'fastest-levenshtein'
 import { STATUS } from '../utils/constants';
 
-function RelatedSearches({searchResults, contentSearchStrings, setContentSearchStrings, selectedKeywords, setSelectedKeywords, handleConceptSelect, setSearchStatus}) {
+function RelatedSearches({searchResults, contentSearchStrings, setContentSearchStrings, selectedKeywords, setSelectedKeywords, setSelectedConcepts, setSearchStatus}) {
 
   // useMemo because we want *related* to only update if any of the inputs change
   const related = useMemo(() => {
@@ -46,10 +46,10 @@ function RelatedSearches({searchResults, contentSearchStrings, setContentSearchS
       setSelectedKeywords((previousSelectedKeywords) => { return previousSelectedKeywords.filter(k => k !== keyword) });
     })
 
-    handleConceptSelect(concept)
+    setSelectedConcepts([concept])  // reset concept searches to *just* the related search
     setSearchStatus(STATUS)   // make it so new search is broad, to all Statuses
     window.scrollTo({top: 0, left: 0})
-  }, [contentSearchStrings, setContentSearchStrings, selectedKeywords, setSelectedKeywords, handleConceptSelect, setSearchStatus])
+  }, [contentSearchStrings, setContentSearchStrings, selectedKeywords, setSelectedKeywords, setSelectedConcepts, setSearchStatus])
 
   return (
     <>

@@ -7,7 +7,7 @@ const terms = ['hypertension', 'farm']
 const keywords = ['mental health']
 const setContentSearchStrings = () => void 0;
 const setSelectedKeywords = () => void 0;
-const handleConceptSelect = () => void 0;
+const setSelectedConcepts = () => void 0;
 const setSearchStatus = () => void 0;
 
 
@@ -19,7 +19,7 @@ it('renders without crashing', () => {
       setContentSearchStrings={setContentSearchStrings}
       selectedKeywords={keywords}
       setSelectedKeywords={setSelectedKeywords}
-      handleConceptSelect={handleConceptSelect}
+      setSelectedConcepts={setSelectedConcepts}
       setSearchStatus={setSearchStatus}
     />
   );
