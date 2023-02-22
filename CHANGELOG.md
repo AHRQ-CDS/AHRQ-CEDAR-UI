@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.7.1 - 2023-02-22
+
+* Fixes issue with related search behavior where search concepts were not correctly cleared
+* Fixes styling of CDS footer on mobile browsers
+
 ## v0.7.0 - 2023-01-05
 
 * Adds support for displaying related searches that a user can click on
