@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Icon, Popup } from 'semantic-ui-react';
 import FreeTextSearchPopup from './FreeTextSearchPopup';
 
@@ -11,14 +11,7 @@ function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOption
     { key: 'title', value: 'Title', text: 'Title' },
     { key: 'keywords', value: 'Keywords', text: 'Keywords' }
   ]
-
   const [searchType, setSearchType] = useState(SEARCH_TYPES[0].value);
-
-  const [currentValues, setCurrentValues] = useState([])
-  // Ensure component is inits or is in sync with searchOptions
-  useEffect(() => {
-    setCurrentValues(_.map(searchOptions, 'value'))  // put searchOptions in local format)
-  }, [searchOptions])
 
   const updateSearchQuery = (e, { value }) => {
     setSearchPage(1);
@@ -67,12 +60,11 @@ function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOption
     setTitleSearchStrings([])
     setSelectedKeywords([])
     setSearchOptions([])
-    setCurrentValues([])
   }
 
   // value passed to setCurrentValues is an array of strings. Each
   // currentValues item (local format) corresponds to the value prop of a searchOption item (global/App format)
-  const handleChange = (e, { value }) => setCurrentValues(value)
+  // const handleChange = (e, { value }) => setCurrentValues(value)
 
   // we need removed labels to update the search accordingly. use:
   // https://react.semantic-ui.com/modules/dropdown/#usage-multiple-custom-label
@@ -82,20 +74,27 @@ function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOption
     content: `${label.text}`,
     onRemove: (e, data) => {
       e.stopPropagation() // prevent focusing search input on click
-      // Update serch query performed
+      // Update search query performed
       if (data.content.includes('Keyword')) {
-        setSelectedKeywords((previousSelectedKeywords) => {return previousSelectedKeywords.filter(k => k !== data.value)});
+        setSelectedKeywords((previousSelectedKeywords) => {
+          return previousSelectedKeywords.filter(k => k !== data.value)
+        });
       }
       if (data.content.includes('Title')) {
-        setTitleSearchStrings((previousTitleSearchStrings) => {return previousTitleSearchStrings.filter(t => t !== data.value)});
+        setTitleSearchStrings((previousTitleSearchStrings) => {
+          return previousTitleSearchStrings.filter(t => t !== data.value)
+        });
       }
       if (data.content.includes('Text')) {
-        setContentSearchStrings((previousContentSearchStrings) => {return previousContentSearchStrings.filter(c => c !== data.value)});
+        setContentSearchStrings((previousContentSearchStrings) => {
+          return previousContentSearchStrings.filter(c => c !== data.value)
+        });
       }
-      // Update UI (labels)
-      const newValues = _.without(currentValues, data.value)
-      setCurrentValues(newValues)
-      handleChange(e, { value: newValues})
+
+      // Update UI render
+      setSearchOptions((previousOptions) => {
+        return previousOptions.filter(option => option.value !== data.value);
+      });
     }
   })
 
@@ -126,13 +125,12 @@ function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOption
               allowAdditions
               icon={null}
               width={11}
-              value={currentValues}
+              value={_.map(searchOptions, 'value')}
               onAddItem={updateSearchQuery}
-              onChange={handleChange}
               renderLabel={renderCustomLabel}
               className="multisearch-input"
             />
-            { currentValues.length > 0
+            { searchOptions.length > 0
               ?
               <Icon name='delete' size='large' onClick={handleClearAll} className='advanced-search-options cursor-pointer' />
               :

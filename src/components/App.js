@@ -298,9 +298,17 @@ function App(props) {
           return previousSelectedKeywords.concat(keyword);
         }
       });
-      setSearchOptions((previousOptions) => previousOptions.filter(option => option.value !== keyword))
+
+      const previousKeywords = searchOptions.filter(option => option.text.includes('Keyword'))
+      setSearchOptions((previousOptions) => {
+        if (previousKeywords.includes(keyword)) {
+          return previousOptions.filter(option => option.value !== keyword);
+        } else {
+          return previousOptions.concat({key: `Keyword: ${keyword}`, text: `Keyword: ${keyword}`, value: keyword});
+        }
+      })
       setSearchPage(1);
-    }, []);
+    }, [searchOptions]);
 
   return (
     <>
