@@ -3,9 +3,7 @@ import React, { useState } from 'react';
 import { Form, Icon, Popup } from 'semantic-ui-react';
 import FreeTextSearchPopup from './FreeTextSearchPopup';
 
-// function FreeTextSearch({searchInput, setContentSearchStrings, setSearchInput, setSearchPage, setSelectedKeywords, setTitleSearchStrings}) {
 function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOptions, setSearchPage, setSelectedKeywords, setTitleSearchStrings}) {
-  
   const SEARCH_TYPES = [
     { key: 'text', value: 'Text', text: 'Text' },
     { key: 'title', value: 'Title', text: 'Title' },
@@ -16,11 +14,11 @@ function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOption
   const updateSearchQuery = (e, { value }) => {
     setSearchPage(1);
 
-    // For each type of search, update UI (labels) via setSearchOption then
-    // update the actual search query to be performed
+    const option = `${searchType}: ${value}`
+    setSearchOptions((previousOptions) => ([...previousOptions, { key: option, text: option, value: option, original: value }]))
+
     switch(searchType) {
       case 'Keywords':
-        setSearchOptions((previousOptions) => ([{ key: `Keyword: ${value}`, text: `Keyword: ${value}`, value: value }, ...previousOptions]))
         setSelectedKeywords((previousSelectedKeywords) => {
           if(previousSelectedKeywords.includes(value)) {
             return previousSelectedKeywords;
@@ -31,7 +29,6 @@ function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOption
         });
         break;
       case 'Title':
-        setSearchOptions((previousOptions) => ([{ key: `Title: ${value}`, text: `Title: ${value}`, value: value }, ...previousOptions]))
         setTitleSearchStrings((previousTitleSearchStrings) => {
           if (previousTitleSearchStrings.includes(value)) {
             return previousTitleSearchStrings;
@@ -41,9 +38,8 @@ function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOption
           }
         });
         break;
-      // Default is Text'
+      // Default is Text
       default:
-        setSearchOptions((previousOptions) => { return [{ key: `Text: ${value}`, text: `Text: ${value}`, value: value }, ...previousOptions] })
         setContentSearchStrings((previousContentSearchStrings) => {
           if (previousContentSearchStrings.includes(value)) {
             return previousContentSearchStrings;
@@ -74,20 +70,22 @@ function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOption
     content: `${label.text}`,
     onRemove: (e, data) => {
       e.stopPropagation() // prevent focusing search input on click
-      // Update search query performed
+
+      // Target the correct search type and value to update search query performed
+      const target = data.value.split(': ')[1]  // everything after ': ' present in each label
       if (data.content.includes('Keyword')) {
         setSelectedKeywords((previousSelectedKeywords) => {
-          return previousSelectedKeywords.filter(k => k !== data.value)
+          return previousSelectedKeywords.filter(k => k !== target)
         });
       }
       if (data.content.includes('Title')) {
         setTitleSearchStrings((previousTitleSearchStrings) => {
-          return previousTitleSearchStrings.filter(t => t !== data.value)
+          return previousTitleSearchStrings.filter(t => t !== target)
         });
       }
       if (data.content.includes('Text')) {
         setContentSearchStrings((previousContentSearchStrings) => {
-          return previousContentSearchStrings.filter(c => c !== data.value)
+          return previousContentSearchStrings.filter(c => c !== target)
         });
       }
 

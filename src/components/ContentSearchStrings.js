@@ -4,7 +4,7 @@ import { Icon, Label } from 'semantic-ui-react';
 function ContentSearchStrings({ contentSearchStrings, setContentSearchStrings, setSearchOptions }) {
   const handleContentSearchStringRemove = (contentString) => {
     setContentSearchStrings((previousContentSearchStrings) => {return previousContentSearchStrings.filter(c => c !== contentString)});
-    setSearchOptions((previousOptions) => previousOptions.filter(option => option.value !== contentString))
+    setSearchOptions((previousOptions) => previousOptions.filter(option => option.key !== `Text: ${contentString}`))
   }
 
   if (contentSearchStrings.length === 0) {

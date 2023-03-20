@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Icon, Container, Grid, Segment } from 'semantic-ui-react';
 
@@ -291,6 +292,7 @@ function App(props) {
   // Memoize this handler so we don't re-render the search results on every overall re-render
   const handleKeywordClick = useCallback(
     (keyword) => {
+      // Handle query update
       setSelectedKeywords((previousSelectedKeywords) => {
         if (previousSelectedKeywords.includes(keyword)) {
           return previousSelectedKeywords.filter(k => k !== keyword);
@@ -299,12 +301,16 @@ function App(props) {
         }
       });
 
-      const previousKeywords = searchOptions.filter(option => option.text.includes('Keyword'))
+      // Handle search UI update
+      const previousKeywords = searchOptions.filter(option => option.key.includes('Keyword:'))
+      const target = `Keyword: ${keyword}`
       setSearchOptions((previousOptions) => {
-        if (previousKeywords.includes(keyword)) {
-          return previousOptions.filter(option => option.value !== keyword);
+        // Check if predicate (matchesProperty in this case) returns truthy for any element of the collection
+        // see https://lodash.com/docs/4.17.15#some
+        if (_.some(previousKeywords, _.matchesProperty('value', target))) {
+          return previousOptions.filter(option => option.value !== target);
         } else {
-          return previousOptions.concat({key: `Keyword: ${keyword}`, text: `Keyword: ${keyword}`, value: keyword});
+          return previousOptions.concat({key: target, text: target, value: target, original: keyword});
         }
       })
       setSearchPage(1);

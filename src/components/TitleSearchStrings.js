@@ -4,7 +4,7 @@ import { Icon, Label } from 'semantic-ui-react';
 function TitleSearchStrings({ titleSearchStrings, setTitleSearchStrings, setSearchOptions }) {
   const handleTitleSearchStringRemove = (titleString) => {
     setTitleSearchStrings((previousTitleSearchStrings) => {return previousTitleSearchStrings.filter(t => t !== titleString)});
-    setSearchOptions((previousOptions) => previousOptions.filter(option => option.value !== titleString))
+    setSearchOptions((previousOptions) => previousOptions.filter(option => option.key !== `Title: ${titleString}`))
   }
 
   if (titleSearchStrings.length === 0) {
