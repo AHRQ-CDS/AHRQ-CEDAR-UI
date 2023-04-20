@@ -194,7 +194,7 @@ function App(props) {
         const sortOptionString = sortOptions.join(',')
         query.append('_sort', sortOptionString);
       }
-      
+
       if (selectedArtifactTypes.length > 0) {
        query.append('artifact-type', selectedArtifactTypes.join(','));
       }
@@ -213,27 +213,35 @@ function App(props) {
       query.append('_count', SEARCH_COUNT);
       query.append('page', searchPage);
 
-      /* 
-        Note: By default a fetch() request timeouts at the time indicated by the browser. In Chrome,
-         a network request times out in 300 seconds, while Firefox will time out in 90 seconds.
-         Should we consider using fetchWithTimeout() instead so that we can establish a shorter time out window?
+      /*
+        Notes:
+        - By default a fetch() request timeouts at the time indicated by the browser. In Chrome,
+          a network request times out in 300 seconds, while Firefox will time out in 90 seconds.
+          Should we consider using fetchWithTimeout() instead so that we can establish a shorter
+          time out window?
+        - We set the HTTP From header so that it can be logged with the request to allow us to
+          differentiate between use of our demo UI and other API usage.
       */
-      const response = await fetch(`../api/fhir/Citation?${query.toString()}`);
+      const response = await fetch(`../api/fhir/Citation?${query.toString()}`, {
+        headers: {
+          'From': 'cedar-demo@cds.ahrq.gov'
+        }
+      });
       const json = await response.json();
       // TODO: need to see if search is still relevant (e.g. long running search might come after other items clicked
       // idea: for each search, increment a "most recent search" counter and don't set search results if the counter has moved on from this search
       setSearchResults({ status: 'complete', data: json });
-      
+
       let url = new URL(baseUrl);
       url.searchParams.set("user-search", urlSearchObject.getAsBase64(
-          selectedKeywords, selectedConcepts, contentSearchStrings, titleSearchStrings, searchPage, searchPublisher, searchStatus, dateFilterSearchString, 
+          selectedKeywords, selectedConcepts, contentSearchStrings, titleSearchStrings, searchPage, searchPublisher, searchStatus, dateFilterSearchString,
           dateFilterType, sortOptions, dateFilterPreset, selectedArtifactTypes));
       window.history.replaceState({}, '', url);
     };
 
     cedarSearch();
 
-  }, [selectedKeywords, selectedConcepts, searchPage, searchPublisher, searchStatus, dateFilterSearchString, dateFilterType, sortOptions, dateFilterPreset, 
+  }, [selectedKeywords, selectedConcepts, searchPage, searchPublisher, searchStatus, dateFilterSearchString, dateFilterType, sortOptions, dateFilterPreset,
     selectedArtifactTypes, contentSearchStrings, titleSearchStrings]);
 
   /*
