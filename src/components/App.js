@@ -302,8 +302,8 @@ function App(props) {
       });
 
       // Handle search UI update
-      const previousKeywords = searchOptions.filter(option => option.key.includes('Keyword:'))
-      const target = `Keyword: ${keyword}`
+      const previousKeywords = searchOptions.filter(option => option.key.includes('Keywords:'))
+      const target = `Keywords: ${keyword}`
       setSearchOptions((previousOptions) => {
         // Check if predicate (matchesProperty in this case) returns truthy for any element of the collection
         // see https://lodash.com/docs/4.17.15#some
