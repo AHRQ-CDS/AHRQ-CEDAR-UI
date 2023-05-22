@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Icon, Container, Grid, Segment } from 'semantic-ui-react';
 
@@ -29,7 +30,7 @@ import '../assets/css/Print.css';
 function App(props) {
   const [patient, setPatient] = useState();
   const [conditions, setConditions] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchOptions, setSearchOptions] = useState([]);
   const [contentSearchStrings, setContentSearchStrings] = useState([]);
   const [titleSearchStrings, setTitleSearchStrings] = useState([]);
   const [selectedKeywords, setSelectedKeywords] = useState([]);
@@ -112,12 +113,24 @@ function App(props) {
         }
         else if (key === 'selectedKeywords') {
           setSelectedKeywords(value);
+          if (value.length > 0) {
+            const terms = value.map((term) => ({ key: `Keyword: ${term}`, text: `Keyword: ${term}`, value: term }))
+            setSearchOptions((previousOptions) => previousOptions.concat(terms))
+          }
         }
         else if (key === 'contentSearchStrings') {
           setContentSearchStrings(value);
+          if (value.length > 0) {
+            const terms = value.map((term) => ({ key: `Text: ${term}`, text: `Text: ${term}`, value: term }))
+            setSearchOptions((previousOptions) => previousOptions.concat(terms))
+          }
         }
         else if (key === 'titleSearchStrings') {
           setTitleSearchStrings(value);
+          if (value.length > 0) {
+            const terms = value.map((term) => ({ key: `Title: ${term}`, text: `Title: ${term}`, value: term }))
+            setSearchOptions((previousOptions) => previousOptions.concat(terms))
+          }
         }
         else if (key === 'selectedArtifactTypes') {
           setSelectedArtifactTypes(value);
@@ -279,6 +292,7 @@ function App(props) {
   // Memoize this handler so we don't re-render the search results on every overall re-render
   const handleKeywordClick = useCallback(
     (keyword) => {
+      // Handle query update
       setSelectedKeywords((previousSelectedKeywords) => {
         if (previousSelectedKeywords.includes(keyword)) {
           return previousSelectedKeywords.filter(k => k !== keyword);
@@ -286,10 +300,21 @@ function App(props) {
           return previousSelectedKeywords.concat(keyword);
         }
       });
+
+      // Handle search UI update
+      const previousKeywords = searchOptions.filter(option => option.key.includes('Keywords:'))
+      const target = `Keywords: ${keyword}`
+      setSearchOptions((previousOptions) => {
+        // Check if predicate (matchesProperty in this case) returns truthy for any element of the collection
+        // see https://lodash.com/docs/4.17.15#some
+        if (_.some(previousKeywords, _.matchesProperty('value', target))) {
+          return previousOptions.filter(option => option.value !== target);
+        } else {
+          return previousOptions.concat({key: target, text: target, value: target, original: keyword});
+        }
+      })
       setSearchPage(1);
-    },
-    []
-  );
+    }, [searchOptions]);
 
   return (
     <>
@@ -298,12 +323,13 @@ function App(props) {
         <p className="description">
           This demonstration UI uses the CEDAR API and lets you to explore its capabilities. Enter a search term to get started.
         </p>
-        <FreeTextSearch searchInput={searchInput}
-                        setContentSearchStrings={setContentSearchStrings}
-                        setSearchInput={setSearchInput}
-                        setSearchPage={setSearchPage}
-                        setSelectedKeywords={setSelectedKeywords}
-                        setTitleSearchStrings={setTitleSearchStrings}
+        <FreeTextSearch
+          searchOptions={searchOptions}
+          setContentSearchStrings={setContentSearchStrings}
+          setSearchOptions={setSearchOptions}
+          setSearchPage={setSearchPage}
+          setSelectedKeywords={setSelectedKeywords}
+          setTitleSearchStrings={setTitleSearchStrings}
         />
         <div className='drawer-toggle-wrapper'>
           <Button onClick={() => setIsMobileDrawer(!isMobileDrawer)} id='mobile-drawer-toggle'>
@@ -321,10 +347,10 @@ function App(props) {
                 {props.smart && (<Patient patient={patient} />)}
                 <Button icon='x' size='large' color='red' onClick={() => setIsMobileDrawer(!isMobileDrawer)} floated='right' id='mobile-drawer-close'/>
                 <Segment>
-                  <ContentSearchStrings contentSearchStrings={contentSearchStrings} setContentSearchStrings={setContentSearchStrings} />
-                  <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage} />
-                  <SearchConcepts selectedConcepts={selectedConcepts} setSelectedConcepts={setSelectedConcepts} setSearchPage={setSearchPage} />
-                  <TitleSearchStrings titleSearchStrings={titleSearchStrings} setTitleSearchStrings={setTitleSearchStrings} />
+                  <ContentSearchStrings contentSearchStrings={contentSearchStrings} setContentSearchStrings={setContentSearchStrings} setSearchOptions={setSearchOptions}/>
+                  <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage}/>
+                  <SearchConcepts selectedConcepts={selectedConcepts} setSelectedConcepts={setSelectedConcepts} setSearchPage={setSearchPage}/>
+                  <TitleSearchStrings titleSearchStrings={titleSearchStrings} setTitleSearchStrings={setTitleSearchStrings} setSearchOptions={setSearchOptions}/>
 
                   <h3>Sort and Filter</h3>
                   <SortBy sortOptions={sortOptions} setSortOptions={setSortOptions} />
@@ -381,6 +407,8 @@ function App(props) {
                                setSelectedKeywords={setSelectedKeywords}
                                setSelectedConcepts={setSelectedConcepts}
                                setSearchStatus={setSearchStatus}
+                               setSearchOptions={setSearchOptions}
+                               setTitleSearchStrings={setTitleSearchStrings}
               />
             </Grid.Column>
           </Grid.Row>
