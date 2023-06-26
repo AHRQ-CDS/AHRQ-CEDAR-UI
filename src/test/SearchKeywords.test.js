@@ -1,10 +1,10 @@
 import React from 'react';
+import { render } from '@testing-library/react';
 import SearchKeywords from '../components/SearchKeywords';
-import { mount } from 'enzyme';
 
 const keywords = ['acute disease', 'acute myocardial infarction', 'arrhythmia, sinus', 'arrhythmias, cardiac']
 const handleKeywordClick = () => void 0;
 
 it('renders without crashing', () => {
-  mount(<SearchKeywords selectedKeywords={keywords} handleKeywordClick={handleKeywordClick}/>);
+  render(<SearchKeywords selectedKeywords={keywords} handleKeywordClick={handleKeywordClick}/>);
 });

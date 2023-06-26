@@ -1,7 +1,7 @@
 import React from 'react';
+import { render } from '@testing-library/react';
 import DateFilters from '../components/DateFilters';
-import { mount } from 'enzyme';
 
 it('renders without crashing', () => {
-  mount(<DateFilters />);
+  render(<DateFilters />);
 });

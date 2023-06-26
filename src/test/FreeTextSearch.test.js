@@ -1,6 +1,6 @@
 import React from 'react';
+import { render } from '@testing-library/react';
 import FreeTextSearch from '../components/FreeTextSearch';
-import { mount } from 'enzyme';
 
 const options = [
   { key: 'Text: mental health', text: 'Text: mental health', value: 'mental health'},
@@ -8,5 +8,5 @@ const options = [
 ]
 
 it('renders without crashing', () => {
-  mount(<FreeTextSearch searchOptions={options} />);
+  render(<FreeTextSearch searchOptions={options} />);
 });

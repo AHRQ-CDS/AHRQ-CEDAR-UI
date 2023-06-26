@@ -3,8 +3,11 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
+import { configureAxe, toHaveNoViolations } from 'jest-axe';
 
-import { configure } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+const axe = configureAxe({
+  runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']
+})
 
-configure({ adapter: new Adapter() });
+expect.extend(toHaveNoViolations);
+module.exports = axe

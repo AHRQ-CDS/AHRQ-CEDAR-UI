@@ -1,8 +1,8 @@
 import React from 'react';
+import { render } from '@testing-library/react';
 import Patient from '../components/Patient';
-import { mount } from 'enzyme';
 import patient from '../../fixtures/patient';
 
 it('renders without crashing', () => {
-  mount(<Patient patient={patient} />);
+  render(<Patient patient={patient} />);
 });

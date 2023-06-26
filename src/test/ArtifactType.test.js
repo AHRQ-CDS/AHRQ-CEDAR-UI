@@ -1,7 +1,7 @@
 import React from 'react';
+import { render } from '@testing-library/react';
 import ArtifactType from '../components/ArtifactType';
-import { mount } from 'enzyme';
 
 it('renders without crashing', () => {
-  mount(<ArtifactType selectedArtifactTypes={[]} allArtifactTypes={[]} />);
+  render(<ArtifactType selectedArtifactTypes={[]} allArtifactTypes={[]} />);
 });

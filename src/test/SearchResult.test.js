@@ -1,8 +1,8 @@
 import React from 'react';
+import { render } from '@testing-library/react';
 import SearchResult from '../components/SearchResult';
-import { mount } from 'enzyme';
 import searchResult from '../../fixtures/searchResult';
 
 it('renders without crashing', () => {
-  mount(<SearchResult resource={searchResult} />);
+  render(<SearchResult resource={searchResult} />);
 });

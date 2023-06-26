@@ -1,8 +1,8 @@
 import React from 'react';
+import { render } from '@testing-library/react';
 import SearchResultHistoryModal from '../components/SearchResultHistoryModal';
-import { mount } from 'enzyme';
 import resource from '../../fixtures/searchResult';
 
 it('renders without crashing', () => {
-  mount(<SearchResultHistoryModal resource={resource} />);
+  render(<SearchResultHistoryModal resource={resource} />);
 });
