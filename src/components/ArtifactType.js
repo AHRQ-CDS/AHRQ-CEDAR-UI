@@ -15,6 +15,8 @@ function ArtifactType({selectedArtifactTypes, setSelectedArtifactTypes}) {
       setAllArtifactTypes(sorted_data);
     };
     getAllArtifactTypes();
+    // Cleanup logic
+    return () => { setAllArtifactTypes([]) };
   }, []);
 
   const handleArtifactTypeChange = (event, {value}) => {
@@ -22,22 +24,24 @@ function ArtifactType({selectedArtifactTypes, setSelectedArtifactTypes}) {
   }
 
   return (
-    <>
-      <h4>Artifact Type</h4>
-      <Dropdown
-        placeholder='All Artifact Types'
-        name="artifactTypes"
-        fluid
-        multiple
-        search
-        selection
-        clearable
-        onChange={handleArtifactTypeChange}
-        options={allArtifactTypes}
-        value={selectedArtifactTypes}
-        className="artifact-type-select"
-      />
-    </>
+    <div className="artifact-type-select">
+      <label>
+        <h4>Artifact Type</h4>
+        <Dropdown
+          placeholder='All Artifact Types'
+          name="artifactTypes"
+          fluid
+          multiple
+          search
+          selection
+          clearable
+          onChange={handleArtifactTypeChange}
+          options={allArtifactTypes}
+          value={selectedArtifactTypes}
+          aria-label='artifact type choices'
+        />
+      </label>
+    </div>
   );
 }
 

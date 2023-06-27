@@ -21,6 +21,7 @@ function SortBy({sortOptions, setSortOptions}) {
       <Dropdown
         placeholder="Default"
         name="sortByOptions"
+        aria-label="'sort by' options"
         fluid
         multiple
         selection

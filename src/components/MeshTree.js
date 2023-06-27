@@ -28,6 +28,8 @@ function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleConcep
         }
       }
       getMeshChildren();
+      // Cleanup logic
+      return () => { setMeshChildren([]) };
     }
   }, [meshNodeExpanded, meshChildren, treeNum]);
 

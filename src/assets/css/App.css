@@ -121,6 +121,15 @@ i.blue.icon {
   visibility: hidden !important;
 }
 
+.multisearch-input {
+  width: 100%;
+  padding-right: 0.5em;
+}
+
+.default.text {
+  color: rgba(0,0,0,.87) !important;
+}
+
 .search-results-navigation {
   min-height: 68px;
 }
@@ -143,7 +152,8 @@ i.search.icon {
 }
 
 .artifact-type-select {
-  margin-bottom: 25px;
+  margin-top: 1.33em;
+  margin-bottom: 1em;
 }
 
 .ui.card .meta {

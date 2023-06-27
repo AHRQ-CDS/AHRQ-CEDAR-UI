@@ -1,5 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
+import axe from '../setupTests';
 import RelatedSearches from '../components/RelatedSearches';
 import searchResult from '../../fixtures/searchResult';
 
@@ -23,4 +24,23 @@ it('renders without crashing', () => {
       setSearchStatus={setSearchStatus}
     />
   );
+});
+
+it('has no detected accessibility violations', async () => {
+  const { container } = render(
+      <RelatedSearches
+      searchResults={searchResult}
+      contentSearchStrings={terms}
+      setContentSearchStrings={setContentSearchStrings}
+      selectedKeywords={keywords}
+      setSelectedKeywords={setSelectedKeywords}
+      setSelectedConcepts={setSelectedConcepts}
+      setSearchStatus={setSearchStatus}
+    />
+  );
+
+  await waitFor(async () => {
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });

@@ -23,14 +23,16 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
       }
     };
     getAllPublishers();
+    // Cleanup logic
+    return () => { setAllPublishers([]) };
   }, [setSearchPublisher]);
 
   const handlePublisherChange = (event) => {
-    if (event.target.checked && !searchPublisher.includes(event.target.value)) {
+    if (event.target.checked && !searchPublisher?.includes(event.target.value)) {
       setSearchPublisher([ ...searchPublisher, event.target.value]);
       setSearchPage(1);
     }
-    else if (!event.target.checked && searchPublisher.includes(event.target.value)) {
+    else if (!event.target.checked && searchPublisher?.includes(event.target.value)) {
       const publisher = searchPublisher.filter(item => item !== event.target.value);
       setSearchPublisher(publisher);
       setSearchPage(1);
@@ -55,7 +57,7 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
                 <label>
                   <input
                     type="checkbox"
-                    checked={searchPublisher.includes(publisher.id)}
+                    checked={searchPublisher?.includes(publisher.id)}
                     onChange={handlePublisherChange}
                     name={publisher.alias}
                     value={publisher.id}

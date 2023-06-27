@@ -345,7 +345,7 @@ function App(props) {
             <Grid.Column width={5} className='no-print' id='search-controls'>
               <div className={isMobileDrawer ? 'mobile-drawer' : 'mobile-drawer open'}>
                 {props.smart && (<Patient patient={patient} />)}
-                <Button icon='x' size='large' color='red' onClick={() => setIsMobileDrawer(!isMobileDrawer)} floated='right' id='mobile-drawer-close'/>
+                <Button icon='x' size='large' color='red' onClick={() => setIsMobileDrawer(!isMobileDrawer)} floated='right' id='mobile-drawer-close' aria-label='Close Mobile Drawer'/>
                 <Segment>
                   <ContentSearchStrings contentSearchStrings={contentSearchStrings} setContentSearchStrings={setContentSearchStrings} setSearchOptions={setSearchOptions}/>
                   <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage}/>
