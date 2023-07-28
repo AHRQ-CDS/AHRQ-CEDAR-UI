@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.8.0 - 2023-07-28
+
+* Implements a new user experience for search by displaying search terms in the search bar
+* Adds a client id to search requests to better support API usage tracking
+
 ## v0.7.1 - 2023-02-22
 
 * Fixes issue with related search behavior where search concepts were not correctly cleared
