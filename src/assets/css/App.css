@@ -2,6 +2,13 @@
   margin-top: 1rem;
 }
 
+#a11y-nav {
+  position: absolute;
+  opacity: 0%;
+  width: 100%;
+  z-index: 1000;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }

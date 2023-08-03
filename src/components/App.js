@@ -318,8 +318,9 @@ function App(props) {
 
   return (
     <>
+      <a href="#main-content" id="a11y-nav">Skip to main content</a>
       <AhrqHeader headerText={HEADER_TEXT} />
-      <div className="search-bar no-print">
+      <div className="search-bar no-print" id="main-content">
         <p className="description">
           This demonstration UI uses the CEDAR API and lets you to explore its capabilities. Enter a search term to get started.
         </p>
