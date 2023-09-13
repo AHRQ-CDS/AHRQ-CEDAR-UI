@@ -6,6 +6,7 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
   const [allPublishers, setAllPublishers] = useState([]);
 
   useEffect(() => {
+    let isSubscribed = true;
     const getAllPublishers = async () => {
       const response = await fetch('../api/fhir/Organization');
       const json = await response.json();
@@ -16,21 +17,23 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
         alias: entry.resource.alias[0],
         description: entry.resource.extension[0].valueString
       }))
-      setAllPublishers(_.orderBy(data, ['alias']));
+      // Only update the state if the component is still mounted
+      if (isSubscribed) setAllPublishers(_.orderBy(data, ['alias']));
       // Only select all publishers by default if there are no query parameters
       if(document.location.search === '') {
         setSearchPublisher(data.map((publisher) => publisher.id));
       }
     };
     getAllPublishers();
+    return () => (isSubscribed = false); // Cancel subscription if unmounting
   }, [setSearchPublisher]);
 
   const handlePublisherChange = (event) => {
-    if (event.target.checked && !searchPublisher.includes(event.target.value)) {
+    if (event.target.checked && !searchPublisher?.includes(event.target.value)) {
       setSearchPublisher([ ...searchPublisher, event.target.value]);
       setSearchPage(1);
     }
-    else if (!event.target.checked && searchPublisher.includes(event.target.value)) {
+    else if (!event.target.checked && searchPublisher?.includes(event.target.value)) {
       const publisher = searchPublisher.filter(item => item !== event.target.value);
       setSearchPublisher(publisher);
       setSearchPage(1);
@@ -55,7 +58,7 @@ function Publishers({searchPublisher, setSearchPublisher, setSearchPage}) {
                 <label>
                   <input
                     type="checkbox"
-                    checked={searchPublisher.includes(publisher.id)}
+                    checked={searchPublisher?.includes(publisher.id)}
                     onChange={handlePublisherChange}
                     name={publisher.alias}
                     value={publisher.id}

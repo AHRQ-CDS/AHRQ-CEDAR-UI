@@ -318,8 +318,9 @@ function App(props) {
 
   return (
     <>
+      <a href="#main-content" id="a11y-nav">Skip to main content</a>
       <AhrqHeader headerText={HEADER_TEXT} />
-      <div className="search-bar no-print">
+      <div className="search-bar no-print" id="main-content">
         <p className="description">
           This demonstration UI uses the CEDAR API and lets you to explore its capabilities. Enter a search term to get started.
         </p>
@@ -345,7 +346,7 @@ function App(props) {
             <Grid.Column width={5} className='no-print' id='search-controls'>
               <div className={isMobileDrawer ? 'mobile-drawer' : 'mobile-drawer open'}>
                 {props.smart && (<Patient patient={patient} />)}
-                <Button icon='x' size='large' color='red' onClick={() => setIsMobileDrawer(!isMobileDrawer)} floated='right' id='mobile-drawer-close'/>
+                <Button icon='x' size='large' color='red' onClick={() => setIsMobileDrawer(!isMobileDrawer)} floated='right' id='mobile-drawer-close' aria-label='Close Mobile Drawer'/>
                 <Segment>
                   <ContentSearchStrings contentSearchStrings={contentSearchStrings} setContentSearchStrings={setContentSearchStrings} setSearchOptions={setSearchOptions}/>
                   <SearchKeywords handleKeywordClick={handleKeywordClick} selectedKeywords={selectedKeywords} setSelectedKeywords={setSelectedKeywords} setSearchPage={setSearchPage}/>

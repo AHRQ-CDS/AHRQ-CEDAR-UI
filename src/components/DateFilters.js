@@ -119,6 +119,7 @@ function ArtifactLastUpdated({setDateFilterSearchString, dateFilterPreset, setDa
         <Form.Select
           selection
           name="date-filter-type"
+          aria-label="date filter type"
           options={DATE_FILTER_TYPE_SELECT_OPTIONS}
           value={dateFilterType}
           onChange={(e, data) => setDateFilterType(data.value)}
@@ -126,6 +127,7 @@ function ArtifactLastUpdated({setDateFilterSearchString, dateFilterPreset, setDa
         <Form.Select
           selection
           name="date-timeframe-options"
+          aria-label="date timeframe options"
           options={DATE_SELECT_OPTIONS}
           value={dateFilterPreset}
           onChange={(e, data) => handleLastUpdatedChange(e, data)}

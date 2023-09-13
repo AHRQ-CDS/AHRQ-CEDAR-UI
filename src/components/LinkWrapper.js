@@ -51,7 +51,7 @@ function LinkWrapper({href, children, ...rest}) {
           {children ?? href}
         </a>
         <span> </span>  {/* Include space between external link & icon */}
-        <img id="leavingSiteImage" alt="external link icon" src={exit_icon} />
+        <img className="leavingSiteImage" alt="external link icon" src={exit_icon} />
         <ExternalLinkModal link={href} open={open} setOpen={setOpen}/>
       </>
     )

@@ -108,26 +108,31 @@ function FreeTextSearch({searchOptions, setContentSearchStrings, setSearchOption
             <Form.Select
               selection
               name="type"
+              aria-label="search type selection"
+              aria-controls="search term input"
               options={SEARCH_TYPES}
               value={searchType}
               width={7}
               onChange={(e, data) => setSearchType(data.value)}
             />
-            <Form.Dropdown
-              options={searchOptions}
-              placeholder='Search terms...'
-              search
-              selection
-              fluid
-              multiple
-              allowAdditions
-              icon={null}
-              width={11}
-              value={_.map(searchOptions, 'value')}
-              onAddItem={updateSearchQuery}
-              renderLabel={renderCustomLabel}
-              className="multisearch-input"
-            />
+            <div className="multisearch-input">
+              <label>
+                <Form.Dropdown
+                  options={searchOptions}
+                  placeholder='Search terms...'
+                  aria-label="search term input"
+                  search
+                  selection
+                  fluid
+                  multiple
+                  allowAdditions
+                  icon={null}
+                  value={_.map(searchOptions, 'value')}
+                  onAddItem={updateSearchQuery}
+                  renderLabel={renderCustomLabel}
+                />
+              </label>
+            </div>
             { searchOptions.length > 0
               ?
               <Icon name='delete' size='large' onClick={handleClearAll} className='advanced-search-options cursor-pointer' />

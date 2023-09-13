@@ -1,8 +1,18 @@
 import React from 'react';
+import { render, waitFor } from '@testing-library/react';
+import axe from '../setupTests';
 import SearchConcepts from '../components/SearchConcepts';
-import { mount } from 'enzyme';
 import { concepts } from '../../fixtures/concepts';
 
 it('renders without crashing', () => {
-  mount(<SearchConcepts selectedConcepts={concepts} />);
+  render(<SearchConcepts selectedConcepts={concepts} />);
+});
+
+it('has no detected accessibility violations', async () => {
+  const { container } = render(<SearchConcepts selectedConcepts={concepts} />);
+
+  await waitFor(async () => {
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });

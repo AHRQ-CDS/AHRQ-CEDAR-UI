@@ -1,6 +1,7 @@
 import React from 'react';
+import { render, waitFor } from '@testing-library/react';
+import axe from '../setupTests';
 import RelatedSearches from '../components/RelatedSearches';
-import { mount } from 'enzyme';
 import searchResult from '../../fixtures/searchResult';
 
 const terms = ['hypertension', 'farm']
@@ -12,7 +13,7 @@ const setSearchStatus = () => void 0;
 
 
 it('renders without crashing', () => {
-  mount(
+  render(
     <RelatedSearches
       searchResults={searchResult}
       contentSearchStrings={terms}
@@ -23,4 +24,23 @@ it('renders without crashing', () => {
       setSearchStatus={setSearchStatus}
     />
   );
+});
+
+it('has no detected accessibility violations', async () => {
+  const { container } = render(
+      <RelatedSearches
+      searchResults={searchResult}
+      contentSearchStrings={terms}
+      setContentSearchStrings={setContentSearchStrings}
+      selectedKeywords={keywords}
+      setSelectedKeywords={setSelectedKeywords}
+      setSelectedConcepts={setSelectedConcepts}
+      setSearchStatus={setSearchStatus}
+    />
+  );
+
+  await waitFor(async () => {
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });
