@@ -7,6 +7,7 @@ function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleConcep
   const [meshChildren, setMeshChildren] = useState([]);
 
   useEffect(() => {
+    let isSubscribed = true;
     if (meshNodeExpanded.get(treeNum) !== undefined && (!meshChildren || meshChildren.length === 0)) {
       async function getMeshChildren() {
         const response = await fetch(`../api/fhir/CodeSystem/$get-mesh-children?code=${treeNum}`);
@@ -24,13 +25,13 @@ function MeshTree({ treeNum, meshNodeExpanded, setMeshNodeExpanded, handleConcep
             indirectArtifacts: value.valueCoding.extension[3].valueUnsignedInt
           }));
 
-          setMeshChildren(data);
+          // Only update the state if the component is still mounted
+          if (isSubscribed) setMeshChildren(data);
         }
       }
       getMeshChildren();
-      // Cleanup logic
-      return () => { setMeshChildren([]) };
     }
+    return () => (isSubscribed = false); // Cancel subscription if unmounting
   }, [meshNodeExpanded, meshChildren, treeNum]);
 
   const tree = meshChildren.map((element, i) => (
