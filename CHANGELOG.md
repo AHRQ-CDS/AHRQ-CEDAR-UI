@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.9.0 - 2023-09-22
+
+* Improves accessibility of user interface
+
 ## v0.8.0 - 2023-07-28
 
 * Implements a new user experience for search by displaying search terms in the search bar
